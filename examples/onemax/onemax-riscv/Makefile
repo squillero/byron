@@ -8,11 +8,12 @@ ALLOWED_TIME=3
 .PHONY: run compile _clean
 
 run: compile
-	${TIMEOUT_CMD} ${ALLOWED_TIME} riscv64-unknown-elf-run --trace-register $(name) 2>&1 || echo -1
+	${TIMEOUT_CMD} ${ALLOWED_TIME} riscv64-unknown-elf-run $(name) 2>&1 || echo -1
 
-compile:
+compile: main.c
+	#./unset_cleaner
 	riscv64-unknown-elf-as --warn --fatal-warnings -march=rv64imd -mno-relax $(name).s -o $(name).o
-	riscv64-unknown-elf-ld --fatal-warnings -o $(name) $(name).o
+	riscv64-unknown-elf-gcc --all-warnings -o $(name) $< $(name).o
 
 clean: _clean
 
