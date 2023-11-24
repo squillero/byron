@@ -30,8 +30,11 @@ def main():
     register_map.include_registers(("t0",))
     riscv = RiscvEvaluator(register_map, evaluation_func=evaluation_function)
 
+    # evaluator = byron.evaluator.MakefileEvaluator(
+    #     'onemax.s', stdout_cleaner=riscv.evaluate_riscv_int_stdout, make_flags=["name=onemax", "-s"], timeout=5
+    # )
     evaluator = byron.evaluator.MakefileEvaluator(
-        'onemax.s', stdout_cleaner=riscv.evaluate_riscv_int_stdout, make_flags=["name=onemax", "-s"], timeout=5
+        'onemax.s', required_files=['main.c'], make_flags=["name=onemax", "-s"], timeout=5
     )
     final_population = byron.ea.vanilla_ea(
         top_frame,
