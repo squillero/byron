@@ -16,31 +16,69 @@ COMMENT = '#'
 
 
 def define_frame():
-    register = byron.f.choice_parameter(["zero", *[f"t{n}" for n in range(4)]])
+    register = byron.f.choice_parameter(["zero", *[f"t{n}" for n in range(7)], *[f"s{n}" for n in range(12)]])
+    int4 = byron.f.integer_parameter(0, 2**4)
     int5 = byron.f.integer_parameter(0, 2**5)
     int8 = byron.f.integer_parameter(0, 2**8)
+    int11 = byron.f.integer_parameter(0, 2**11)  # Incoherence with the manual that say 12bits
     int20 = byron.f.integer_parameter(0, 2**20)
 
-    operations_R = byron.f.choice_parameter(['add', 'sub', 'slt', 'sltu', 'sra', 'sll', 'srl', 'and', 'or', 'xor'])
-    operations_I = byron.f.choice_parameter(['addi', 'slti', 'sltiu', 'andi', 'ori', 'xori'])
+    operations_R = byron.f.choice_parameter(
+        [
+            'add',
+            'sub',
+            'slt',
+            'sltu',
+            'sra',
+            'sll',
+            'srl',
+            'and',
+            'or',
+            'xor',
+            'addw',
+            'sllw',
+            'srlw',
+            'subw',
+            'sraw',
+            'mul',
+            'mulh',
+            'mulhu',
+            'mulhsu',
+            # 'div',
+            # 'divu',
+            # 'rem',
+            # 'remu',
+            # 'divw',
+            # 'divuw',
+            # 'remw',
+            # 'remuw',
+        ]
+    )
+    operations_I = byron.f.choice_parameter(['addi', 'slti', 'sltiu', 'andi', 'ori', 'xori', 'addiw'])
     operations_I_special = byron.f.choice_parameter(['slli', 'srli', 'srai'])
+    operations_I_special64 = byron.f.choice_parameter(['slliw', 'srliw', 'sraiw'])
     operations_U = byron.f.choice_parameter(['lui', 'auipc'])
     op_R = byron.f.macro('{op} {r1}, {r2}, {r3}', op=operations_R, r1=register, r2=register, r3=register)
-    op_I = byron.f.macro('{op} {r1}, {r2}, {imm:#x}', op=operations_I, r1=register, r2=register, imm=int8)
+    op_I = byron.f.macro('{op} {r1}, {r2}, {imm:#x}', op=operations_I, r1=register, r2=register, imm=int11)
     op_I_special = byron.f.macro(
         '{op} {r1}, {r2}, {imm:#x}', op=operations_I_special, r1=register, r2=register, imm=int5
     )
+    op_I_special64 = byron.f.macro(
+        '{op} {r1}, {r2}, {imm:#x}', op=operations_I_special64, r1=register, r2=register, imm=int4
+    )
     op_U = byron.f.macro('{op} {r1}, {imm:#x}', op=operations_U, r1=register, imm=int20)
 
-    conditions = byron.f.choice_parameter(['eq', 'ne', 'ge', 'lt', 'geu', 'ltu'])
-    branch = byron.f.macro(
+    operations_B = byron.f.choice_parameter(['eq', 'ne', 'ge', 'lt', 'geu', 'ltu'])
+    op_B = byron.f.macro(
         'b{cond} {r1}, {r2}, {label}',
-        cond=conditions,
+        cond=operations_B,
         r1=register,
         r2=register,
         label=byron.f.local_reference(backward=True, loop=False, forward=True),
     )
-    jump = byron.f.macro('j {label}', label=byron.f.local_reference(backward=True, loop=False, forward=True))
+
+    op_J_imm = byron.f.macro('j {label}', label=byron.f.local_reference(backward=True, loop=False, forward=True))
+    op_J_reg = byron.f.macro('jr {r1}', r1=register)
 
     prologue_main = byron.f.macro(
         r"""# [prologue_main]
@@ -136,15 +174,42 @@ asm_call:
 # [end-epilogue_main]"""
     )
 
+    prologue_sub = byron.f.macro(
+        r"""
+; [prologue_sub]
+.globl	{_node}             ; -- Begin function {_node}
+{_node}:
+push ra
+; [end-prologue_sub]""",
+        _label='',  # No automatic creation of the label -- it's embedded as "{_node}:"
+    )
+
+    epilogue_sub = byron.f.macro(
+        r"""; [epilogue_sub]
+pull ra
+jr ra
+; [end-epilogue_sub]"""
+    )
+
+    op_pool = [op_R, op_I, op_I_special, op_I_special64, op_U]  # missing op_B, op_J_imm, op_J_reg
+    op_pool_weight = [
+        operations_R.NUM_ALTERNATIVES,
+        operations_I.NUM_ALTERNATIVES,
+        operations_I_special.NUM_ALTERNATIVES,
+        operations_I_special64.NUM_ALTERNATIVES,
+        operations_U.NUM_ALTERNATIVES,
+    ]
+    assert len(op_pool) == len(op_pool_weight), "The size of the poll must be equal to the size of the weight"
+
+    core_sub = byron.framework.bunch(op_pool, size=(1, 5 + 1), weights=op_pool_weight)
+    sub = byron.framework.sequence([prologue_sub, core_sub, epilogue_sub])
+    op_JL_imm = byron.f.macro("jal {label}", label=byron.f.global_reference(sub, creative_zeal=1, first_macro=True))
+    op_JL_reg = byron.f.macro("jalr {reg}")  # Maybe not feasible
+
     core_main = byron.framework.bunch(
-        [op_R, op_I, op_I_special, op_U],
+        op_pool,  # + op_JL_imm, op_JL_reg
         size=(10, 15 + 1),
-        weights=[
-            operations_R.NUM_ALTERNATIVES,
-            operations_I.NUM_ALTERNATIVES,
-            operations_I_special.NUM_ALTERNATIVES,
-            operations_U.NUM_ALTERNATIVES,
-        ],
+        weights=op_pool_weight,
     )
 
     main = byron.framework.sequence([prologue_main, core_main, epilogue_main])
