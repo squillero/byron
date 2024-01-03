@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum, Flag, auto
-from typing import Sequence, List, Dict, Set, Callable
+from typing import Sequence, List, Dict, Set, Callable, Collection
 import byron
-from byron.classes import ParameterABC, Macro, ParameterStructuralABC
+from byron.classes import ParameterABC, Macro, ParameterStructuralABC, FrameABC
 
 
 @dataclass
@@ -30,7 +30,7 @@ class RiscvInstructionFormat(RiscvInstructionFormatData, Enum):
         lambda representation, operands, registers, immediate, label: byron.f.macro(
             representation, op=operands, r1=registers, r2=registers, r3=registers
         ),
-        "{op} {r1} {r2} {r3}",
+        "{op} {r1}, {r2}, {r3}",
         3,
     )
     I = (
@@ -39,7 +39,7 @@ class RiscvInstructionFormat(RiscvInstructionFormatData, Enum):
         ),
         "{op} {r1}, {r2}, {imm:#x}",
         2,
-        12,
+        11,  # Incoherence with the manual that say 12bits
     )
     I_5bit = (
         lambda representation, operands, registers, immediate, label: byron.f.macro(
@@ -76,12 +76,42 @@ class RiscvInstructionFormat(RiscvInstructionFormatData, Enum):
     )
     J = (
         lambda representation, operands, registers, immediate, label: byron.f.macro(
-            representation, op=operands, label=label
+            representation, r1=registers, op=operands, label=label
         ),
-        "{op} {label}",
+        "{op} {r1}, {label}",
         1,
         20,
         False,
+    )
+    PSEUDO_only_label_local = (
+        lambda representation, operands, registers, immediate, label: byron.f.macro(
+            representation, op=operands, label=label
+        ),
+        "{op} {label}",
+        0,
+        20,
+        True,
+    )
+    PSEUDO_only_label_global = (
+        lambda representation, operands, registers, immediate, label: byron.f.macro(
+            representation, op=operands, label=label
+        ),
+        "{op} {label}",
+        0,
+        20,
+        False,
+    )
+    PSEUDO_only_register = (
+        lambda representation, operands, registers, immediate, label: byron.f.macro(
+            representation, r1=registers, op=operands
+        ),
+        "{op} {r1}",
+        1,
+    )
+    PSEUDO_op = (
+        lambda representation, operands, registers, immediate, label: byron.f.macro(representation, op=operands),
+        "{op}",
+        0,
     )
 
     def __init__(
@@ -113,7 +143,15 @@ class RiscvInstructionFormat(RiscvInstructionFormatData, Enum):
     def __eq__(self, other):
         return self.name == self.name
 
-    def create_operations_pool(self, operands: Sequence[str], registers: Sequence[str] | None):
+    def __str__(self):
+        return f"{self.name}-type"
+
+    def create_operations_pool(
+        self,
+        operands: Collection[str],
+        registers: Collection[str] | None = None,
+        sub_bunch: type[FrameABC] | None = None,
+    ) -> type[Macro]:
         return self._macro_lambda(
             self._representation,
             byron.f.choice_parameter(operands),
@@ -123,7 +161,7 @@ class RiscvInstructionFormat(RiscvInstructionFormatData, Enum):
             if self._is_local_reference is None
             else byron.f.local_reference(backward=True, loop=False, forward=True)
             if self._is_local_reference is True
-            else byron.f.global_reference(sub, creative_zeal=1, first_macro=True),
+            else byron.f.global_reference(sub_bunch, creative_zeal=1, first_macro=True),
         )
 
 
@@ -159,7 +197,7 @@ class RiscvOperation(RiscvOperationData, Enum):
     SUB = ("SUB", RiscvInstructionFormat.R)
     SRA = ("SRA", RiscvInstructionFormat.R)
 
-    NOP = ("NOP", RiscvInstructionFormat.I)
+    # PSEUDO_NOP = ("NOP", RiscvInstructionFormat.PSEUDO_op)
 
     JAL = ("JAL", RiscvInstructionFormat.J)
     JALR = ("JALR", RiscvInstructionFormat.I)
@@ -185,6 +223,11 @@ class RiscvOperation(RiscvOperationData, Enum):
     DIVUW = ("DIVUW", RiscvInstructionFormat.R)
     REMW = ("REMW", RiscvInstructionFormat.R)
     REMUW = ("REMUW", RiscvInstructionFormat.R)
+
+    PSEUDO_J = ("J", RiscvInstructionFormat.PSEUDO_only_label_local)
+    PSEUDO_JAL = ("JAL", RiscvInstructionFormat.PSEUDO_only_label_global)
+    PSEUDO_JR = ("JR", RiscvInstructionFormat.PSEUDO_only_register)
+    PSEUDO_JALR = ("JALR", RiscvInstructionFormat.PSEUDO_only_register)
 
     def __init__(self, op_name: str, op_format: RiscvInstructionFormat):
         self._op_name = op_name
@@ -244,7 +287,7 @@ class RiscvIsaBase(RiscvIsaOperationSet):
             RiscvOperation.SRL,
             RiscvOperation.SUB,
             RiscvOperation.SRA,
-            RiscvOperation.NOP,
+            # RiscvOperation.NOP,
             RiscvOperation.JAL,
             RiscvOperation.JALR,
             RiscvOperation.BEQ,
@@ -295,33 +338,68 @@ class RiscvIsaExtension(RiscvIsaOperationSet):
 
 
 class RiscvIsaCustomOperationSet(RiscvIsaOperationSet):
+    BasicOp32 = (
+        "Custom set, basic operations 32bit, no jump or branch",
+        [
+            RiscvOperation.ADDI,
+            RiscvOperation.SLTI,
+            RiscvOperation.SLTIU,
+            RiscvOperation.ANDI,
+            RiscvOperation.ORI,
+            RiscvOperation.XORI,
+            RiscvOperation.SLLI,
+            RiscvOperation.SRLI,
+            RiscvOperation.SRAI,
+            RiscvOperation.ADD,
+            RiscvOperation.SLT,
+            RiscvOperation.SLTU,
+            RiscvOperation.AND,
+            RiscvOperation.OR,
+            RiscvOperation.XOR,
+            RiscvOperation.SLL,
+            RiscvOperation.SRL,
+            RiscvOperation.SUB,
+            RiscvOperation.SRA,
+        ],
+    )
+    BasicBranch = (
+        "Standard branches",
+        [
+            RiscvOperation.BEQ,
+            RiscvOperation.BNE,
+            RiscvOperation.BLT,
+            RiscvOperation.BLTU,
+            RiscvOperation.BGE,
+            RiscvOperation.BGEU,
+        ],
+    )
     BasicOp64 = ("Custom set, basic operations 64bit", [])
 
 
 @dataclass
-class RegistersData:
+class RiscvRegistersData:
     type: str
     count: int = field(default=1)
 
 
-class Registers(RegistersData, Enum):
+class RiscvRegisters(RiscvRegistersData, Enum):
     ZERO = "zero"
-    RA = "ra"
-    SP = "sp"
-    GP = "gp"
-    TP = "tp"
-    T = ("t", 7)
-    S = ("s", 12)
-    A = ("a", 8)
+    RETURN_ADDRESS = "ra"
+    STACK_POINTER = "sp"
+    GLOBAL_POINTER = "gp"
+    THREAD_POINTER = "tp"
+    TEMPORARIES = ("t", 7)
+    SAVED = ("s", 12)
+    ARGUMENTS = ("a", 8)
 
-    def __init__(self, type: str, count=None):
+    def __init__(self, type: str, count=1):
         self._type = type
         self._count = count
 
     @property
     def register_set(self) -> Set[str]:
         if self._count == 1:
-            return set(self._type)
+            return {self._type}
         else:
             return set(f"{self._type}{n}" for n in range(self._count))
 
@@ -329,11 +407,10 @@ class Registers(RegistersData, Enum):
 class RiscvIsaBuilder:
     def __init__(self):
         self._operations: Dict[RiscvInstructionFormat, Set[str]] = dict()
-        self._registers = set()
+        self._registers: Set[str] = set()
 
     def set_base_isa(self, base_isa: RiscvIsaBase) -> RiscvIsaBuilder:
         for op in base_isa.operations:
-            print(op.name)
             _ = self.add_operation(op)
         return self
 
@@ -353,11 +430,44 @@ class RiscvIsaBuilder:
         self._operations[operation.op_format].add(operation.op_name)
         return self
 
-    def add_register_set(self, registers: Registers) -> RiscvIsaBuilder:
+    def add_register_set(self, registers: RiscvRegisters) -> RiscvIsaBuilder:
         self._registers.update(registers.register_set)
         return self
 
-    def build(self):
-        registers = byron.f.choice_parameter(self._registers)
-        for operation in self._operations:
-            immediate
+    def build(self) -> RiscvIsa:
+        return RiscvIsa(self._operations, self._registers)
+
+
+class RiscvIsa:
+    def __init__(self, operations: Dict[RiscvInstructionFormat, Collection[str]], registers: Collection[str]):
+        assert len(registers) > 0, f"No registers initialized"
+        # self._registers = byron.f.choice_parameter(registers)
+        self._registers = registers
+
+        self._operations = {}
+        for instruction_format, ops in operations.items():
+            assert len(ops) > 0, f"{instruction_format} format defined with no instructions"
+            # self._operations[instruction_format] = byron.f.choice_parameter(ops)
+            self._operations[instruction_format] = ops
+
+    def get_operations_from_format(
+        self, instruction_format: RiscvInstructionFormat
+    ) -> Collection[str]:  # type[ParameterABC]:
+        assert instruction_format in self._operations, f"No {instruction_format} instructions initialized"
+        return self._operations[instruction_format]
+
+    @property
+    def registers(self) -> Collection[str]:  # type[ParameterABC]:
+        return self._registers
+
+    def get_operations_pool(self, sub_bunch: type[FrameABC] | None = None) -> Sequence[type[Macro]]:
+        out_sequence = []
+        for instruction_format, ops in self._operations.items():
+            out_sequence.append(instruction_format.create_operations_pool(ops, self.registers, sub_bunch))
+        return out_sequence
+
+    def get_operations_pool_weight(self) -> Sequence[int]:
+        out_weight = []
+        for instruction_format, ops in self._operations.items():
+            out_weight.append(len(ops))
+        return out_weight

@@ -11,75 +11,21 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import byron
+from riscv_isa_builder import (
+    RiscvIsaBase,
+    RiscvIsaBuilder,
+    RiscvIsa,
+    RiscvInstructionFormat,
+    RiscvRegisters,
+    RiscvIsaCustomOperationSet,
+    RiscvIsaExtension,
+    RiscvOperation,
+)
 
 COMMENT = '#'
 
 
 def define_frame():
-    register = byron.f.choice_parameter(["zero", *[f"t{n}" for n in range(7)], *[f"s{n}" for n in range(12)]])
-    int4 = byron.f.integer_parameter(0, 2**4)
-    int5 = byron.f.integer_parameter(0, 2**5)
-    int8 = byron.f.integer_parameter(0, 2**8)
-    int11 = byron.f.integer_parameter(0, 2**11)  # Incoherence with the manual that say 12bits
-    int20 = byron.f.integer_parameter(0, 2**20)
-
-    operations_R = byron.f.choice_parameter(
-        [
-            'add',
-            'sub',
-            'slt',
-            'sltu',
-            'sra',
-            'sll',
-            'srl',
-            'and',
-            'or',
-            'xor',
-            'addw',
-            'sllw',
-            'srlw',
-            'subw',
-            'sraw',
-            'mul',
-            'mulh',
-            'mulhu',
-            'mulhsu',
-            # 'div',
-            # 'divu',
-            # 'rem',
-            # 'remu',
-            # 'divw',
-            # 'divuw',
-            # 'remw',
-            # 'remuw',
-        ]
-    )
-    operations_I = byron.f.choice_parameter(['addi', 'slti', 'sltiu', 'andi', 'ori', 'xori', 'addiw'])
-    operations_I_special = byron.f.choice_parameter(['slli', 'srli', 'srai'])
-    operations_I_special64 = byron.f.choice_parameter(['slliw', 'srliw', 'sraiw'])
-    operations_U = byron.f.choice_parameter(['lui', 'auipc'])
-    op_R = byron.f.macro('{op} {r1}, {r2}, {r3}', op=operations_R, r1=register, r2=register, r3=register)
-    op_I = byron.f.macro('{op} {r1}, {r2}, {imm:#x}', op=operations_I, r1=register, r2=register, imm=int11)
-    op_I_special = byron.f.macro(
-        '{op} {r1}, {r2}, {imm:#x}', op=operations_I_special, r1=register, r2=register, imm=int5
-    )
-    op_I_special64 = byron.f.macro(
-        '{op} {r1}, {r2}, {imm:#x}', op=operations_I_special64, r1=register, r2=register, imm=int4
-    )
-    op_U = byron.f.macro('{op} {r1}, {imm:#x}', op=operations_U, r1=register, imm=int20)
-
-    operations_B = byron.f.choice_parameter(['eq', 'ne', 'ge', 'lt', 'geu', 'ltu'])
-    op_B = byron.f.macro(
-        'b{cond} {r1}, {r2}, {label}',
-        cond=operations_B,
-        r1=register,
-        r2=register,
-        label=byron.f.local_reference(backward=True, loop=False, forward=True),
-    )
-
-    op_J_imm = byron.f.macro('j {label}', label=byron.f.local_reference(backward=True, loop=False, forward=True))
-    op_J_reg = byron.f.macro('jr {r1}', r1=register)
-
     prologue_main = byron.f.macro(
         r"""# [prologue_main]
 .global asm_call
@@ -191,25 +137,30 @@ jr ra
 ; [end-epilogue_sub]"""
     )
 
-    op_pool = [op_R, op_I, op_I_special, op_I_special64, op_U]  # missing op_B, op_J_imm, op_J_reg
-    op_pool_weight = [
-        operations_R.NUM_ALTERNATIVES,
-        operations_I.NUM_ALTERNATIVES,
-        operations_I_special.NUM_ALTERNATIVES,
-        operations_I_special64.NUM_ALTERNATIVES,
-        operations_U.NUM_ALTERNATIVES,
-    ]
+    riscv_isa = (
+        RiscvIsaBuilder()
+        .add_operation_set(RiscvIsaCustomOperationSet.BasicOp32)
+        .add_operation_set(RiscvIsaCustomOperationSet.BasicBranch)
+        # .add_operation(RiscvOperation.PSEUDO_J)
+        # .add_extension(RiscvIsaExtension.M)
+        .add_register_set(RiscvRegisters.ZERO)
+        .add_register_set(RiscvRegisters.TEMPORARIES)
+        .add_register_set(RiscvRegisters.SAVED)
+        .build()
+    )
+    op_pool = riscv_isa.get_operations_pool()
+    op_pool_weight = riscv_isa.get_operations_pool_weight()
     assert len(op_pool) == len(op_pool_weight), "The size of the poll must be equal to the size of the weight"
-
-    core_sub = byron.framework.bunch(op_pool, size=(1, 5 + 1), weights=op_pool_weight)
-    sub = byron.framework.sequence([prologue_sub, core_sub, epilogue_sub])
-    op_JL_imm = byron.f.macro("jal {label}", label=byron.f.global_reference(sub, creative_zeal=1, first_macro=True))
-    op_JL_reg = byron.f.macro("jalr {reg}")  # Maybe not feasible
+    #
+    # core_sub = byron.framework.bunch(op_pool, size=(1, 5 + 1), weights=op_pool_weight)
+    # sub = byron.framework.sequence([prologue_sub, core_sub, epilogue_sub])
+    # op_JL_imm = byron.f.macro("jal {label}", label=byron.f.global_reference(sub, creative_zeal=1, first_macro=True))
+    # op_JL_reg = byron.f.macro("jalr {reg}")  # Maybe not feasible
 
     core_main = byron.framework.bunch(
         op_pool,  # + op_JL_imm, op_JL_reg
         size=(10, 15 + 1),
-        weights=op_pool_weight,
+        weights=op_pool_weight,  # +1...
     )
 
     main = byron.framework.sequence([prologue_main, core_main, epilogue_main])
