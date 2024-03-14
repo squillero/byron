@@ -5,7 +5,7 @@ from enum import Enum, Flag, auto
 from typing import Sequence, List, Dict, Set, Callable, Collection
 import byron
 from byron.classes import ParameterABC, Macro, ParameterStructuralABC, FrameABC
-from riscv_instruction_format_data import RiscvInstructionFormatData
+from .riscv_instruction_format_data import RiscvInstructionFormatData
 
 
 class RiscvInstructionFormat(RiscvInstructionFormatData, Enum):

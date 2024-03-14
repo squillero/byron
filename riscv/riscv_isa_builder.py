@@ -5,13 +5,13 @@ from enum import Enum, Flag, auto
 from typing import Sequence, List, Dict, Set, Callable, Collection
 import byron
 from byron.classes import ParameterABC, Macro, ParameterStructuralABC, FrameABC
-from riscv_instruction_format import RiscvInstructionFormat
-from riscv_isa_base import RiscvIsaBase
-from riscv_isa_extension import RiscvIsaExtension
-from riscv_isa_operation_set import RiscvIsaOperationSet
-from riscv_operation import RiscvOperation
-from riscv_registers import RiscvRegisters
-from riscv_isa import RiscvIsa
+from .riscv_instruction_format import RiscvInstructionFormat
+from .riscv_isa_base import RiscvIsaBase
+from .riscv_isa_extension import RiscvIsaExtension
+from .riscv_isa_operation_set import RiscvIsaOperationSet
+from .riscv_operation import RiscvOperation
+from .riscv_registers import RiscvRegisters
+from .riscv_isa import RiscvIsa
 
 
 class RiscvIsaBuilder:

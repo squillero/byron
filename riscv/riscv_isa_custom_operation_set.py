@@ -5,12 +5,12 @@ from enum import Enum, Flag, auto
 from typing import Sequence, List, Dict, Set, Callable, Collection
 import byron
 from byron.classes import ParameterABC, Macro, ParameterStructuralABC, FrameABC
-from riscv_isa_operation_set import RiscvIsaOperationSet, RiscvOperation
+from .riscv_isa_operation_set import RiscvIsaOperationSet, RiscvOperation
 
 
-class RiscvIsaBase(RiscvIsaOperationSet):
-    RV32I = (
-        "RV32I",
+class RiscvIsaCustomOperationSet(RiscvIsaOperationSet):
+    BasicOp32 = (
+        "Custom set, basic operations 32bit, no jump or branch",
         [
             RiscvOperation.ADDI,
             RiscvOperation.SLTI,
@@ -21,8 +21,6 @@ class RiscvIsaBase(RiscvIsaOperationSet):
             RiscvOperation.SLLI,
             RiscvOperation.SRLI,
             RiscvOperation.SRAI,
-            RiscvOperation.LUI,
-            RiscvOperation.AUIPC,
             RiscvOperation.ADD,
             RiscvOperation.SLT,
             RiscvOperation.SLTU,
@@ -33,9 +31,11 @@ class RiscvIsaBase(RiscvIsaOperationSet):
             RiscvOperation.SRL,
             RiscvOperation.SUB,
             RiscvOperation.SRA,
-            # RiscvOperation.NOP,
-            RiscvOperation.JAL,
-            RiscvOperation.JALR,
+        ],
+    )
+    BasicBranch = (
+        "Standard branches",
+        [
             RiscvOperation.BEQ,
             RiscvOperation.BNE,
             RiscvOperation.BLT,
@@ -44,6 +44,4 @@ class RiscvIsaBase(RiscvIsaOperationSet):
             RiscvOperation.BGEU,
         ],
     )
-    RV32E = ("RV32E", [])
-    RV64I = ("RV64I", [*RV32I[1], *[]])
-    RV128I = ("RV128I", [])
+    BasicOp64 = ("Custom set, basic operations 64bit", [])

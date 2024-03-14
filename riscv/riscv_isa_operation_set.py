@@ -5,7 +5,7 @@ from enum import Enum, Flag, auto
 from typing import Sequence, List, Dict, Set, Callable, Collection
 import byron
 from byron.classes import ParameterABC, Macro, ParameterStructuralABC, FrameABC
-from riscv_isa_operation_set_data import RiscvIsaOperationSetData, RiscvOperation
+from .riscv_isa_operation_set_data import RiscvIsaOperationSetData, RiscvOperation
 
 
 class RiscvIsaOperationSet(RiscvIsaOperationSetData, Enum):
