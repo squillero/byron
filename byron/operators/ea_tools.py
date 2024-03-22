@@ -84,7 +84,8 @@ def group_selements(
     groups = defaultdict(lambda: defaultdict(list))
     for ind in individuals:
         for node, path in nx.single_source_dijkstra_path(ind.genome, 0).items():
-            groups[make_index(ind.genome, path)][ind].append(node)
+            if node_filter(ind.genome, node):
+                groups[make_index(ind.genome, path)][ind].append(node)
 
     # remove NodeZero
     for cleanup in {MacroZero, (MacroZero,)}:
