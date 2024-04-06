@@ -13,16 +13,15 @@ import pickle
 import byron
 
 
-class Integer2(byron.classes.FitnessABC, int):
-    """A single numeric value -- Larger is better."""
+asm_instruction = byron.f.macro(
+    "{inst} {reg}, 0x{imm:04x}",
+    inst=byron.f.choice_parameter(["add", "sub", "and", "or", "xor"]),
+    reg=byron.f.choice_parameter(["ax", "bx", "cx", "dx"]),
+    imm=byron.f.integer_parameter(0, 2**16),
+)
 
-    def __new__(cls, *args, **kw):
-        return int.__new__(cls, *args, **kw)
+section_proc = byron.f.sequence([byron.f.macro("proc {_node} near:"), byron.f.bunch(asm_instruction, 3), byron.f.macro("ret")], name="zap")
 
-    def _decorate(self):
-        return str(int(self))
+asm_call = byron.f.macro("call {target}", target=byron.f.global_reference("zap", creative_zeal=1))
 
-
-f = byron.fit.make_fitness(4)
-# f = Integer2(4)
-print(pickle.dumps(f))
+byron.f.as_forest(asm_call)
