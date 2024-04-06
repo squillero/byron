@@ -46,6 +46,7 @@ class SElementMeta(type):
     FORCED_PARENT: type | str | None
 
     _counters = defaultdict(int)
+    _directory = set()
 
     def __new__(cls, name, *args, **kwargs):
         # new_cls = super(SElementMeta, cls).__new__(cls, name, *args, **kwargs)

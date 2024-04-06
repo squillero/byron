@@ -56,6 +56,7 @@ __all__ = [
     'DEFAULT_EXTRA_PARAMETERS',
     'DEFAULT_OPTIONS',
     'LOG_LAPSES',
+    'SE_DIRECTORY'
 ]
 
 import logging
@@ -168,3 +169,7 @@ DEFAULT_EXTRA_PARAMETERS = {
 LOG_LAPSES = defaultdict(float)
 
 #####################################################################################################################
+
+assert "SE_DIRECTORY" not in globals(), f"SystemError (paranoia check): SElement Directory already initialized"
+SE_DIRECTORY = set()
+assert "SE_DIRECTORY" in globals(), f"SystemError (paranoia check): SElement Directory not initialized"

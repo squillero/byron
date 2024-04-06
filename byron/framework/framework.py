@@ -126,6 +126,8 @@ def alternative(
     else:
         T._patch_info(name="FrameAlternative#")
 
+    assert T not in SE_DIRECTORY, f"ValueError (paranoia check): Can't add {T}"
+    SE_DIRECTORY.add(T)
     return T
 
 
@@ -161,6 +163,8 @@ def sequence(
     else:
         T._patch_info(name="FrameSequence#")
 
+    assert T not in SE_DIRECTORY, f"ValueError (paranoia check): Can't add {T}"
+    SE_DIRECTORY.add(T)
     return T
 
 
@@ -242,6 +246,8 @@ def bunch(
     else:
         T._patch_info(name='MacroBunch#')
 
+    assert T not in SE_DIRECTORY, f"ValueError (paranoia check): Can't add {T}"
+    SE_DIRECTORY.add(T)
     return T
 
 

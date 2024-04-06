@@ -92,6 +92,8 @@ def _local_reference(
         name=f"LocalReference[{'<' if backward else '≮'}{'=' if self_loop else '≠'}{'>' if forward else '≯'}]"
     )
 
+    assert T not in SE_DIRECTORY, f"ValueError (paranoia check): Can't add {T}"
+    SE_DIRECTORY.add(T)
     return T
 
 
