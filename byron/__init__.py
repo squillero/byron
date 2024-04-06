@@ -171,3 +171,8 @@ if not joblib_available:
     user_messages.runtime_warning("No 'joblib': process-based parallel evaluators will not be available.")
 if not psutil_available:
     user_messages.runtime_warning("No 'psutil': comprehensive machine information will not be available.")
+
+#############################################################################
+# While debugging, let's use https://github.com/gruns/icecream
+from icecream import install
+install()
