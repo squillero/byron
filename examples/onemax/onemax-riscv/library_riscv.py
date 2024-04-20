@@ -11,16 +11,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import byron
-from riscv_isa_builder import (
-    RiscvIsaBase,
-    RiscvIsaBuilder,
-    RiscvIsa,
-    RiscvInstructionFormat,
-    RiscvRegisters,
-    RiscvIsaCustomOperationSet,
-    RiscvIsaExtension,
-    RiscvOperation,
-)
+from riscv.riscv_isa_builder import RiscvIsaBuilder, RiscvRegisters
+from riscv.riscv_isa_custom_operation_set import RiscvIsaCustomOperationSet
+
 
 COMMENT = '#'
 
@@ -140,7 +133,7 @@ jr ra
     riscv_isa = (
         RiscvIsaBuilder()
         .add_operation_set(RiscvIsaCustomOperationSet.BasicOp32)
-        .add_operation_set(RiscvIsaCustomOperationSet.BasicBranch)
+        # .add_operation_set(RiscvIsaCustomOperationSet.BasicBranch)
         # .add_operation(RiscvOperation.PSEUDO_J)
         # .add_extension(RiscvIsaExtension.M)
         .add_register_set(RiscvRegisters.ZERO)
@@ -159,7 +152,7 @@ jr ra
 
     core_main = byron.framework.bunch(
         op_pool,  # + op_JL_imm, op_JL_reg
-        size=(10, 15 + 1),
+        size=(2, 4 + 1),
         weights=op_pool_weight,  # +1...
     )
 
