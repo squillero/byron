@@ -209,30 +209,13 @@ def fasten_subtree_parameters(node_reference: NodeReference):
 
 def discard_useless_components(G: nx.MultiDiGraph) -> None:
     """Removes unconnected and unreached components"""
-    # TODO
-    # 0. nodi_attivi = { NODE_ZERO }
-    # 1. Estendi (diretto) da tutti i nodi attivi
-    # 2. Estendi (non diretto) da tutti i nodi attivi sequendo solo i link strutturali??? perche' consentiamo di risalire il subtree?? cosi' facendo arriviamo ad estendere a tutto l'albero
-    # 3. se cambiato -> torna a 1
-    # 4. rimuovi tutti i nodi non attivi
     H = nx.MultiDiGraph()
-    H.add_edges_from(G.edges(keys=False))
+    H.add_edges_from(G.out_edges(keys=False))
     H.remove_node(NODE_ZERO)
     node_zero, first_tree = next((u, v) for u, v in G.edges(NODE_ZERO))
     H.add_edge(node_zero, first_tree)
-    active_nodes = set()
-    structural_nodes_to_explore = {node_zero}
-    while len(structural_nodes_to_explore) > 0:
-        for n in structural_nodes_to_explore:
-            active_nodes |= nx.descendants(H, n) | {n}
-        structural_nodes_to_explore = set()
-        for node2 in active_nodes:
-            for node1 in tuple(u for u, v, k, d in G.in_edges(node2, keys=True, data='_type') if d == FRAMEWORK):
-                if node1 not in active_nodes:
-                    structural_nodes_to_explore.add(node1)
-
-    unconnected_nodes = H.nodes - active_nodes
-    G.remove_nodes_from(unconnected_nodes)
+    directly_connected_nodes = H.nodes - (nx.descendants(H, node_zero) | {node_zero})
+    G.remove_nodes_from(directly_connected_nodes)
 
 
 def discard_not_directly_connected_components(G: nx.MultiDiGraph) -> None:
