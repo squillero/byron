@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -42,6 +42,7 @@ from byron.classes.frame import *
 from byron.classes.evaluator import *
 from byron.fitness import make_fitness
 from byron.user_messages import logger as byron_logger
+from .common import take_operators
 from .selection import *
 
 
@@ -103,7 +104,8 @@ def vanilla_ea(
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
 
     # Initialize population
-    ops0 = [op for op in get_operators() if op.num_parents is None]
+    # ops0 = [op for op in get_operators() if op.num_parents is None]
+    ops0 = take_operators(True)
     gen0 = list()
     while len(gen0) < mu:
         o = rrandom.choice(ops0)
@@ -130,7 +132,8 @@ def vanilla_ea(
 
     # Let's roll
     while not any(s() for s in stopping_conditions):
-        ops = [op for op in get_operators() if op.num_parents is not None]
+        # ops = [op for op in get_operators() if op.num_parents is not None]
+        ops = take_operators(False)
         new_individuals = list()
         for step in range(lambda_):
             op = rrandom.choice(ops)

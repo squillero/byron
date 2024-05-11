@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -177,10 +177,13 @@ class ParameterStructuralABC(ParameterABC):
         return format(self.value, format_spec) if target is not None else "*UNSET*"
 
     def is_correct(self, obj: Any) -> bool:
-        assert check_valid_type(obj, int)
-        if not super().is_correct(obj):
-            return False
+        # if not super().is_correct(obj): -> ParameterABC does not have a is_correct() function
+        #    return False
         if not self.is_fastened:
             return False
-        # TODO: Da fare
+        target = self.value
+        if target is None:
+            return False
+        assert check_valid_type(obj, int)
+        # TODO: Da fare?
         return True

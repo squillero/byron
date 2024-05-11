@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -71,20 +71,25 @@ def group_selements(
 
     partial_filters = list()
     if only_direct_targets:
+        # only nodes that are targets (ie. with fanin > 1)
         partial_filters.append(lambda G, n: _is_target(G, n))
     if only_heads:
+        # only nodes that are heads (ie. the first node of a macro)
         partial_filters.append(lambda G, n: _is_head(G, n))
     node_filter = lambda G, n: all(f(G, n) for f in partial_filters)
 
     if choosy:
+        # group based on type path
         make_index = lambda G, path: tuple(G.nodes[v]['_selement'].__class__ for v in path)
     else:
+        # group based on type
         make_index = lambda G, path: ind.genome.nodes[path[-1]]['_selement'].__class__
 
     groups = defaultdict(lambda: defaultdict(list))
     for ind in individuals:
         for node, path in nx.single_source_dijkstra_path(ind.genome, 0).items():
             if node_filter(ind.genome, node):
+                # thanks dimitri!!!!
                 groups[make_index(ind.genome, path)][ind].append(node)
 
     # remove NodeZero

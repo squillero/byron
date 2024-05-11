@@ -1,5 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+#!/usr/bin/env bash
 #################################|###|#####################################
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
@@ -10,20 +9,19 @@
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import byron as byron
+# Compiles and runs a genome, kills it if it does not terminate swiftly
+TIMEOUT_CMD=timeout
+ALLOWED_TIME=3
+re='^[0-9]+\n*+'
 
+for file in "$@"; do
+    mipsel-linux-gnu-gcc -static "$file" main.c -o onemax.out
+    out="$($TIMEOUT_CMD $ALLOWED_TIME qemu-mipsel onemax.out 2>/dev/null)" || ( cp "$file" "problem-$file"; echo -1 )
+    if [[ $out =~ $re ]] ; then
+        echo $out
+    fi
+    grep -q 'nNone' "$file" && cp "$file" "nNone-$file"
+done
+rm onemax.out
 
-def test_evaluator_abstract_methods():
-    try:
-        evaluator = byron.classes.evaluator.EvaluatorABC()
-    except TypeError:
-        pass
-    else:
-        assert False, "EvaluatorABC should not be instantiable."
-
-    class MyEvaluator(byron.classes.evaluator.EvaluatorABC):
-        def evaluate(self, individuals):
-            return [byron.classes.fitness.FitnessABC() for i in individuals]
-
-    evaluator = MyEvaluator()
-    assert callable(evaluator.evaluate)
+exit 0

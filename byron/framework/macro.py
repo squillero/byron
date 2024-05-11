@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -34,6 +34,7 @@ from byron.global_symbols import FRAMEWORK
 from byron.user_messages import *
 from byron.classes.macro import Macro
 from byron.classes.parameter import ParameterABC
+from byron.classes.node_reference import NodeReference
 
 
 @cache
@@ -51,6 +52,8 @@ def _macro(
         M._patch_info(name='Text#')
     else:
         M._patch_info(name='User#')
+
+    M.add_node_check(_check_parameters)
 
     return M
 
@@ -100,3 +103,12 @@ def macro(text: str, **parameters: type[ParameterABC] | str) -> type[Macro]:
             extra_parameters.append((n, p))
 
     return _macro(text, tuple(sorted(macro_parameters)), tuple(sorted(extra_parameters)))
+
+
+def _check_parameters(node_ref: NodeReference):
+    # skip type and _selement because you don't need to check them
+    return all(
+        node_ref.node_attributes[p].is_correct(node_ref.node_attributes[p].value)
+        for p in node_ref.node_attributes
+        if p != '_type' and p != '_selement' and p != '%old_label'
+    )

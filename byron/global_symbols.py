@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -56,6 +56,7 @@ __all__ = [
     'DEFAULT_EXTRA_PARAMETERS',
     'DEFAULT_OPTIONS',
     'LOG_LAPSES',
+    'SE_DIRECTORY'
 ]
 
 import logging
@@ -63,11 +64,11 @@ import sys
 from collections import defaultdict
 import multiprocessing
 
-__version__ = "0.8a1.dev39"
-__date__ = "07-10-2023"
+__version__ = "0.8a1.dev45"
+__date__ = "25-01-2024"
 __codename__ = "Don Juan"
 __author__ = "Giovanni Squillero and Alberto Tonda"
-__copyright__ = "Copyright (c) 2023 Giovanni Squillero and Alberto Tonda"
+__copyright__ = "Copyright (c) 2023-24 Giovanni Squillero and Alberto Tonda"
 
 #####################################################################################################################
 # Auto-detected "modes"
@@ -168,3 +169,7 @@ DEFAULT_EXTRA_PARAMETERS = {
 LOG_LAPSES = defaultdict(float)
 
 #####################################################################################################################
+
+assert "SE_DIRECTORY" not in globals(), f"SystemError (paranoia check): SElement Directory already initialized"
+SE_DIRECTORY = set()
+assert "SE_DIRECTORY" in globals(), f"SystemError (paranoia check): SElement Directory not initialized"

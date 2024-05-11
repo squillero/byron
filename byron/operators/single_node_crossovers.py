@@ -10,10 +10,10 @@ from typing import Collection
 
 import networkx as nx
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -133,12 +133,12 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     # NOTE[GX]: replace link in node1_parent -> node1 with node1_parent -> node2 preserving links order
     node1_parent_complete_fanout = tuple(new_genome.edges(node1_parent_link[0], data=True, keys=True))
     for edge in node1_parent_complete_fanout:
-        new_genome.remove_edge(edge[0], edge[1], key=edge[2])  # ????remove
+        new_genome.remove_edge(edge[0], edge[1], key=edge[2])
     for edge in node1_parent_complete_fanout:
         if edge == node1_parent_link:
             new_genome.add_edge(edge[0], node2, edge[2], **edge[3])
         else:
-            new_genome.add_edge(edge[0], edge[1], key=edge[2], **edge[3])  # ?????? than re-add
+            new_genome.add_edge(edge[0], edge[1], key=edge[2], **edge[3])
     discard_useless_components(new_genome)
 
     if not get_structure_tree(new_genome):
@@ -160,14 +160,17 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
 
 @genetic_operator(num_parents=2)
 def node_crossover_choosy(parent1: Individual, parent2: Individual):
+    # Swaps two node with exactly the same path-type (ie. parents must be of the same types)
     return _generic_node_crossover(parent1, parent2, choosy=True, link_type=LINK)
 
 
 @genetic_operator(num_parents=2)
 def node_crossover_unfussy(parent1: Individual, parent2: Individual):
+    # Swaps two target nodes of the same type
     return _generic_node_crossover(parent1, parent2, choosy=False, link_type=LINK)
 
 
 @genetic_operator(num_parents=2)
 def leaf_crossover_unfussy(parent1: Individual, parent2: Individual):
-    return _generic_node_crossover(parent1, parent2, choosy=False, link_type=FRAMEWORK)  # ????????????? choosy false
+    # Swaps two generic nodes of the same type
+    return _generic_node_crossover(parent1, parent2, choosy=False, link_type=FRAMEWORK)

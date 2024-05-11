@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -85,6 +85,7 @@ class Age:
 
     def __iadd__(self, generations):
         self.apparent_age += generations
+        return self
 
     def __str__(self):
         return f'⚝ {self.birth}' + (f' (⌛ {self.apparent_age})' if self.apparent_age else '')
@@ -100,7 +101,7 @@ class Individual(Paranoid):
     All tree root nodes are connected to "Node Zero" -- thus, technically, it is not a forest, but a single tree :$
 
     Edges of `kind=FRAMEWORK` store the structure, while edges of `kind=LINK` store parameters and other references
-    -- thus, technically, the individual is not even a tree, but a weekly-connected multigraph that may contains
+    -- thus, technically, the individual is not even a tree, but a weakly-connected multigraph that may contains
     loops ://)
 
     Individuals are created by passing a reference to the top frame. Please note that frames are types, and their
@@ -230,8 +231,8 @@ class Individual(Paranoid):
         return self._age
 
     @age.setter
-    def age(self, value: int):
-        assert value >= 0
+    def age(self, value: Age):
+        assert value is not None
         self._age = value
 
     @property
@@ -302,6 +303,9 @@ class Individual(Paranoid):
 
     #######################################################################
     # PUBLIC METHODS
+
+    def aging(self, step: int = 1):
+        self.age += step
 
     def run_paranoia_checks(self) -> bool:
         # ==[check genome (structural)]======================================

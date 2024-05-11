@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
@@ -10,26 +8,25 @@
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import _byron as byron
+SHELL=/bin/sh
+CFLAGS = -O3
 
+# GNU timeout is /opt/homebrew/bin/gtimeout in GX's machine
+TIMEOUT_CMD=gtimeout
+ALLOWED_TIME=3
 
-class MyFitness(byron.classes.FitnessABC):
-    def __init__(self, value):
-        self.value = value
+.PHONY: run compile _clean
 
-    def calculate(self, individual):
-        pass
+run: compile
+	${TIMEOUT_CMD} ${ALLOWED_TIME} qemu-mipsel $(name) || echo -1
 
-    @classmethod
-    def is_fitter(cls, fitness1, fitness2):
-        pass
+compile: onemax.s main.c
+		mipsel-linux-gnu-gcc -static $@ $^ -o $(name)
 
+clean: _clean
 
-def test_fitness_function():
-    @byron.decorators.fitness_function(MyFitness)
-    def my_fitness_function():
-        return MyFitness(42)
-
-    fitness_object = my_fitness_function()
-
-    assert isinstance(fitness_object, MyFitness)
+_clean:
+	-rm -f $(name)
+	-rm -f *.o *.out
+	-rm -f *ind*[a-f0-9]*.s
+	-rm -f *.svg *.png

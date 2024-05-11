@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -46,6 +46,7 @@ class Population:
     _fitness_function: Callable[[Any], FitnessABC]
     _individuals: list[Individual]
     _memory: set | None
+    _generation: int
 
     def __init__(self, top_frame: type[SElement], extra_parameters: dict | None = None, *, memory: bool = False):
         assert check_valid_types(top_frame, SElement, subclass=True)
@@ -178,3 +179,14 @@ class Population:
             sorted_ += sorted(pareto, key=lambda i: (i.fitness, -i.id))
 
         self._individuals = sorted_
+
+    def aging(self, step: int = 1, top_n: int = None):
+        for i in self._individuals[top_n:]:
+            i.aging(step)
+
+    def get_elders(self, lifespan: int, top_n: int = None) -> list[Individual]:
+        return [i for i in self._individuals[top_n:] if i.age.apparent_age > lifespan]
+
+    def life_cycle(self, lifespan: int, step: int = 1, top_n: int = None):
+        self.aging(step, top_n)
+        self -= self.get_elders(lifespan, top_n)

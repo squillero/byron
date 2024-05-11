@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -28,7 +28,6 @@
 __all__ = [
     '_get_first_macro',
     'discard_useless_components',
-    'discard_not_directly_connected_components',
     'fasten_subtree_parameters',
     'get_all_frames',
     'get_all_macros',
@@ -44,7 +43,6 @@ __all__ = [
     'set_successors_order',
 ]
 
-import copy
 from collections.abc import Sequence
 from functools import lru_cache
 from collections import deque
@@ -218,22 +216,9 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
     G.remove_nodes_from(directly_connected_nodes)
 
 
-def discard_not_directly_connected_components(G: nx.MultiDiGraph) -> None:
-    """Removes unconnected and not directly reachable components"""
-    H = nx.MultiDiGraph()
-    H.add_edges_from(G.out_edges(keys=False))
-    H.remove_node(NODE_ZERO)
-    node_zero, first_tree = next((u, v) for u, v in G.edges(NODE_ZERO))
-    H.add_edge(node_zero, first_tree)
-    directly_connected_nodes = H.nodes - (nx.descendants(H, node_zero) | {node_zero})
-    G.remove_nodes_from(directly_connected_nodes)
-
-
 def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:
     tree = make_digraph(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK))
-    if not nx.is_branching(tree):
-        return None
-    if not nx.is_weakly_connected(tree):
+    if not nx.is_branching(tree) or not nx.is_weakly_connected(tree):
         return None
     return tree
 
