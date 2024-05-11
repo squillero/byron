@@ -155,19 +155,6 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
         logger.debug(f"generic_node_crossover: Failed (invalid individual)")
         return list()
 
-    params = {
-        '_comment': '#',
-        '_label': '{_node}:\n',
-        '_text_before_macro': '',
-        '_text_after_macro': '\n',
-        '_text_before_frame': '',
-        '_text_after_frame': '',
-        '_text_before_node': '',
-        '_text_after_node': '',
-        '$dump_node_info': True,
-    }
-    phenotype = new_individual.dump(params)
-    new_individual.as_lgp("i3i1.png")
     return [new_individual]
 
 
