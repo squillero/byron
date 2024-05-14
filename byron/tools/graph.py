@@ -207,19 +207,13 @@ def fasten_subtree_parameters(node_reference: NodeReference):
 
 def discard_useless_components(G: nx.MultiDiGraph) -> None:
     """Removes unconnected and unreached components"""
-    # TODO
-    # 0. nodi_attivi = { NODE_ZERO }
-    # 1. Estendi (diretto) da tutti i nodi attivi
-    # 2. Estendi (non diretto) da tutti i nodi attivi sequendo solo i link strutturali
-    # 3. se cambiato -> torna a 1
-    # 4. rimuovi tutti i nodi non attivi
     H = nx.MultiDiGraph()
-    H.add_edges_from(G.edges(keys=False))
+    H.add_edges_from(G.out_edges(keys=False))
     H.remove_node(NODE_ZERO)
     node_zero, first_tree = next((u, v) for u, v in G.edges(NODE_ZERO))
     H.add_edge(node_zero, first_tree)
-    unconnected_nodes = H.nodes - (nx.descendants(H, node_zero) | {node_zero})
-    G.remove_nodes_from(unconnected_nodes)
+    directly_connected_nodes = H.nodes - (nx.descendants(H, node_zero) | {node_zero})
+    G.remove_nodes_from(directly_connected_nodes)
 
 
 def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:

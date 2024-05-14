@@ -299,6 +299,7 @@ class MakefileEvaluator(EvaluatorABC):
     *   `make_flags`: Flags for make. Default is just ``'-s'`` (be quiet)
     *   `makefile`: Name of the Makefile itself
     *   `timeout`: Number of seconds to wait for make completion (default: 60, use ``None`` to wait indefinitely)
+    *   `stdout_cleaner`: Callable function to clean the stdout, of the executed program, into an evaluable output if needed
 
     Use option `strip_phenotypes` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to convert the phenotype into a
     single-line string.
@@ -319,6 +320,7 @@ class MakefileEvaluator(EvaluatorABC):
     _make_flags: tuple[str]
     _makefile: str
     _required_files: tuple[str]
+    _stdout_cleaner: Callable[[str], Sequence[float] | float] | None
     _byron_base_dir: str
     _timeout: int | None
 
@@ -330,6 +332,7 @@ class MakefileEvaluator(EvaluatorABC):
         make_command='make',
         make_flags: Sequence[str] = ('-s',),
         makefile='Makefile',
+        stdout_cleaner: Callable[[str], Sequence[float] | float] | None = None,
         timeout: int | None = 60,
         **kwargs,
     ) -> None:
@@ -346,6 +349,8 @@ class MakefileEvaluator(EvaluatorABC):
             Name of the makefile
         required_files
             Files that need to be present for the makefile to work in addition to `makefile` and `filename`
+        stdout_cleaner
+            Callable function to clean the stdout
         timeout
             Seconds to wait for make completion (``None`` indefinitely)
         kwargs
@@ -359,6 +364,7 @@ class MakefileEvaluator(EvaluatorABC):
         self._required_files = tuple(required_files)
         self._timeout = timeout
         self._byron_base_dir = os.getcwd()
+        self._stdout_cleaner = stdout_cleaner
 
         for f in self._required_files:
             if not os.path.exists(f):
@@ -419,9 +425,12 @@ class MakefileEvaluator(EvaluatorABC):
                 if result is None:
                     raise RuntimeError(f"Thread failed (returned None)")
                 else:
-                    value = [float(r) for r in result.stdout.split()]
-                    if len(value) == 1:
-                        value = value[0]
+                    if self._stdout_cleaner is None:
+                        value = [float(r) if '.' in r else int(r) for r in result.stdout.split()]
+                        if len(value) == 1:
+                            value = value[0]
+                    else:
+                        value = self._stdout_cleaner(result.stdout)
                     fitness = make_fitness(value)
                     population[i].fitness = fitness
 

@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
-#   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
-#        |_____|                    \|/                                    #
-#################################### ' #####################################
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+from typing import Collection
+
 import networkx as nx
 
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
@@ -37,7 +39,7 @@ from byron.tools.graph import *
 from byron.user_messages import *
 
 
-def _connected_nodes(G: nx.MultiDiGraph, n: Node | int) -> list[Node | int]:
+def _connected_nodes(G: nx.MultiDiGraph, n: Node | int) -> Collection[Node | int]:
     graph = nx.Graph((u, v) for u, v, t in G.edges(data='_type') if t == FRAMEWORK)
     # graph.add_nodes_from((n, NODE_ZERO))  # NOTE[GX]: Better safe than sorry
     graph.remove_node(NODE_ZERO)
@@ -54,6 +56,8 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
         if len(elements) < 2:
             continue
         for ind, nodes in elements.items():
+            if 664 in nodes:
+                pass
             plausible_nodes = [
                 n for n in nodes if link_type in set(t for u, v, t in ind.genome.in_edges(n, data='_type'))
             ]
@@ -80,12 +84,44 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     #    [(u, v, k, d) for u, v, k, d in node2_fanin if d['_type'] == node1_parent_link[3]['_type']]
     # )
 
-    # TODO: !!!
     # 1. trovare i successori di node2
-    # 2. S = {node2, tutti i suoi successori} -- componente connessa che contiene node2?
-    # 3. rimuovere tutti i link entranti in S che non partono da S
-    for node, key in tuple((u, k) for u, v, k, d in new_genome.in_edges(node2, keys=True, data='_type') if d == LINK):
-        new_genome.remove_edge(node, node2, key)
+    # 2. trovare il nodo p1 = parent strutturale di node1
+    # 3. per S = {node2, tutti i suoi successori} definire P = {parents strutturali di ogni nodo di S}
+    # 4. dato P' = P - S, se P' != {p2(parent strutturale di node 2)} => fallisce
+    # 5. scollegare i nodi che possiedono parent strutturale p2 da esso e collegarli al p1
+    new_nodes_of_P2 = nx.descendants(new_genome, node2) | {node2}
+    node1_parent = node1_parent_link[0]
+    node1_parent_struct = [
+        u for u, v, k, d in new_genome.in_edges(node1_parent, keys=True, data='_type') if d == FRAMEWORK
+    ]
+    if len(node1_parent_struct) != 1:
+        logger.debug(f"generic_node_crossover: Failed (node 1 have many structural parent)")
+        raise ByronOperatorFailure
+    node1_parent_struct = node1_parent_struct[0]
+    node2_parent_struct = [u for u, v, k, d in new_genome.in_edges(node2, keys=True, data='_type') if d == FRAMEWORK]
+    if len(node2_parent_struct) != 1:
+        logger.debug(f"generic_node_crossover: Failed (node 2 have many structural parent)")
+        raise ByronOperatorFailure
+    node2_parent_struct = node2_parent_struct[0]
+
+    parents_struct = set()
+    for new_node in new_nodes_of_P2:
+        parent_struct = [
+            (u, k) for u, v, k, d in new_genome.in_edges(new_node, keys=True, data='_type') if d == FRAMEWORK
+        ]
+        if len(parent_struct) != 1:
+            logger.debug(f"generic_node_crossover: Failed (new successor have many structural parent)")
+            raise ByronOperatorFailure
+        parent_struct = parent_struct[0]
+        parents_struct.add(parent_struct[0])
+        if (parent_struct[0]) == node2_parent_struct:
+            new_genome.remove_edge(node2_parent_struct, new_node, parent_struct[1])
+            new_genome.add_edge(node1_parent_struct, new_node, parent_struct[1], **{'_type': FRAMEWORK})
+
+    different_parent_struct = parents_struct - new_nodes_of_P2
+    if different_parent_struct != {node2_parent_struct}:
+        logger.debug(f"generic_node_crossover: Failed (invalid structure)")
+        raise ByronOperatorFailure
 
     logger.debug(
         f"generic_node_crossover: "
