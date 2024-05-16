@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -86,7 +86,7 @@ def _local_reference(
             if strength == 1 or self.value is None:
                 self.value = rrandom.choice(pt, None)
             else:
-                self.value = rrandom.sigmachoice(pt, pt.index(self.value), strength)
+                self.value = rrandom.choice(pt, pt.index(self.value), strength=strength)
 
     T._patch_info(
         name=f"LocalReference[{'<' if backward else '≮'}{'=' if self_loop else '≠'}{'>' if forward else '≯'}]"

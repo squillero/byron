@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -672,7 +672,7 @@ class ParallelScriptEvaluator(EvaluatorABC):
                         + f"\n[red]---[/red]\n{result.stderr}\n[red]---[/red]"
                     )
                     result.stdout = self._default_result + '\n'
-                elif not self._default_result:
+                elif result.returncode and not self._default_result:
                     logger.error(f"ParallelScriptEvaluator: failed to evaluate {population[i]}")
                     logger.error(
                         f"command \"{result.cmdline}\" exit status: {result.returncode}"

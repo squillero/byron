@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -64,7 +64,7 @@ def test_randy_choice():
     alphabet = "ABCDEFGHIJKLMNOPQRTUVWXYZ"
     for _ in range(10):
         for i, c in enumerate(alphabet):
-            val = byron.rrandom.choice(alphabet, loc=i, sigma=0)
+            val = byron.rrandom.choice(alphabet, loc=i, strength=0)
             assert val == c
 
 

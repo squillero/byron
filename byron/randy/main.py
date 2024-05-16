@@ -8,7 +8,7 @@
 #  ( >__< )    水の音
 #
 # https://github.com/squillero/randy
-# Copyright 2023 Giovanni Squillero.
+# Copyright 2023-24 Giovanni Squillero.
 # SPDX-License-Identifier: 0BSD
 
 import math
@@ -101,29 +101,29 @@ class Randy:
         assert self._save_state()
 
     @staticmethod
-    def _check_parameters(a, b, *, loc: float | None = None, scale: float | None = None, sigma: float | None = None):
-        assert a <= b, "ValueError (paranoia check): 'a' must precede 'b': found ({a}, {b})"
+    def _check_parameters(a, b, *, loc: float | None = None, scale: float | None = None, strength: float | None = None):
+        assert a <= b, f"ValueError (paranoia check): 'a' must precede 'b': found ({a}, {b})"
         assert not (
-            scale is not None and sigma is not None
-        ), "ValueError (paranoia check): 'scale' and 'sigma' cannot be both specified"
+            scale is not None and strength is not None
+        ), "ValueError (paranoia check): 'scale' and 'strength' cannot be both specified"
         assert (
-            sigma is None or 0 <= sigma <= 1
-        ), f"ValueError (paranoia check): strength (σ) should be in [0, 1]. Found {sigma}"
-        assert loc is None or a <= loc <= b, "ValueError (paranoia check): 'loc' not in [{a}, {b}]"
-        assert scale is None or scale >= 0, "ValueError (paranoia check): scale must be positive. Found {scale}"
+            strength is None or 0 <= strength <= 1
+        ), f"ValueError (paranoia check): strength (σ) should be in [0, 1]. Found {strength}"
+        assert loc is None or a <= loc <= b, f"ValueError (paranoia check): 'loc' ({loc}) not in [{a}, {b}]"
+        assert scale is None or scale >= 0, f"ValueError (paranoia check): scale must be positive. Found {scale}"
 
-        assert (loc is None and sigma is None and scale is None) or (
-            loc is not None and (sigma is not None or scale is not None)
+        assert (loc is None and strength is None and scale is None) or (
+            loc is not None and (strength is not None or scale is not None)
         ), "ValueError (paranoia check): 'loc' and 'scale'/'strength' not specified together"
         return True
 
     @staticmethod
     def get_truncnorm_parameters(
-        a: float, b: float, *, loc: float, scale: float | None = None, sigma: float | None = None
+        a: float, b: float, *, loc: float, scale: float | None = None, strength: float | None = None
     ) -> dict:
         r"""Returns the 'a', 'b', 'loc', and 'scale' to be passed to 'truncnorm'"""
-        if sigma is not None:
-            x = sigma / 2 + 0.5
+        if strength is not None:
+            x = strength / 2 + 0.5
             x = min(x, 1 - Randy.SMALL_NUMBER)
             scale = math.log(x / (1 - x))
             if math.isclose(scale, 0):
@@ -137,17 +137,17 @@ class Randy:
         *,
         loc: float | None = None,
         scale: float | None = None,
-        sigma: float | None = None,
+        strength: float | None = None,
     ) -> float:
         """A value from a standard normal truncated to [a, b) with mean = 'loc' and standard deviation = 'scale'."""
         self._calls += 1
         assert self._check_saved_state()
-        assert Randy._check_parameters(a, b, loc=loc, scale=scale, sigma=sigma)
+        assert Randy._check_parameters(a, b, loc=loc, scale=scale, strength=strength)
         if loc is None:
             val = self._generator.random() * (b - a) + a
         else:
             val = truncnorm.ppf(
-                self._generator.random(), **Randy.get_truncnorm_parameters(a, b, loc=loc, scale=scale, sigma=sigma)
+                self._generator.random(), **Randy.get_truncnorm_parameters(a, b, loc=loc, scale=scale, strength=strength)
             )
         assert self._save_state()
         return val
@@ -157,9 +157,10 @@ class Randy:
         val = self.random_float(a - 0.5, b - 0.5, **kwargs)
         return round(val)
 
-    def choice(self, seq: Sequence[Any], loc: int | None = None, sigma: float | None = None) -> Any:
+    def choice(self, seq: Sequence[Any], loc: int | None = None, strength: float | None = None) -> Any:
         """Returns a random element from seq by perturbing index loc with a given strength."""
-        index = self.random_int(0, len(seq), loc=loc, sigma=sigma)
+        assert loc is None or strength == 1 or 0 <= loc < len(seq), f"ValueError (paranoia check): loc ({loc}) out of range"
+        index = self.random_int(0, len(seq), loc=loc, strength=strength)
         return seq[index]
 
     def boolean(self, p_true: float | None = None, p_false: float | None = None) -> bool:

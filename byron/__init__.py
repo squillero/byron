@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -31,11 +31,7 @@ import logging
 from byron import sys
 
 # noinspection PyUnresolvedReferences
-from byron.functions import *
-
-# noinspection PyUnresolvedReferences
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 
 # noinspection PyUnresolvedReferences
 from byron.classes.node import NODE_ZERO

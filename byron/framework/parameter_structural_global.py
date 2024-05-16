@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -105,7 +105,7 @@ def _global_reference(
             if strength == 1.0:
                 target = rrandom.choice(potential_targets)
             else:
-                target = rrandom.choice(potential_targets, self.value, sigma=strength)
+                target = rrandom.choice(potential_targets, potential_targets.index(self.value), strength=strength)
             if target is None:
                 # get_all_macros(G, root=f, data=False, node_id=True)
                 new_node = unroll_selement(self._target_frame, self._node_reference.graph)

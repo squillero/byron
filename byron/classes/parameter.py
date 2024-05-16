@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -88,7 +88,7 @@ class ParameterABC(SElement, Paranoid):
 
     @abstractmethod
     def mutate(self, strength: float = 1.0) -> None:
-        pass
+        raise NotImplementedError
 
 
 class ParameterNumericABC(ParameterABC):

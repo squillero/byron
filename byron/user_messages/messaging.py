@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -122,12 +122,10 @@ else:
 from rich import logging as rich_logging
 from rich import highlighter as rich_highlighter
 
-
 # console_handler = logging.StreamHandler()
 # console_handler.setFormatter(console_formatter)
 if notebook_mode:
     console_handler = logging.StreamHandler()
-    # console_formatter = logging.Formatter('%(asctime)s ▷ %(levelname)s ▷ %(name)s::%(message)s', datefmt='%H:%M:%S')
     console_formatter = logging.Formatter('%(levelname)s ▷ %(message)s')
 else:
     console_handler = rich_logging.RichHandler(
@@ -138,6 +136,7 @@ else:
         highlighter=rich_highlighter.NullHighlighter(),
         keywords=['▷'],
     )
+    #console_handler.overflow = 'ignore'
     console_formatter = logging.Formatter('▷ %(message)s')
 console_handler.setFormatter(console_formatter)
 logger.handlers = [console_handler]

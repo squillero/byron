@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -155,6 +155,7 @@ def vanilla_ea(
         population.sort()
         population.individuals[mu:] = []
         best = population[0]
+        #ic(best.fitness, f"{best.fitness}", old_best.fitness, f"{old_best.fitness}")
         if best.fitness >> old_best.fitness:
             _new_best(population, evaluator)
 

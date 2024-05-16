@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -147,7 +147,7 @@ def _choice_parameter(alternatives: tuple[Hashable]) -> type[ParameterABC]:
             if strength == 1.0:
                 self.value = rrandom.choice(alternatives)
             else:
-                self.value = rrandom.choice(alternatives, loc=alternatives.index(self._value), sigma=strength)
+                self.value = rrandom.choice(alternatives, loc=alternatives.index(self._value), strength=strength)
 
     # NOTE[GX]: alternative symbol: – (not a minus!)
     T._patch_info(name='Choice[' + '┊'.join(str(a) for a in alternatives) + ']')

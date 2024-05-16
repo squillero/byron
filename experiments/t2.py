@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -79,7 +79,7 @@ I0.as_lgp(filename="code.png", figsize=(25, 15), bbox_inches="tight")
 
 byron.rrandom.seed()
 print(I0 == I1)
-I1.G.dfs_nodes[19]["_macro"].population_extra_parameters["target"].mutate(1)
+I1.G.dfs_nodes[19]["_macro"].population_extra_parameters["target"].safe_mutate(1)
 print(I0 == I1)
 
 with open("p0.s", "w") as F:

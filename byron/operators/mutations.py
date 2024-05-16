@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -25,29 +25,42 @@
 # HISTORY
 # v1 / June 2023 / Squillero (GX)
 
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.operators.graph_tools import *
 from byron.user_messages import *
 from byron.classes import *
 from byron.registry import *
-from byron.functions import *
 from byron.randy import rrandom
 from byron.tools.graph import *
 
-from networkx import dfs_preorder_nodes
+from copy import deepcopy
 from collections import Counter
 from math import ceil, floor
+from networkx import dfs_preorder_nodes
 
 
 @genetic_operator(num_parents=1)
 def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
+    """Mutates a parameter
+
+    The function tries at least 100 times to change the parameter by calling `mutate` with the given strength.
+    However, if `strength` is 0, `mutate` is not called at all and the parameter is left untouched.
+
+    strength
+        the strength of the mutation
+    """
+
     offspring = parent.clone
-    candidates = offspring.parameters
-    if not candidates:
+    if not offspring.parameters:
         raise ByronOperatorFailure
-    param = rrandom.choice(candidates)
-    mutate(param, strength=strength)
+
+    parameter = rrandom.choice(offspring.parameters)
+    old_value = deepcopy(parameter.value)
+    parameter.mutate(strength=strength)
+    if strength > 0 and parameter.value == old_value:
+        if strength < 1:
+            ic(parameter, parameter.value)
+        raise ByronOperatorFailure
+
     return [offspring]
 
 
@@ -59,11 +72,18 @@ def single_element_array_parameter_mutation(parent: Individual, strength=1.0) ->
     candidates = [p for p in offspring.parameters if isinstance(p, ParameterArrayABC)]
     if not candidates:
         raise ByronOperatorFailure
+
     param = rrandom.choice(candidates)
+    old_value = list(parameter.value)
     new_value = list(param.value)
     for _ in range(ceil(len(param.value) // ext_mutation)):
         i = rrandom.random_int(0, len(param.value))
         new_value[i] = rrandom.choice(param.DIGITS)
+
+    if strength > 0 and parameter.value == old_value:
+        ic(parameter, parameter.value)
+        raise ByronOperatorFailure
+
     param.value = ''.join(new_value)
 
     return [offspring]

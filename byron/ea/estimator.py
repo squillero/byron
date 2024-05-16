@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -145,7 +145,7 @@ class Estimator:
         ].operator
 
     # TODO: Remove use_entropy when entropy will be fully implemented
-    def sigma(self, use_entropy) -> float:
+    def strength(self, use_entropy) -> float:
         self._update()
         # check fitness but also check entropy to avoid excessive reduction in diversity in the population
         if self._near is not None and self._population[0].fitness > self._near:

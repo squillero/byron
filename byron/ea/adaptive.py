@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
 #  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
@@ -134,14 +134,14 @@ def adaptive_ea(
     # begin evolution!
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
-        sigma = ext.sigma(entropy)
+        strength = ext.strength(entropy)
         for _ in range(lambda_):
             op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
                 parents.append(tournament_selection(population, 1))
             if 'strength' in signature(op).parameters:
-                new_individuals += op(*parents, strength=sigma)
+                new_individuals += op(*parents, strength=strength)
             else:
                 new_individuals += op(*parents)
 

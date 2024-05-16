@@ -10,6 +10,9 @@
 
 SHELL=/bin/sh
 
+fmt:
+	go fmt *.go
+
 clean:
 	-rm -f individual[0-9]*.go saved-individual[0-9]*.go
 	-rm -f *-ind*[a-f0-9]*.go
