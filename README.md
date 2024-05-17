@@ -4,6 +4,7 @@
 [![Codename](https://img.shields.io/badge/codename-Don_Juan-pink.svg)](https://en.wikipedia.org/wiki/Don_Juan_(poem))
 [![PyPI - Status](https://img.shields.io/pypi/status/byron)](https://en.wikipedia.org/wiki/Software_release_life_cycle)
 [![GitHub License](https://img.shields.io/github/license/squillero/byron)](https://opensource.org/licenses/)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcad-polito-it%2Fbyron.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcad-polito-it%2Fbyron?ref=badge_shield)
 [![GitHub repo size](https://img.shields.io/github/repo-size/squillero/byron)](https://github.com/squillero/byron)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/byron)](https://www.python.org/)
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/squillero/byron/pytest.yml?label=pytest)

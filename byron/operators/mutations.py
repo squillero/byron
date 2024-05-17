@@ -57,7 +57,6 @@ def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individ
     old_value = deepcopy(parameter.value)
     parameter.mutate(strength=strength)
     if strength > 0 and parameter.value == old_value:
-        ic(strength, parameter, parameter.value)
         raise ByronOperatorFailure
 
     return [offspring]
@@ -72,18 +71,17 @@ def single_element_array_parameter_mutation(parent: Individual, strength=1.0) ->
     if not candidates:
         raise ByronOperatorFailure
 
-    param = rrandom.choice(candidates)
+    parameter = rrandom.choice(candidates)
     old_value = list(parameter.value)
-    new_value = list(param.value)
-    for _ in range(ceil(len(param.value) // ext_mutation)):
-        i = rrandom.random_int(0, len(param.value))
-        new_value[i] = rrandom.choice(param.DIGITS)
+    new_value = list(parameter.value)
+    for _ in range(ceil(len(parameter.value) // ext_mutation)):
+        i = rrandom.random_int(0, len(parameter.value))
+        new_value[i] = rrandom.choice(parameter.DIGITS)
 
     if strength > 0 and parameter.value == old_value:
-        ic(strength, parameter, parameter.value)
         raise ByronOperatorFailure
 
-    param.value = ''.join(new_value)
+    parameter.value = ''.join(new_value)
 
     return [offspring]
 
