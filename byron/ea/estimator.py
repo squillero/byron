@@ -6,7 +6,7 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-# Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -116,7 +116,6 @@ class Estimator:
             return max_l
 
     def _update(self):
-
         if self._time < self._population.generation:
             self._time = self._population.generation
 
@@ -138,7 +137,7 @@ class Estimator:
             # every quarter of the run check again also discarded operators
             if self._time % ceil(self._horizon / 4) == 0:
                 self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
-        
+
     def take(self) -> Callable:
         return self._operators[
             rrandom.weighted_choice([p[0] for p in self._probabilities], [p[1] for p in self._probabilities])

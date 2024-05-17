@@ -111,7 +111,7 @@ from byron.tools.entropy import *
 
 __welcome__ = (
     f'[bold]This is Byron v{__version__.rsplit(".", maxsplit=1)[0]} "[italic]{__codename__}[/italic]"[/]\n'
-    + f"[bold](c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
+    + f"[bold](c) 2023-24 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
 )
 
 
@@ -171,4 +171,5 @@ if not psutil_available:
 #############################################################################
 # While debugging, let's use https://github.com/gruns/icecream
 from icecream import install
+
 install()

@@ -6,7 +6,7 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-# Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -57,8 +57,7 @@ def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individ
     old_value = deepcopy(parameter.value)
     parameter.mutate(strength=strength)
     if strength > 0 and parameter.value == old_value:
-        if strength < 1:
-            ic(parameter, parameter.value)
+        ic(strength, parameter, parameter.value)
         raise ByronOperatorFailure
 
     return [offspring]
@@ -81,7 +80,7 @@ def single_element_array_parameter_mutation(parent: Individual, strength=1.0) ->
         new_value[i] = rrandom.choice(param.DIGITS)
 
     if strength > 0 and parameter.value == old_value:
-        ic(parameter, parameter.value)
+        ic(strength, parameter, parameter.value)
         raise ByronOperatorFailure
 
     param.value = ''.join(new_value)
@@ -91,7 +90,6 @@ def single_element_array_parameter_mutation(parent: Individual, strength=1.0) ->
 
 @genetic_operator(num_parents=1)
 def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
-
     offspring = parent.clone
     G = offspring.genome
     candidates = [
@@ -123,7 +121,7 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
         # randomly select a macro. The less the strength, the less the variety of macros
         new_macro_type = rrandom.choice(macro_fo[: ceil(len(macro_fo) * strength)])
 
-   # new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
+    # new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
 
     new_macro_reference = unroll_selement(new_macro_type, G)
     G.add_edge(node, new_macro_reference.node, _type=FRAMEWORK)
