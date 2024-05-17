@@ -4,11 +4,11 @@
 > *But nothing seems to satisfy*  
 > *Think I'll lose my mind if I don't*  
 > *Find something to pacify*  
-> 
-> *Can you help me occupy my brain?*  
-> *Oh, yeah*  
 
 In **production**, Byron is typically run from a non-interactive script, for example on a server with ssh access. In this context, performance is critical, while verbosity should be minimal. During **setup**, on the other hand, the user needs to check the various parameters and the coherence of the constraints. Here, speed is not essential, while warnings and hints can be quite useful. 
+
+> *Can you help me occupy my brain?*  
+> *Oh, yeah*  
 
 Byron's *paranoia checks* are computationally intensive routines that thoroughly analyze and verify both the integrity of internal data structures and parameter values, and provide error messages and hints. *Paranoia checks* are intended to be used during setup and are automatically removed when an optimization flag is specified..
 

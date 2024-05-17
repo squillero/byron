@@ -60,18 +60,12 @@ def _numeric(*, type_, min_, max_):
         if type_ == int:
 
             def mutate(self, strength: float = 1.0) -> None:
-                if strength == 1.0:
-                    self.value = rrandom.random_int(min_, max_)
-                else:
-                    self.value = rrandom.random_int(min_, max_, loc=self._value, strength=strength)
+                self.value = rrandom.random_int(min_, max_, loc=self._value, strength=strength)
 
         elif type_ == float:
 
             def mutate(self, strength: float = 1.0) -> None:
-                if strength == 1.0:
-                    self.value = rrandom.random_float(min_, max_)
-                else:
-                    self.value = rrandom.random_float(min_, max_, loc=self._value, strength=strength)
+                self.value = rrandom.random_float(min_, max_, loc=self._value, strength=strength)
 
     if type_ == int and min_ == 0 and any(max_ == 2**n for n in range(4, 128 + 1)):
         p = next(n for n in range(4, 128 + 1) if max_ == 2**n)
