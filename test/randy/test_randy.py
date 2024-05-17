@@ -11,6 +11,7 @@
 
 import random
 import byron as byron
+import numpy as np
 
 BATCH_SIZE = 4096
 
@@ -47,7 +48,8 @@ def test_independence():
     v1 = [byron.rrandom.random_float() for _ in range(BATCH_SIZE)]
     byron.rrandom.seed(seed)
     v2_1 = [byron.rrandom.random_float() for _ in range(BATCH_SIZE // 2)]
-    z = [random.random() for _ in range(BATCH_SIZE)]
+    z1 = [random.random() for _ in range(BATCH_SIZE)]
+    z2 = [np.random.random() for _ in range(BATCH_SIZE)]
     v2_2 = [byron.rrandom.random_float() for _ in range(BATCH_SIZE // 2)]
     assert v1 == v2_1 + v2_2
 

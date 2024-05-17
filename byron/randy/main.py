@@ -74,7 +74,7 @@ class Randy:
                 "Random seed is None: results will not be reproducible (generally a bad idea when debugging)"
             )
         )
-        self._generator = np.random.default_rng(seed)
+        self._generator = random.Random(seed)
         # with open(Randy.LOG_FILENAME, 'a') as fout:
         #    fout.write(f"New seed: {self}\n")
         assert self.__save_state()
