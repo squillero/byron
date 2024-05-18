@@ -9,7 +9,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 SHELL=/bin/sh
-CFLAGS = -O3
+CC=gcc
+CFLAGS=-O3
 
 # GNU timeout is /opt/homebrew/bin/gtimeout in GX's machine
 TIMEOUT_CMD=gtimeout

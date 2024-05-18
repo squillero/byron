@@ -18,9 +18,10 @@ import byron
 
 if platform.machine() == "arm64":
     import library_arm64 as library
+elif platform.machine() == "AMD64":
+    import library_x86_64 as library
 else:
     raise NotImplementedError(f"Unknown machine type: {platform.machine()}")
-
 
 SCRIPT_NAME = {"Linux": "./evaluate-all.sh", "Darwin": "./evaluate-all.sh", "Windows": "evaluate-all.cmd"}
 

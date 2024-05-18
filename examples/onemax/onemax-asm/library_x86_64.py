@@ -21,8 +21,8 @@ def define_frame():
     prologue = byron.f.macro(
         """
     .text
-    .globl	one_max
-one_max:
+    .globl	onemax
+onemax:
     pushq	%rbp
     movq	%rsp, %rbp
         """
