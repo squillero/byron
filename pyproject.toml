@@ -102,6 +102,7 @@
 
 [tool.mypy]
     modules = ['byron']
+    ignore_missing_imports = true
 
 [tool.pytype]
     inputs = ['byron']
