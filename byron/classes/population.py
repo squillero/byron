@@ -28,7 +28,7 @@
 __all__ = ["Population"]
 
 import logging
-from collections.abc import Sequence
+from collections.abc import Sequence, Iterable
 from typing import Callable, Any
 from copy import copy
 
@@ -41,7 +41,7 @@ from byron.classes.individual import Individual
 from byron.tools.entropy import *
 
 
-class Population:
+class Population(Iterable):
     _top_frame: type[SElement]
     _fitness_function: Callable[[Any], FitnessABC]
     _individuals: list[Individual]

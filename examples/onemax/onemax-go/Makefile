@@ -10,6 +10,9 @@
 
 SHELL=/bin/sh
 
+help:
+	# Use either 'make fmt' or 'make clean'
+
 fmt:
 	go fmt *.go
 

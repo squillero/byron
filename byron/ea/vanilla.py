@@ -59,7 +59,7 @@ def _elapsed(start, *, process: bool = False, steps: int = 0):
     if process:
         e = str(timedelta(microseconds=(end[1] - start[1]) // 1e3)) + '.0000000000'
         s = e[: e.index('.') + 3] + ' [byron]'
-        data.append('⏱️  ' + s)
+        data.append('🕙️  ' + s)
     return ' / '.join(data)
 
 
@@ -155,7 +155,7 @@ def vanilla_ea(
         population.sort()
         population.individuals[mu:] = []
         best = population[0]
-        #ic(best.fitness, f"{best.fitness}", old_best.fitness, f"{old_best.fitness}")
+        # ic(best.fitness, f"{best.fitness}", old_best.fitness, f"{old_best.fitness}")
         if best.fitness >> old_best.fitness:
             _new_best(population, evaluator)
 
