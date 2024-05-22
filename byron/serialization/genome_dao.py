@@ -20,25 +20,25 @@ class GenomeDAO(BaseDAO):
         if tag is not None:
             self._tag = tag
 
-    # @staticmethod
-    # def from_genome(genome: nx.MultiDiGraph) -> GenomeDAO:
-    #     nodes = []
-    #     for node in genome.nodes:
-    #         nodes.append(NodeDAO.from_out_edges(node, genome.out_edges(node, keys=True, data=True)))
-    #     return GenomeDAO(ListDAO.from_object(nodes, "nodes"))
+    def __str__(self):
+        return f"{self._tag} => {str(self._nodes)}"
+
+    @property
+    def nodes(self):
+        return self._nodes
 
     @staticmethod
     def from_object(obj: nx.MultiDiGraph, tag: Optional[str] = None) -> GenomeDAO:
         nodes = [NodeDAO.from_object((node, obj.out_edges(node, keys=True, data=True))) for node in obj.nodes]
         return GenomeDAO(ListDAO.from_object(nodes, "nodes"))
 
-    def objectify(self) -> ObjectifiedElement:
-        genome = objectify.Element(self._tag)
-        genome.append(self._nodes.objectify())
-        return genome
-
     @staticmethod
     def deobjectify(
         data: ObjectifiedElement, dao_type: Optional[Type[BaseDAO]] = Type['GenomeDAO'], tag: Optional[str] = None
     ) -> GenomeDAO:
         return GenomeDAO(ListDAO.deobjectify(data.nodes, NodeDAO, "nodes"), tag)
+
+    def objectify(self) -> ObjectifiedElement:
+        genome = objectify.Element(self._tag)
+        genome.append(self._nodes.objectify())
+        return genome
