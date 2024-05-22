@@ -8,6 +8,12 @@ from lxml.objectify import ObjectifiedElement
 
 
 class BaseDAO(ABC):
+    _tag: str
+
+    @property
+    def tag(self):
+        return self._tag
+
     @abstractmethod
     def objectify(self) -> ObjectifiedElement:
         pass
@@ -18,9 +24,6 @@ class BaseDAO(ABC):
         data: ObjectifiedElement, dao_type: Type[BaseDAO] = Type['BaseDAO'], tag: Optional[str] = None
     ) -> BaseDAO:
         pass
-        # if type(data) is str:
-        #     return objectify.fromstring(data)
-        # return data
 
     @staticmethod
     @abstractmethod
