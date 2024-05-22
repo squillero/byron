@@ -19,21 +19,24 @@ class ListDAO(BaseDAO, Generic[T]):
         if tag is not None:
             self._tag = tag
 
-    # @staticmethod
-    # def from_obj(tag: str, list: List[T]) -> ListDAO[T]:
-    #     return ListDAO(tag, list)
+    def __str__(self):
+        return f"{self._tag} => {str(self._list)}"
+
+    @property
+    def list(self):
+        return self._list
 
     @staticmethod
     def from_object(obj: List[T], tag: Optional[str] = None) -> ListDAO[T]:
         return ListDAO(obj, tag)
+
+    @staticmethod
+    def deobjectify(data: ObjectifiedElement, dao_type: Type[BaseDAO] = T, tag: Optional[str] = None) -> ListDAO[T]:
+        # raise error if tag or daotype are none
+        return ListDAO([dao_type.deobjectify(d) for d in data.getchildren()], tag)
 
     def objectify(self) -> ObjectifiedElement:
         l = objectify.Element(self._tag)
         for element in self._list:
             l.append(element.objectify())
         return l
-
-    @staticmethod
-    def deobjectify(data: ObjectifiedElement, dao_type: Type[BaseDAO] = T, tag: Optional[str] = None) -> ListDAO[T]:
-        # raise error if tag or daotype are none
-        return ListDAO([dao_type.deobjectify(d) for d in data.getchildren()], tag)
