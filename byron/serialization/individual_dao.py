@@ -20,22 +20,29 @@ class IndividualDAO(BaseDAO):
         if tag is not None:
             self._tag = tag
 
-    # @staticmethod
-    # def from_individual(individual: Individual) -> IndividualDAO:
-    #     return IndividualDAO(individual.id, GenomeDAO.from_genome(individual.genome))
+    def __str__(self):
+        return f"{self._tag} id:{self._id} => {str(self._genome)}"
+
+    @property
+    def id(self):
+        return self._id
+
+    @property
+    def genome(self):
+        return self._genome
 
     @staticmethod
     def from_object(obj: Individual, tag: Optional[str] = None) -> IndividualDAO:
         return IndividualDAO(obj.id, GenomeDAO.from_object(obj.genome))
-
-    def objectify(self) -> ObjectifiedElement:
-        individual = objectify.Element(self._tag)
-        individual.set("id", str(self._id))
-        individual.append(self._genome.objectify())
-        return individual
 
     @staticmethod
     def deobjectify(
         data: ObjectifiedElement, dao_type: Optional[Type[BaseDAO]] = Type['IndividualDAO'], tag: Optional[str] = None
     ) -> IndividualDAO:
         return IndividualDAO(data.get("id"), GenomeDAO.deobjectify(data.genome), tag)
+
+    def objectify(self) -> ObjectifiedElement:
+        individual = objectify.Element(self._tag)
+        individual.set("id", str(self._id))
+        individual.append(self._genome.objectify())
+        return individual
