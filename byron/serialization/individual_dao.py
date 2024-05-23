@@ -24,11 +24,11 @@ class IndividualDAO(BaseDAO):
         return f"{self._tag} id:{self._id} => {str(self._genome)}"
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self._id
 
     @property
-    def genome(self):
+    def genome(self) -> GenomeDAO:
         return self._genome
 
     @staticmethod

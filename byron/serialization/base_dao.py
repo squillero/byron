@@ -11,7 +11,7 @@ class BaseDAO(ABC):
     _tag: str
 
     @property
-    def tag(self):
+    def tag(self) -> str:
         return self._tag
 
     @abstractmethod

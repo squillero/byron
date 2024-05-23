@@ -21,7 +21,7 @@ class DictStrDAO(BaseDAO):
         return f"{self._tag} => {str(self._dict)}"
 
     @property
-    def dict(self):
+    def dict(self) -> Dict[str, str]:
         return self._dict
 
     @staticmethod

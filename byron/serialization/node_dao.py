@@ -25,11 +25,11 @@ class NodeDAO(BaseDAO):
         return f"{self._tag} id:{self._id} => {str(self._out_edges)}"
 
     @property
-    def id(self):
+    def id(self) -> str:
         return self._id
 
     @property
-    def out_edges(self):
+    def out_edges(self) -> ListDAO[EdgeDAO]:
         return self._out_edges
 
     @staticmethod

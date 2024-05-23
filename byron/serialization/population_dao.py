@@ -26,11 +26,11 @@ class PopulationDAO(BaseDAO):
         return f"{self._tag} generation:{self._generation} => {str(self._individuals)}"
 
     @property
-    def generation(self):
+    def generation(self) -> int:
         return self._generation
 
     @property
-    def individuals(self):
+    def individuals(self) -> ListDAO[IndividualDAO]:
         return self._individuals
 
     @staticmethod

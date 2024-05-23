@@ -23,7 +23,7 @@ class ListDAO(BaseDAO, Generic[T]):
         return f"{self._tag} => {str(self._list)}"
 
     @property
-    def list(self):
+    def list(self) -> List[T]:
         return self._list
 
     @staticmethod

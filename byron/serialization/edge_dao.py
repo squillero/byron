@@ -26,15 +26,15 @@ class EdgeDAO(BaseDAO):
         return f"{self._tag} to:{self._destination_id} key:{self._key}=> {str(self._data)}"
 
     @property
-    def destination_id(self):
+    def destination_id(self) -> str:
         return self._destination_id
 
     @property
-    def key(self):
+    def key(self) -> int:
         return self._key
 
     @property
-    def data(self):
+    def data(self) -> DictStrDAO:
         return self._data
 
     @staticmethod

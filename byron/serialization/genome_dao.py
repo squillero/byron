@@ -24,7 +24,7 @@ class GenomeDAO(BaseDAO):
         return f"{self._tag} => {str(self._nodes)}"
 
     @property
-    def nodes(self):
+    def nodes(self) -> ListDAO[NodeDAO]:
         return self._nodes
 
     @staticmethod
