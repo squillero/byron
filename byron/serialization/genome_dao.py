@@ -29,7 +29,15 @@ class GenomeDAO(BaseDAO):
 
     @staticmethod
     def from_object(obj: nx.MultiDiGraph, tag: Optional[str] = None) -> GenomeDAO:
-        nodes = [NodeDAO.from_object((node, obj.out_edges(node, keys=True, data=True))) for node in obj.nodes]
+        # nodes = [
+        #     NodeDAO.from_object(
+        #         (node, obj.out_edges(node, keys=True, data=True), {k: v for k, v in node.items() if k != "_selement"})
+        #     )
+        #     for node in obj.nodes
+        # ]
+        # nodes = []
+        # nodes_name = [node_name for node_name in obj.nodes]
+        nodes = [NodeDAO.from_object(NodeDAO.BaseObject(node_name, obj)) for node_name in obj.nodes]
         return GenomeDAO(ListDAO.from_object(nodes, "nodes"))
 
     @staticmethod
