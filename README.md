@@ -9,8 +9,8 @@
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/squillero/byron/pytest.yml?label=pytest)](https://github.com/squillero/byron/actions)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fcad-polito-it%2Fbyron.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fcad-polito-it%2Fbyron?ref=badge_shield)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
-[![PyPI - Version](https://img.shields.io/pypi/v/byron?label=pypi+version)](https://pypi.org/project/byron/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=pypi+downloads)](https://pypi.org/project/byron/)
+[![PyPI - Version](https://img.shields.io/pypi/v/byron?label=pypi)](https://pypi.org/project/byron/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=downloads)](https://pypi.org/project/byron/)
 
 Byron is an [evolutionary tool](https://cad-polito-it.github.io/byron/evolution): given a problem, it first generates a set of random solutions, then iteratively improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
 
