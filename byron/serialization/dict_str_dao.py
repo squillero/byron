@@ -1,18 +1,20 @@
 from __future__ import annotations
 
-from typing import Dict, Optional, Type
+from typing import Dict, Optional, Type, TypeVar, Generic
 
 from lxml import objectify
 from lxml.objectify import ObjectifiedElement
 
 from .base_dao import BaseDAO
 
+T = TypeVar('T')
 
-class DictStrDAO(BaseDAO):
+
+class DictStrDAO(BaseDAO, Generic[T]):
     _tag: str = "dict"
-    _dict: Dict[str, str]
+    _dict: Dict[str, T]
 
-    def __init__(self, dict: Dict[str, str], tag: Optional[str] = None):
+    def __init__(self, dict: Dict[str, T], tag: Optional[str] = None):
         self._dict = dict
         if tag is not None:
             self._tag = tag
@@ -21,12 +23,13 @@ class DictStrDAO(BaseDAO):
         return f"{self._tag} => {str(self._dict)}"
 
     @property
-    def dict(self) -> Dict[str, str]:
+    def dict(self) -> Dict[str, T]:
         return self._dict
 
     @staticmethod
-    def from_object(obj: Dict[str, str], tag: Optional[str] = None) -> DictStrDAO:
-        return DictStrDAO(obj, tag)
+    def from_object(obj: Dict[str, T], tag: Optional[str] = None) -> DictStrDAO:
+        new_dict = {k: v if type(v) is str else str(v) for k, v in obj.items()}
+        return DictStrDAO(new_dict, tag)
 
     @staticmethod
     def deobjectify(

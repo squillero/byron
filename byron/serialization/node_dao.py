@@ -42,7 +42,7 @@ class NodeDAO(BaseDAO):
     @staticmethod
     def from_object(obj: BaseObject, tag: Optional[str] = None) -> NodeDAO:
         edges = [EdgeDAO.from_object((v, k, d)) for u, v, k, d in obj.graph.out_edges(obj.id, keys=True, data=True)]
-        data = {k: v for k, v in obj.graph.nodes[obj.id].items() if k != "_selement"}
+        data = obj.graph.nodes[obj.id]
         return NodeDAO(obj.id, DictStrDAO.from_object(data, "data"), ListDAO.from_object(edges, "edges"))
 
     @staticmethod
