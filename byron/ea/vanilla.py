@@ -32,6 +32,7 @@ from typing import Optional
 from time import perf_counter_ns, process_time_ns
 from datetime import timedelta
 
+import lxml.objectify
 from tqdm.auto import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm, tqdm_logging_redirect
 
@@ -44,6 +45,7 @@ from byron.fitness import make_fitness
 from byron.user_messages import logger as byron_logger
 from .common import take_operators
 from .selection import *
+from ..serialization import IndividualDAO, PopulationDAO, Serializer
 
 
 def _elapsed(start, *, process: bool = False, steps: int = 0):
@@ -77,6 +79,7 @@ def vanilla_ea(
     max_generation: int = 100,
     max_fitness: Optional = None,
     population_extra_parameters: dict = None,
+    serializer: Optional[Serializer] = None,
 ) -> Population:
     r"""A simple evolutionary algorithm
 
@@ -90,6 +93,8 @@ def vanilla_ea(
         The size of the population
     lambda_
         The size the offspring
+    serializer
+        The serializer
 
     Returns
     -------
@@ -112,6 +117,10 @@ def vanilla_ea(
         gen0 += o(top_frame=top_frame)
 
     population += gen0
+
+    if serializer is not None and serializer.is_to_be_serialized:
+        serializer.serialize(PopulationDAO.from_object(population))
+
     evaluator(population)
     population.sort()
     best = population[0]
