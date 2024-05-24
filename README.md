@@ -35,6 +35,13 @@ Byron is an [evolutionary tool](https://cad-polito-it.github.io/byron/evolution)
 * [Giovanni Squillero](https://github.com/squillero) [:email:](mailto:giovanni.squillero@polito.it) [:house:](https://staff.polito.it/giovanni.squillero/)
 * [Alberto Tonda](https://github.com/albertotonda/) [:email:](mailto:alberto.tonda@inrae.fr) [:house:](https://www.researchgate.net/profile/Alberto_Tonda)
 
+### Main Contributors
+
+<a href="https://github.com/cad-polito-it/byron/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=cad-polito-it/byron" />
+</a>
+
 ### Licence
+
 Copyright (c) 2023-24 [Giovanni Squillero](https://github.com/squillero) and [Alberto Tonda](https://github.com/albertotonda/)  
 Byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software), and it is distributed under the permissive [Apache License 2.0](https://opensource.org/license/apache-2-0/).
