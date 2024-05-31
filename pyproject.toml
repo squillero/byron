@@ -101,7 +101,7 @@
     omit    = ['.*/*', 'test/*', 'venv/*']
 
 [tool.mypy]
-    modules = ['byron']
+    modules                = ['byron']
     ignore_missing_imports = true
 
 [tool.pytype]
