@@ -12,7 +12,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/byron?label=pypi)](https://pypi.org/project/byron/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=downloads)](https://pypi.org/project/byron/)
 
-Byron is an [evolutionary tool](https://cad-polito-it.github.io/byron/evolution): given a problem, it first generates a set of random solutions, then iteratively improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
+Byron is a generic [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization) designed to support high-level [fuzzing](https://en.wikipedia.org/wiki/Fuzzing). It first generates a set of random solutions, then [iteratively improves them](https://cad-polito-it.github.io/byron/evolution) using both their evaluation results and structural information.
 
 :package: The Python package is available on [PyPi](https://pypi.org/project/byron/); this repo is only useful if you want to hack the code. 
 
