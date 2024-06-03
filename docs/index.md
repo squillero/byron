@@ -1,4 +1,4 @@
-# Byron v0.8a1.dev46 *"Don Juan"*
+# Byron v0.8a1.dev47 *"Don Juan"*
 
 > A multi-purpose extensible self-adaptive optimizer and fuzzer
 
