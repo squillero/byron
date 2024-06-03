@@ -23,7 +23,8 @@ Candidate solutions [do not need to be *designed*](https://evolution.berkeley.ed
 * Byron is currently in [alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha) and under active development
 * The default branch is always the more stable
 * Do not clone experimental branches `exp/*` unless you really know what you are doing
-* Follow this [style guide](https://github.com/squillero/style/blob/master/python.md) and keep the code formatted with [Black](https://black.readthedocs.io/en/stable/) and this [convention](https://github.com/squillero/style/blob/master/git.md) when drafting commit messages
+* Follow this [style guide](https://github.com/squillero/style/blob/master/python.md) and keep the code formatted with [Black](https://black.readthedocs.io/en/stable/)
+* Follow this [convention](https://github.com/squillero/style/blob/master/git.md) when drafting commit messages
 * Write as few lines of code and as many lines of comments as possible (ie. use builtins, exploit generators and list comprehension)
 * Be [paranoid](https://cad-polito-it.github.io/byron/paranoia) (cit. *"I need someone to show me the things"*)
 * Use [pytest](https://docs.pytest.org/) and [Coverage.py](https://coverage.readthedocs.io/) for unit testing (ie. `coverage run --module pytest --all`)
