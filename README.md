@@ -12,7 +12,9 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/byron?label=pypi)](https://pypi.org/project/byron/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=downloads)](https://pypi.org/project/byron/)
 
-Byron is a generic [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization) designed to support high-level [fuzzing](https://en.wikipedia.org/wiki/Fuzzing). It first generates a set of random solutions, then [iteratively improves them](https://cad-polito-it.github.io/byron/evolution) using both their evaluation results and structural information.
+Byron is a generic [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization) designed to support source code [fuzzing](https://en.wikipedia.org/wiki/Fuzzing), either in assembly or in higher-level languages. It begins by generating a set of random programs, which are then iteratively improved by an [evolutionary algorithm](https://cad-polito-it.github.io/byron/evolution). It can handle complex, realistic structures containing local and global variables, conditional and looping statements, and subroutines.
+
+Candidate solutions [do not need to be *designed*](https://evolution.berkeley.edu/), but merely *evaluated* using an external tool, such as an interpreter or a simulator. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
 :package: The Python package is available on [PyPi](https://pypi.org/project/byron/); this repo is only useful if you want to hack the code. 
 
@@ -21,8 +23,7 @@ Byron is a generic [optimizer](https://en.wikipedia.org/wiki/Engineering_optimiz
 * Byron is currently in [alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha) and under active development
 * The default branch is always the more stable
 * Do not clone experimental branches `exp/*` unless you really know what you are doing
-* Follow this [style guide](https://github.com/squillero/style/blob/master/python.md) and keep the code formatted with [Black](https://black.readthedocs.io/en/stable/)
-* Follow this [convention](https://github.com/squillero/style/blob/master/git.md) when drafting commit messages
+* Follow this [style guide](https://github.com/squillero/style/blob/master/python.md) and keep the code formatted with [Black](https://black.readthedocs.io/en/stable/) and this [convention](https://github.com/squillero/style/blob/master/git.md) when drafting commit messages
 * Write as few lines of code and as many lines of comments as possible (ie. use builtins, exploit generators and list comprehension)
 * Be [paranoid](https://cad-polito-it.github.io/byron/paranoia) (cit. *"I need someone to show me the things"*)
 * Use [pytest](https://docs.pytest.org/) and [Coverage.py](https://coverage.readthedocs.io/) for unit testing (ie. `coverage run --module pytest --all`)
