@@ -76,7 +76,7 @@
         pytest-emoji = "^0.2.0"
         ruff         = "^0.1.8"
         seaborn      = "^0.12.2"
-        setuptools   = "^69.5.1"
+        setuptools   = ">=69.5.1,<71.0.0"
         unicorn      = "^2.0.1.post1"
 
 [build-system]
