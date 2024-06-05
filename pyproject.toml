@@ -11,9 +11,9 @@
 [tool.poetry]
     name = "byron"
     version = "0.8a1.dev47"
-    description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
+    description = "An evolutionary fuzzer for ASM & HLLs"
     authors = [
-        "The Cyber Romanticists <giovanni.squillero@polito.it>"
+        "Cyber Romanticists"
         # "Giovanni Squillero <giovanni.squillero@polito.it>",
         # "Alberto Tonda <alberto.tonda@inrae.fr>",
     ]
