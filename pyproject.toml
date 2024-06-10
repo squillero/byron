@@ -75,7 +75,7 @@
         pytest       = ">=7.4,<9.0"
         pytest-emoji = "^0.2.0"
         ruff         = "^0.1.8"
-        seaborn      = "^0.12.2"
+        seaborn      = ">=0.12.2,<0.14.0"
         setuptools   = ">=69.5.1,<71.0.0"
         unicorn      = "^2.0.1.post1"
 
