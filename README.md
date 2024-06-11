@@ -16,7 +16,7 @@
 
 Byron is a generic [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization) designed to support source code [fuzzing](https://en.wikipedia.org/wiki/Fuzzing), either in assembly or in higher level languages. It starts by generating a set of random programs, which are then iteratively improved by an [evolutionary algorithm](https://cad-polito-it.github.io/byron/evolution). It can handle quite complex structures including subroutines, local and global variables, jumps, conditionals, and loops.
 
-Test programs [do not need to be *designed*](https://evolution.berkeley.edu/), but merely *evaluated* using an external tool, such as an interpreter or a simulator. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
+Test programs [do not need](https://evolution.berkeley.edu/) to be designed, but merely evaluated using an external tool, such as an interpreter or a simulator. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
 :package: The Python package is available on [PyPi](https://pypi.org/project/byron/); this repo is only useful if you want to hack the code. 
 
