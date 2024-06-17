@@ -27,19 +27,18 @@
 
 __all__ = ["vanilla_ea"]
 
+from datetime import timedelta
+from time import perf_counter_ns, process_time_ns
 from typing import Optional
 
-from time import perf_counter_ns, process_time_ns
-from datetime import timedelta
-
-
+from byron.classes.evaluator import *
+from byron.classes.frame import *
+from byron.classes.selement import *
+from byron.fitness import make_fitness
 from byron.operators import *
 from byron.sys import *
-from byron.classes.selement import *
-from byron.classes.frame import *
-from byron.classes.evaluator import *
-from byron.fitness import make_fitness
 from byron.user_messages import logger as byron_logger
+
 from .common import take_operators
 from .selection import *
 

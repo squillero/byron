@@ -11,6 +11,7 @@
 
 
 import pytest
+
 from byron.classes.value_bag import ValueBag
 
 

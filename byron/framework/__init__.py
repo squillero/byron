@@ -34,15 +34,15 @@ Notes:
       Python operator ``is`` returns ``True``
 """
 
-from .defaults import *
+from byron.classes.readymade_frames import *
+from byron.classes.readymade_macros import *
+
 from .bnf import *
+from .defaults import *
 from .framework import *
 from .macro import *
 from .parameter import *
-from .parameter_structural_local import *
 from .parameter_structural_global import *
+from .parameter_structural_local import *
 from .shared import *
 from .show_element import *
-
-from byron.classes.readymade_macros import *
-from byron.classes.readymade_frames import *

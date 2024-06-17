@@ -10,7 +10,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from byron.classes.frame import FrameABC, FrameSequence, FrameAlternative, FrameMacroBunch
+from byron.classes.frame import FrameABC, FrameAlternative, FrameMacroBunch, FrameSequence
 
 
 class TestFrame(FrameABC):

@@ -9,9 +9,10 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
+import itertools
+
 import pytest
 
-import itertools
 import byron
 
 # test_sizes = [10**n for n in range(1, 3)]

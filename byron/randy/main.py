@@ -12,12 +12,12 @@
 # SPDX-License-Identifier: 0BSD
 
 import math
-from typing import Any, MutableSequence
-from collections.abc import Sequence
 import random
+from collections.abc import Sequence
+from typing import Any, MutableSequence
 
-from byron.user_messages import *
 from byron.global_symbols import *
+from byron.user_messages import *
 
 __all__ = ["Randy"]
 

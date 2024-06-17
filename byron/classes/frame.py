@@ -29,9 +29,9 @@ __all__ = ["FrameABC", "FrameAlternative", "FrameSequence", "FrameMacroBunch"]
 
 from abc import abstractmethod
 
-from byron.global_symbols import *
-from byron.classes.selement import SElement
 from byron.classes.paranoid import Paranoid
+from byron.classes.selement import SElement
+from byron.global_symbols import *
 
 
 class FrameABC(SElement, Paranoid):

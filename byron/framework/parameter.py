@@ -32,9 +32,9 @@ from functools import cache
 from numbers import Number
 from typing import Any, Hashable, SupportsInt
 
-from byron.user_messages import *
 from byron.classes.parameter import *
 from byron.randy import rrandom
+from byron.user_messages import *
 
 
 @cache

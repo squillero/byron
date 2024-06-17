@@ -9,8 +9,9 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import byron as byron
 import pytest
+
+import byron as byron
 
 
 def test_uncanonize_name():

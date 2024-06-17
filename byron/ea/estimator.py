@@ -26,14 +26,14 @@
 
 __all__ = ["Estimator"]
 
+from math import ceil, log, sqrt
 from typing import Callable, Sequence
-from math import sqrt, log, ceil
 
-from byron.fitness import make_fitness
-from byron.randy import rrandom
 from byron.classes import Population
 from byron.classes.fitness import FitnessABC
 from byron.ea.common import take_operators
+from byron.fitness import make_fitness
+from byron.randy import rrandom
 
 
 class Estimator:

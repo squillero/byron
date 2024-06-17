@@ -30,15 +30,14 @@ from numbers import Number
 
 import networkx as nx
 
-from byron.user_messages import *
-from byron.randy import rrandom
-from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
-
 from byron.classes.parameter import ParameterStructuralABC
-from byron.operators.graph_tools import *
 from byron.classes.selement import SElement
+from byron.global_symbols import *
+from byron.operators.graph_tools import *
+from byron.randy import rrandom
 from byron.tools.graph import *
+from byron.user_messages import *
 
 __all__ = ["global_reference"]
 

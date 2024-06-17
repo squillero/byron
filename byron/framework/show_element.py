@@ -27,15 +27,15 @@
 
 __all__ = ['as_text', 'as_lgp', 'as_forest']
 
-from byron.randy import rrandom
-from byron.sys import *
-from byron.global_symbols import *
+from byron.classes.individual import Individual
 from byron.classes.node import NODE_ZERO
+from byron.classes.parameter import ParameterABC
 from byron.classes.selement import SElement
 from byron.framework.macro import macro
-from byron.classes.parameter import ParameterABC
-from byron.classes.individual import Individual
+from byron.global_symbols import *
 from byron.operators.initializers import *
+from byron.randy import rrandom
+from byron.sys import *
 
 
 def as_text(

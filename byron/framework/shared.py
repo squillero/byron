@@ -28,6 +28,7 @@
 __all__ = ["make_shared_parameter"]
 
 from typing import Any
+
 from byron.classes.parameter import *
 
 # MAKE KEY (TODO!!!)

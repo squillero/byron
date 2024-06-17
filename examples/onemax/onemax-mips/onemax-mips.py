@@ -10,12 +10,13 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import logging
 import argparse
+import logging
 import platform
 
-import byron
 import library_mips as library
+
+import byron
 
 SCRIPT_NAME = {"Linux": "./evaluate_all.sh", "Darwin": "./evaluate_all.sh"}
 

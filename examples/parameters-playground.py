@@ -13,7 +13,6 @@
 import logging
 
 # logging.basicConfig(format="[%(asctime)s] %(levelname)s:%(message)s", datefmt="%H:%M:%S", level=logging.INFO)
-
 import byron
 
 r = byron.lib.choice_parameter_instance(["ax", "bx", "cx", "dx"])

@@ -25,8 +25,8 @@
 # =[ HISTORY ]===============================================================
 # v1 / August 2023 / Squillero (GX)
 
-import sys
 import platform
+import sys
 
 import networkx as nx
 

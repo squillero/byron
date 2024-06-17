@@ -28,8 +28,8 @@
 
 __all__ = ['SElement', 'SElementMeta']
 
-from typing import Callable, Sequence, Optional
 from collections import defaultdict
+from typing import Callable, Optional, Sequence
 from uuid import uuid1 as generate_uuid
 
 from byron.global_symbols import *
@@ -87,8 +87,8 @@ class SElementMeta(type):
         tag: str | Sequence[str] = (),
         custom_class_id: str | None = None,
     ):
-        from byron.classes.macro import Macro
         from byron.classes.frame import FrameABC
+        from byron.classes.macro import Macro
         from byron.classes.parameter import ParameterABC
 
         if custom_class_id:

@@ -6,9 +6,7 @@
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
-from typing import Collection
-
-import networkx as nx
+from collections import defaultdict
 
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
@@ -24,19 +22,20 @@ import networkx as nx
 #
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 # =[ HISTORY ]===============================================================
 # v1 / August 2023 / Squillero (GX)
-
 from copy import deepcopy
-from collections import defaultdict
+from typing import Collection
 
-from .ea_tools import *
+import networkx as nx
+
 from byron.classes import *
 from byron.randy import rrandom
 from byron.registry import *
 from byron.tools.graph import *
 from byron.user_messages import *
+
+from .ea_tools import *
 
 
 def _connected_nodes(G: nx.MultiDiGraph, n: Node | int) -> Collection[Node | int]:

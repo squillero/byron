@@ -28,9 +28,9 @@
 __all__ = ["bnf"]
 
 from byron.classes.frame import FrameABC
-from byron.classes.selement import SElement
 from byron.classes.macro import Macro
 from byron.classes.readymade_frames import SELF
+from byron.classes.selement import SElement
 from byron.tools.names import base_name
 
 from .framework import *

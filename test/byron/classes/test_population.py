@@ -10,10 +10,11 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import pytest
-from byron.classes.population import Population
-from byron.classes.individual import Individual
-from byron.classes.selement import SElement
+
 from byron.classes.fitness import FitnessABC
+from byron.classes.individual import Individual
+from byron.classes.population import Population
+from byron.classes.selement import SElement
 
 
 class MockFitness(FitnessABC):

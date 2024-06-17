@@ -9,8 +9,9 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-from byron.classes.byron import Byron
 import networkx as nx
+
+from byron.classes.byron import Byron
 
 # def test_str_method():
 #     byron = Byron()
@@ -49,6 +50,7 @@ def test_system_version():
 def test_machine_info():
     byron = Byron()
     import platform
+
     import psutil
 
     desc = f'{platform.machine()} ({platform.processor()})'

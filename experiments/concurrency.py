@@ -10,10 +10,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import logging
-import time
+import multiprocessing
 import subprocess
 import threading
-import multiprocessing
+import time
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 
 JOB_SIZE = 200_000

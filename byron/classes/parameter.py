@@ -32,11 +32,11 @@ from typing import Any
 
 from networkx.classes import MultiDiGraph
 
+from byron.classes.node_reference import NodeReference
+from byron.classes.paranoid import Paranoid
+from byron.classes.selement import SElement
 from byron.global_symbols import *
 from byron.user_messages import *
-from byron.classes.selement import SElement
-from byron.classes.paranoid import Paranoid
-from byron.classes.node_reference import NodeReference
 
 
 class ParameterABC(SElement, Paranoid):

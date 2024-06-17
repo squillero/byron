@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 from typing import Dict, Set
+
 from .riscv_instruction_format import RiscvInstructionFormat
+from .riscv_isa import RiscvIsa
 from .riscv_isa_base import RiscvIsaBase
 from .riscv_isa_extension import RiscvIsaExtension
 from .riscv_isa_operation_set import RiscvIsaOperationSet
 from .riscv_operation import RiscvOperation
 from .riscv_registers import RiscvRegisters
-from .riscv_isa import RiscvIsa
 
 
 class RiscvIsaBuilder:

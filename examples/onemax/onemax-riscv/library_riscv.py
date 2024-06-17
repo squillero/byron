@@ -14,7 +14,6 @@ import byron
 from riscv.riscv_isa_builder import RiscvIsaBuilder, RiscvRegisters
 from riscv.riscv_isa_custom_operation_set import RiscvIsaCustomOperationSet
 
-
 COMMENT = '#'
 
 

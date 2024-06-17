@@ -11,6 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import logging
+
 import byron
 
 NUM_BITS = 500

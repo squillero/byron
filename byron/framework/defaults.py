@@ -29,8 +29,8 @@
 
 __all__ = ['set_global_parameter', 'set_global_option']
 
-from typing import Any
 import re
+from typing import Any
 
 from byron.global_symbols import *
 from byron.global_symbols import DEFAULT_EXTRA_PARAMETERS, DEFAULT_OPTIONS

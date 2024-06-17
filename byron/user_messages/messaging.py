@@ -118,8 +118,8 @@ else:
 
 # Alternative symbols: ⍄ ┊
 
-from rich import logging as rich_logging
 from rich import highlighter as rich_highlighter
+from rich import logging as rich_logging
 
 # console_handler = logging.StreamHandler()
 # console_handler.setFormatter(console_formatter)

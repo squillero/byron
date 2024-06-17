@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from typing import Sequence, Dict, Collection
-from byron.classes import Macro, FrameABC
+from typing import Collection, Dict, Sequence
+
+from byron.classes import FrameABC, Macro
+
 from .riscv_instruction_format import RiscvInstructionFormat
 
 

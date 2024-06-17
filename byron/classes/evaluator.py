@@ -33,27 +33,26 @@ __all__ = [
     'ScriptEvaluator',
 ]
 
-from typing import Callable, Sequence
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from itertools import zip_longest
-
 import os
 import subprocess
 import tempfile
+from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
+from itertools import zip_longest
+from typing import Callable, Sequence
 
 from byron.global_symbols import *
 
 if joblib_available:
     import joblib
 
-from byron.user_messages import *
 from byron.classes.fitness import FitnessABC
-from byron.fitness import make_fitness
 from byron.classes.population import Population
-from byron.registry import *
+from byron.fitness import make_fitness
 from byron.global_symbols import *
+from byron.registry import *
+from byron.user_messages import *
 
 
 @dataclass(kw_only=True, slots=True)

@@ -29,23 +29,22 @@
 
 __all__ = ['Individual', 'Lineage', 'Age']
 
-from typing import Callable
-from itertools import chain
-from copy import deepcopy, copy
-from dataclasses import dataclass
 import operator
+from copy import copy, deepcopy
+from dataclasses import dataclass
+from itertools import chain
+from typing import Callable
 
 import networkx as nx
 
-from byron.user_messages import *
-from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
+from byron.global_symbols import *
 from byron.tools.graph import *
+from byron.user_messages import *
 
 if matplotlib_available:
     pass
 
-from byron.global_symbols import *
 from byron.classes.byron import Byron
 from byron.classes.dump import *
 from byron.classes.fitness import FitnessABC
@@ -58,6 +57,7 @@ from byron.classes.parameter import ParameterABC, ParameterStructuralABC
 from byron.classes.paranoid import Paranoid
 from byron.classes.readymade_macros import MacroZero
 from byron.classes.value_bag import ValueBag
+from byron.global_symbols import *
 
 
 @dataclass(frozen=True, slots=True)
@@ -119,7 +119,7 @@ class Individual(Paranoid):
 
     BYRON: Byron = Byron()
 
-    from ._individual_as import as_forest, as_lgp, _draw_forest, _draw_multipartite
+    from ._individual_as import _draw_forest, _draw_multipartite, as_forest, as_lgp
 
     def __init__(self, top_frame: type[FrameABC], genome: nx.MultiDiGraph | None = None) -> None:
         Individual.__LAST_BYRON_INDIVIDUAL += 1

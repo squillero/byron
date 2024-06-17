@@ -11,7 +11,6 @@
 
 import byron
 
-
 asm_instruction = byron.f.macro(
     "{inst} {reg}, 0x{imm:04x}",
     inst=byron.f.choice_parameter(["add", "sub", "and", "or", "xor"]),

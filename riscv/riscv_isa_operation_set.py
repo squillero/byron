@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 from typing import List
+
 from .riscv_isa_operation_set_data import RiscvIsaOperationSetData, RiscvOperation
 
 

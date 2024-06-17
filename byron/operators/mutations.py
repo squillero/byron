@@ -25,17 +25,18 @@
 # HISTORY
 # v1 / June 2023 / Squillero (GX)
 
-from byron.operators.graph_tools import *
-from byron.user_messages import *
-from byron.classes import *
-from byron.registry import *
-from byron.randy import rrandom
-from byron.tools.graph import *
-
-from copy import deepcopy
 from collections import Counter
+from copy import deepcopy
 from math import ceil, floor
+
 from networkx import dfs_preorder_nodes
+
+from byron.classes import *
+from byron.operators.graph_tools import *
+from byron.randy import rrandom
+from byron.registry import *
+from byron.tools.graph import *
+from byron.user_messages import *
 
 
 @genetic_operator(num_parents=1)

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Callable
-from byron.classes import ParameterABC, Macro, ParameterStructuralABC
+
+from byron.classes import Macro, ParameterABC, ParameterStructuralABC
 
 
 @dataclass

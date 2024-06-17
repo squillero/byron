@@ -10,6 +10,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from networkx.classes import MultiDiGraph
+
 from byron.classes.node_reference import NodeReference
 
 

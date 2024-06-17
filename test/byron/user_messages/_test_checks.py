@@ -10,8 +10,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from typing import Sequence
-import byron as byron
+
 import pytest
+
+import byron as byron
 
 PARANOIA_TYPE_ERROR = "TypeError (paranoia check)"
 PARANOIA_VALUE_ERROR = "ValueError (paranoia check)"

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from enum import Enum
 from typing import Set
+
 from .riscv_registers_data import RiscvRegistersData
 
 

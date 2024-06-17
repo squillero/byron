@@ -27,10 +27,11 @@
 
 __all__ = ['array_parameter_uniform_crossover_choosy']
 
-from byron.user_messages import *
 from byron.classes import *
-from byron.registry import *
 from byron.randy import rrandom
+from byron.registry import *
+from byron.user_messages import *
+
 from .ea_tools import *
 
 # unfussy vs. chosy

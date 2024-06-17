@@ -11,14 +11,16 @@
 
 
 import dataclasses
-import pytest
-import networkx as nx
-from byron.classes.node_view import NodeView
-from byron.classes.node_reference import NodeReference
-from byron.classes.node import Node
-from byron.classes.selement import SElement
-from byron.classes.parameter import ParameterABC
 from typing import Any
+
+import networkx as nx
+import pytest
+
+from byron.classes.node import Node
+from byron.classes.node_reference import NodeReference
+from byron.classes.node_view import NodeView
+from byron.classes.parameter import ParameterABC
+from byron.classes.selement import SElement
 
 
 class MockSElement(SElement):

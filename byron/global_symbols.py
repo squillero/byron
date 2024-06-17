@@ -60,9 +60,9 @@ __all__ = [
 ]
 
 import logging
+import multiprocessing
 import sys
 from collections import defaultdict
-import multiprocessing
 
 __version__ = "0.8a1.dev50"
 __date__ = "07-06-2024"

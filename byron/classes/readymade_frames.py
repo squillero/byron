@@ -28,6 +28,7 @@
 __all__ = ["SELF"]
 
 from byron.global_symbols import *
+
 from .frame import FrameABC
 
 

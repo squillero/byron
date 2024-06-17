@@ -32,15 +32,14 @@ from functools import cached_property
 
 import networkx as nx
 
-from byron.global_symbols import *
-from byron.user_messages import *
-from byron.classes.value_bag import ValueBag
-from byron.classes.node_reference import NodeReference
-from byron.classes.selement import SElement
-from byron.classes.parameter import ParameterABC
 from byron.classes.node import Node
-
+from byron.classes.node_reference import NodeReference
+from byron.classes.parameter import ParameterABC
+from byron.classes.selement import SElement
+from byron.classes.value_bag import ValueBag
+from byron.global_symbols import *
 from byron.tools.graph import *
+from byron.user_messages import *
 
 # NOTE[GX]: Rewritten almost from scratch taking advantage of 'dataclasses' (py>=3.7) and
 # '@cached_property' (py>=3.8)

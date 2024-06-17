@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 from enum import Enum
-from .riscv_operation_data import RiscvOperationData, RiscvInstructionFormat
+
+from .riscv_operation_data import RiscvInstructionFormat, RiscvOperationData
 
 
 class RiscvOperation(RiscvOperationData, Enum):

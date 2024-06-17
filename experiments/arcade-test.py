@@ -11,8 +11,9 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Library imports
-import arcade
 import random
+
+import arcade
 
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600

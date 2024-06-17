@@ -9,11 +9,13 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import pytest
-from byron.classes.macro import Macro, ValueBag
-from byron.classes.node_view import NodeView
 import math
 import random
+
+import pytest
+
+from byron.classes.macro import Macro, ValueBag
+from byron.classes.node_view import NodeView
 
 
 def test_macro_init():

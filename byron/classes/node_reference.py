@@ -28,6 +28,7 @@
 __all__ = ["NodeReference"]
 
 from typing import NamedTuple
+
 from networkx.classes import MultiDiGraph
 
 

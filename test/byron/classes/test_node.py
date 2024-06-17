@@ -10,9 +10,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-import pytest
 import networkx as nx
-from byron.classes.node import Node, NODE_ZERO
+import pytest
+
+from byron.classes.node import NODE_ZERO, Node
 
 
 def create_sample_graph():

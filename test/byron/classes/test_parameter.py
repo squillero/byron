@@ -10,10 +10,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-import pytest
-from byron.classes.parameter import ParameterStructuralABC, NodeReference, ParameterABC
-import networkx as nx
 from typing import Any
+
+import networkx as nx
+import pytest
+
+from byron.classes.parameter import NodeReference, ParameterABC, ParameterStructuralABC
 
 
 class ConcreteParameter(ParameterABC):

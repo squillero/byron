@@ -27,11 +27,11 @@
 
 __all__ = ["check_valid_type", "check_valid_types", "check_value_range", "check_valid_length", "check_no_duplicates"]
 
-from numbers import Number
 from collections.abc import Collection
+from numbers import Number
 
-from .messaging import logger
 from .exception import *
+from .messaging import logger
 
 PARANOIA_TYPE_ERROR = 'TypeError (paranoia check)'
 PARANOIA_VALUE_ERROR = 'ValueError (paranoia check)'

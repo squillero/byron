@@ -30,10 +30,10 @@ __all__ = ["macro"]
 from functools import cache
 from typing import Any
 
-from byron.user_messages import *
 from byron.classes.macro import Macro
-from byron.classes.parameter import ParameterABC
 from byron.classes.node_reference import NodeReference
+from byron.classes.parameter import ParameterABC
+from byron.user_messages import *
 
 
 @cache

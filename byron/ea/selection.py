@@ -26,10 +26,10 @@
 # HISTORY
 # v1 / July 2023 / Squillero (GX)
 
-from byron.user_messages.checks import *
 from byron.classes.individual import Individual
 from byron.classes.population import Population
 from byron.randy import rrandom
+from byron.user_messages.checks import *
 
 
 def tournament_selection(population: Population, tournament_size: float = 2) -> Individual:

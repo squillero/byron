@@ -30,11 +30,11 @@
 
 import networkx as nx
 
-from byron.tools.graph import *
-from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
 from byron.classes.node_reference import NodeReference
 from byron.classes.node_view import NodeView
+from byron.global_symbols import *
+from byron.tools.graph import *
 
 if matplotlib_available:
     import matplotlib.pyplot as plt

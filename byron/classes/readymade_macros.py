@@ -29,7 +29,6 @@ __all__ = ["MacroZero", "Info"]
 
 from datetime import datetime
 
-
 from byron.classes.macro import Macro
 from byron.global_symbols import *
 from byron.user_messages import *

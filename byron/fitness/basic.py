@@ -27,12 +27,11 @@
 
 __all__ = ["Scalar", "Integer", "Float", "Vector", "Lexicographic", "make_fitness"]
 
-from typing import Sequence, Any
-
 from math import isclose
+from typing import Any, Sequence
 
-from byron.global_symbols import *
 from byron.classes.fitness import FitnessABC
+from byron.global_symbols import *
 from byron.user_messages import *
 
 

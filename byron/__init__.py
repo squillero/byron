@@ -27,72 +27,22 @@
 
 import logging
 
-# noinspection PyUnresolvedReferences
-from byron import sys
-
-# noinspection PyUnresolvedReferences
-from byron.global_symbols import *
-
-# noinspection PyUnresolvedReferences
-from byron.classes.node import NODE_ZERO
-
-# noinspection PyUnresolvedReferences
-from byron import user_messages
-
-##from _byron.user_messages.exception import *
-### noinspection PyUnresolvedReferences
-
-# noinspection PyUnresolvedReferences
-from byron import classes
-
-# noinspection PyUnresolvedReferences
+from byron import classes, ea, framework, operators, sys, user_messages
 from byron import classes as C
-
-# noinspection PyUnresolvedReferences
-from byron import framework
-
-# noinspection PyUnresolvedReferences
-from byron import framework as f
-
-# noinspection PyUnresolvedReferences
-from byron import ea
-
-# noinspection PyUnresolvedReferences
-from byron import operators
-
-# noinspection PyUnresolvedReferences
-from byron import operators as op
-
-# noinspection PyUnresolvedReferences
 from byron import evaluator_ as evaluator
-
-# noinspection PyUnresolvedReferences
-from byron import fitness_ as fitness
-
-# noinspection PyUnresolvedReferences
 from byron import fitness_ as fit
-
-# noinspection PyUnresolvedReferences
-from byron.randy import rrandom
-
-# noinspection PyUnresolvedReferences
-from byron.user_messages.messaging import logger
-
-# noinspection PyUnresolvedReferences
-from byron.registry import *
-
-# noinspection PyUnresolvedReferences
+from byron import fitness_ as fitness
+from byron import framework as f
+from byron import operators as op
+from byron.classes.node import NODE_ZERO
 from byron.fitness_log import *
-
-# noinspection PyUnresolvedReferences
+from byron.global_symbols import *
+from byron.randy import rrandom
+from byron.registry import *
 from byron.sys import SYSINFO as sysinfo
-
-# noinspection PyUnresolvedReferences
-from byron.tools.graph import fasten_subtree_parameters
-
-# noinspection PyUnresolvedReferences
 from byron.tools.entropy import *
-
+from byron.tools.graph import fasten_subtree_parameters
+from byron.user_messages.messaging import logger
 
 #############################################################################
 # Patch names to ease debugging and visualization

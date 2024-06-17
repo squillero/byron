@@ -111,10 +111,9 @@
     line-length = 120
 
 [tool.ruff.lint]
-    #extend-select = [
-    #    "UP",  # pyupgrade
-    #    "D",   # pydocstyle
-    #]
+    extend-select = [
+        "I"
+    ]
 
 [tool.ruff.format]
     # Prefer single quotes over double quotes.

@@ -10,11 +10,13 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-import pytest
-from byron.classes.monitor import failure_rate, _STAT
-from byron.user_messages import performance_warning
 from functools import wraps
+
+import pytest
+
 import byron as byron
+from byron.classes.monitor import _STAT, failure_rate
+from byron.user_messages import performance_warning
 
 
 @byron.classes.failure_rate

@@ -25,6 +25,6 @@
 # =[ HISTORY ]===============================================================
 # v1 / May 2023 / Squillero (GX)
 
+from byron.user_messages.checks import *
 from byron.user_messages.exception import *
 from byron.user_messages.messaging import *
-from byron.user_messages.checks import *

@@ -28,17 +28,17 @@
 __all__ = ["Population"]
 
 import logging
-from collections.abc import Sequence, Iterable
-from typing import Callable, Any
+from collections.abc import Iterable, Sequence
 from copy import copy
+from typing import Any, Callable
 
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
-from byron.user_messages import *
-from byron.classes.selement import SElement
 from byron.classes.fitness import FitnessABC
 from byron.classes.individual import Individual
+from byron.classes.node import NODE_ZERO
+from byron.classes.selement import SElement
+from byron.global_symbols import *
 from byron.tools.entropy import *
+from byron.user_messages import *
 
 
 class Population(Iterable):

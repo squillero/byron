@@ -29,20 +29,19 @@
 
 __all__ = ["Statistics", "fitness_function", "genetic_operator", "get_byron_type"]
 
-from typing import Callable
-from dataclasses import dataclass
-
-from functools import wraps
 import weakref
+from dataclasses import dataclass
+from functools import wraps
+from typing import Callable
 
+from byron import fitness
+from byron.classes import monitor
+from byron.classes.fitness import *
+from byron.classes.frame import FrameABC
+from byron.classes.individual import Individual, Lineage
+from byron.fitness_log import *
 from byron.global_symbols import *
 from byron.user_messages import *
-from byron.classes.individual import Individual, Lineage
-from byron.classes.frame import FrameABC
-from byron.classes.fitness import *
-from byron import fitness
-from byron.fitness_log import *
-from byron.classes import monitor
 
 FAMILYTREE_FILENAME = 'genealogy.db'
 FITNESS_LOG_FILENAME = 'fitness.db'

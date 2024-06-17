@@ -10,8 +10,10 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import random
-import byron as byron
+
 import numpy as np
+
+import byron as byron
 
 BATCH_SIZE = 4096
 

@@ -10,11 +10,12 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import logging
 import argparse
+import logging
+
+import library_riscv as library
 
 import byron
-import library_riscv as library
 
 
 def main():

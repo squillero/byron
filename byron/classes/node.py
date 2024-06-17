@@ -48,8 +48,8 @@ class Node(int):
     @staticmethod
     def reset_labels(G: nx.MultiDiGraph) -> None:
         """Set Graph node labels to unique numbers"""
-        from byron.tools.graph import fasten_subtree_parameters
         from byron.classes.node_reference import NodeReference
+        from byron.tools.graph import fasten_subtree_parameters
 
         new_labels = {k: Node() for k in G.nodes if k != NODE_ZERO}
         nx.relabel_nodes(G, new_labels, copy=False)
@@ -60,8 +60,8 @@ class Node(int):
     @staticmethod
     def relabel_to_canonic_form(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
         """Set Graph node labels to "canonic" labels"""
-        from byron.tools.graph import fasten_subtree_parameters
         from byron.classes.node_reference import NodeReference
+        from byron.tools.graph import fasten_subtree_parameters
 
         new_labels = {k: Node(i) for i, k in enumerate(G.nodes)}
         G = nx.relabel_nodes(G, new_labels, copy=True)

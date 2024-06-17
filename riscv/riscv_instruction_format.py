@@ -2,8 +2,10 @@ from __future__ import annotations
 
 from enum import Enum
 from typing import Callable, Collection
+
 import byron
-from byron.classes import ParameterABC, Macro, ParameterStructuralABC, FrameABC
+from byron.classes import FrameABC, Macro, ParameterABC, ParameterStructuralABC
+
 from .riscv_instruction_format_data import RiscvInstructionFormatData
 
 

@@ -28,21 +28,22 @@
 __all__ = ["adaptive_ea"]
 
 
-from typing import Callable
+from datetime import timedelta
 from inspect import signature
 from time import perf_counter_ns, process_time_ns
-from datetime import timedelta
+from typing import Callable
 
-from byron.operators import *
-from byron.user_messages import logger as byron_logger
-from byron.sys import *
-from byron.classes.frame import *
 from byron.classes.evaluator import *
+from byron.classes.frame import *
 from byron.fitness import make_fitness
+from byron.operators import *
+from byron.sys import *
 from byron.user_messages import *
+from byron.user_messages import logger as byron_logger
+
 from .common import take_operators
-from .selection import *
 from .estimator import Estimator
+from .selection import *
 
 
 def _elapsed(start, *, process: bool = False, steps: int = 0):

@@ -43,17 +43,17 @@ __all__ = [
     'set_successors_order',
 ]
 
+from collections import deque
 from collections.abc import Sequence
 from functools import lru_cache
-from collections import deque
 
 import networkx as nx
 
-from byron.global_symbols import *
 from byron.classes.node import *
-from byron.user_messages import *
 from byron.classes.node_reference import NodeReference
 from byron.classes.parameter import ParameterABC, ParameterStructuralABC
+from byron.global_symbols import *
+from byron.user_messages import *
 
 # =[PUBLIC FUNCTIONS]===================================================================================================
 

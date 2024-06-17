@@ -27,13 +27,11 @@
 
 from functools import cache
 
-from byron.user_messages import *
-from byron.global_symbols import *
-
 from byron.classes.parameter import ParameterStructuralABC
+from byron.global_symbols import *
 from byron.randy import rrandom
-
 from byron.tools.graph import *
+from byron.user_messages import *
 
 __all__ = ["local_reference"]
 

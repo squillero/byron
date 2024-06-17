@@ -28,17 +28,17 @@
 __all__ = ["sequence", "alternative", "bunch"]
 
 from collections import abc
-from typing import Sequence
 from functools import partial
+from typing import Sequence
 
-from byron.global_symbols import *
-from byron.user_messages import *
-from byron.classes.selement import SElement
 from byron.classes.frame import *
 from byron.classes.macro import Macro
 from byron.classes.node_reference import NodeReference
+from byron.classes.selement import SElement
 from byron.framework.utilities import cook_selement_list
+from byron.global_symbols import *
 from byron.randy import rrandom
+from byron.user_messages import *
 
 
 def alternative(

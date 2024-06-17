@@ -26,10 +26,10 @@
 
 __all__ = ["random_individual"]
 
-from byron.user_messages import *
-from byron.registry import *
 from byron.classes.individual import *
 from byron.operators.graph_tools import *
+from byron.registry import *
+from byron.user_messages import *
 
 
 @genetic_operator(num_parents=None)

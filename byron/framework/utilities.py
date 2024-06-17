@@ -27,15 +27,15 @@
 
 __all__ = ["cook_selement_list"]
 
-from typing import Sequence
 from collections import abc
+from typing import Sequence
 
-from byron.user_messages import *
-from byron.classes.selement import SElement
 from byron.classes.frame import FrameABC
-from byron.classes.parameter import ParameterABC
 from byron.classes.macro import Macro
+from byron.classes.parameter import ParameterABC
+from byron.classes.selement import SElement
 from byron.framework.macro import macro
+from byron.user_messages import *
 
 
 def cook_selement_list(raw_se_list: Sequence[type[SElement] | type[ParameterABC] | str]) -> list[type[SElement]]:
