@@ -107,10 +107,6 @@
 [tool.pytype]
     inputs = ['byron']
 
-[tool.pylint]
-    max-line-length = 120
-    source-roots    = ['src']
-
 [tool.ruff]
     line-length = 120
 

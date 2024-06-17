@@ -14,8 +14,9 @@ from copy import deepcopy
 
 try:
     import byron
-except ModuleNotFoundError as e:
-    import sys, os
+except ModuleNotFoundError:
+    import sys
+    import os
 
     sys.path.append(os.curdir)
     sys.path.append(os.pardir)

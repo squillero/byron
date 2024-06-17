@@ -25,5 +25,4 @@
 # =[ HISTORY ]===============================================================
 # v1 / May 2023 / Squillero (GX)
 
-from byron.classes.fitness import FitnessABC
 from byron.fitness import *

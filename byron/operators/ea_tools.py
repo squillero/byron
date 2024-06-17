@@ -36,7 +36,6 @@ import networkx as nx
 
 from typing import Sequence
 from collections import defaultdict
-from functools import partial
 
 from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO

@@ -6,7 +6,6 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-import functools
 
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
@@ -26,13 +25,11 @@ import functools
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-from itertools import chain
-from functools import cache, lru_cache
+from functools import cache
 from numbers import Number
 
 import networkx as nx
 
-from byron.classes import NodeReference
 from byron.user_messages import *
 from byron.randy import rrandom
 from byron.global_symbols import *

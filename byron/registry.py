@@ -36,7 +36,6 @@ from functools import wraps
 import weakref
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.individual import Individual, Lineage
 from byron.classes.frame import FrameABC

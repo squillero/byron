@@ -29,24 +29,23 @@
 
 __all__ = ['Individual', 'Lineage', 'Age']
 
-from typing import Any, Callable
+from typing import Callable
 from itertools import chain
 from copy import deepcopy, copy
+from dataclasses import dataclass
 import operator
 
 import networkx as nx
 
 from byron.user_messages import *
-from byron.user_messages.messaging import logger as byron_logger
 from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
 from byron.tools.graph import *
 
 if matplotlib_available:
-    import matplotlib.pyplot as plt
+    pass
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.classes.byron import Byron
 from byron.classes.dump import *
 from byron.classes.fitness import FitnessABC

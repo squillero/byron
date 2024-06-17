@@ -9,11 +9,9 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import warnings
 import pytest
 
 import byron
-import byron as byron
 
 
 def test_messaging():

@@ -32,13 +32,11 @@ from typing import Sequence
 from functools import partial
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.frame import *
 from byron.classes.macro import Macro
 from byron.classes.node_reference import NodeReference
-from byron.framework.macro import macro
 from byron.framework.utilities import cook_selement_list
 from byron.randy import rrandom
 
@@ -186,7 +184,7 @@ def bunch(
             )
         if len(pool) > len(set(pool)):
             syntax_warning_hint(
-                f"Found duplicate macros in pool — considering using 'weights'",
+                "Found duplicate macros in pool — considering using 'weights'",
                 stacklevel_offset=1,
             )
         return True

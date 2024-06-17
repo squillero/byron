@@ -27,6 +27,6 @@
 
 from .main import *
 
-assert "rrandom" not in globals(), f"SystemError (paranoia check): Randy the Random already initialized"
+assert "rrandom" not in globals(), "SystemError (paranoia check): Randy the Random already initialized"
 rrandom = Randy(42)
-assert "rrandom" in globals(), f"SystemError (paranoia check): Randy the Random not initialized"
+assert "rrandom" in globals(), "SystemError (paranoia check): Randy the Random not initialized"

@@ -36,7 +36,6 @@ except ModuleNotFoundError:
     psutil = None
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 
 
 class Byron:

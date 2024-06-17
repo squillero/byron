@@ -30,7 +30,6 @@ __all__ = ['calculate_entropy', 'calculate_delta_entropy']
 from typing import Sequence
 import math
 from collections import Counter
-from functools import reduce
 
 
 def calculate_entropy(messages: Sequence[Sequence[int]]) -> float:

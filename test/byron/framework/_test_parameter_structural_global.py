@@ -10,7 +10,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import byron as byron
-import pytest
 
 # def test_global_reference_creation():
 #     gr = byron.f.GlobalReference(target_frame='Frame')

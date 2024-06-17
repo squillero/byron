@@ -11,7 +11,6 @@
 
 import pytest
 
-import logging
 import itertools
 import os
 

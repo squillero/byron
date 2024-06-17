@@ -33,7 +33,6 @@ from typing import Any
 import re
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.global_symbols import DEFAULT_EXTRA_PARAMETERS, DEFAULT_OPTIONS
 
 

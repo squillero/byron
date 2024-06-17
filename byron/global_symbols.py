@@ -169,6 +169,6 @@ LOG_LAPSES = defaultdict(float)
 
 #####################################################################################################################
 
-assert "SE_DIRECTORY" not in globals(), f"SystemError (paranoia check): SElement Directory already initialized"
+assert "SE_DIRECTORY" not in globals(), "SystemError (paranoia check): SElement Directory already initialized"
 SE_DIRECTORY = set()
-assert "SE_DIRECTORY" in globals(), f"SystemError (paranoia check): SElement Directory not initialized"
+assert "SE_DIRECTORY" in globals(), "SystemError (paranoia check): SElement Directory not initialized"

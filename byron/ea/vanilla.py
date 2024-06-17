@@ -32,8 +32,6 @@ from typing import Optional
 from time import perf_counter_ns, process_time_ns
 from datetime import timedelta
 
-from tqdm.auto import tqdm
-from tqdm.contrib.logging import logging_redirect_tqdm, tqdm_logging_redirect
 
 from byron.operators import *
 from byron.sys import *

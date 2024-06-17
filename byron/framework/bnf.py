@@ -27,13 +27,11 @@
 
 __all__ = ["bnf"]
 
-from byron.global_symbols import FRAMEWORK
 from byron.classes.frame import FrameABC
 from byron.classes.selement import SElement
 from byron.classes.macro import Macro
 from byron.classes.readymade_frames import SELF
 from byron.tools.names import base_name
-from byron.framework.macro import macro
 
 from .framework import *
 

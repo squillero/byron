@@ -11,7 +11,6 @@
 
 from typing import Any
 import byron as byron
-import pytest
 
 
 class MockParameter(byron.classes.ParameterABC):

@@ -1,6 +1,5 @@
 __all__ = ["FitnessLog"]
 
-from pprint import pformat
 from datetime import datetime
 
 

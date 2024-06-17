@@ -26,6 +26,5 @@
 # v1 / August 2023 / Squillero (GX)
 
 
-from dataclasses import dataclass
 
 # @dataclass(frozen=True, slots=True)

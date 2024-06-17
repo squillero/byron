@@ -27,7 +27,6 @@
 
 __all__ = ["reverse_fitness"]
 
-from abc import ABC, abstractmethod
 from functools import cache
 
 from byron.classes.fitness import FitnessABC

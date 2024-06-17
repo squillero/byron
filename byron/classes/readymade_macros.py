@@ -27,15 +27,11 @@
 
 __all__ = ["MacroZero", "Info"]
 
-import sys
 from datetime import datetime
-import platform
 
-import networkx as nx
 
 from byron.classes.macro import Macro
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 
 

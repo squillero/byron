@@ -95,12 +95,12 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
         u for u, v, k, d in new_genome.in_edges(node1_parent, keys=True, data='_type') if d == FRAMEWORK
     ]
     if len(node1_parent_struct) != 1:
-        logger.debug(f"generic_node_crossover: Failed (node 1 have many structural parent)")
+        logger.debug("generic_node_crossover: Failed (node 1 have many structural parent)")
         raise ByronOperatorFailure
     node1_parent_struct = node1_parent_struct[0]
     node2_parent_struct = [u for u, v, k, d in new_genome.in_edges(node2, keys=True, data='_type') if d == FRAMEWORK]
     if len(node2_parent_struct) != 1:
-        logger.debug(f"generic_node_crossover: Failed (node 2 have many structural parent)")
+        logger.debug("generic_node_crossover: Failed (node 2 have many structural parent)")
         raise ByronOperatorFailure
     node2_parent_struct = node2_parent_struct[0]
 
@@ -110,7 +110,7 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
             (u, k) for u, v, k, d in new_genome.in_edges(new_node, keys=True, data='_type') if d == FRAMEWORK
         ]
         if len(parent_struct) != 1:
-            logger.debug(f"generic_node_crossover: Failed (new successor have many structural parent)")
+            logger.debug("generic_node_crossover: Failed (new successor have many structural parent)")
             raise ByronOperatorFailure
         parent_struct = parent_struct[0]
         parents_struct.add(parent_struct[0])
@@ -120,11 +120,11 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
 
     different_parent_struct = parents_struct - new_nodes_of_P2
     if different_parent_struct != {node2_parent_struct}:
-        logger.debug(f"generic_node_crossover: Failed (invalid structure)")
+        logger.debug("generic_node_crossover: Failed (invalid structure)")
         raise ByronOperatorFailure
 
     logger.debug(
-        f"generic_node_crossover: "
+        "generic_node_crossover: "
         + f"{node1}/{new_genome.nodes[node1]['_selement'].__class__}"
         + " <-> "
         + f"{node2}/{new_genome.nodes[node2]['_selement'].__class__}"
@@ -142,7 +142,7 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     discard_useless_components(new_genome)
 
     if not get_structure_tree(new_genome):
-        logger.debug(f"generic_node_crossover: Failed (invalid structure)")
+        logger.debug("generic_node_crossover: Failed (invalid structure)")
         raise ByronOperatorFailure
 
     Node.reset_labels(new_genome)
@@ -152,7 +152,7 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     # assert parent1.run_paranoia_checks()
     # assert parent2.run_paranoia_checks()
     if not new_individual.valid:
-        logger.debug(f"generic_node_crossover: Failed (invalid individual)")
+        logger.debug("generic_node_crossover: Failed (invalid individual)")
         return list()
 
     return [new_individual]

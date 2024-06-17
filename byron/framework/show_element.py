@@ -32,13 +32,10 @@ from byron.sys import *
 from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
 from byron.classes.selement import SElement
-from byron.classes.frame import FrameABC
 from byron.framework.macro import macro
 from byron.classes.parameter import ParameterABC
-from byron.classes.population import Population
 from byron.classes.individual import Individual
 from byron.operators.initializers import *
-from byron.classes.readymade_macros import MacroZero
 
 
 def as_text(

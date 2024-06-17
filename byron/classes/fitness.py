@@ -28,11 +28,9 @@
 __all__ = ["FitnessABC"]
 
 from abc import ABC, abstractmethod
-from functools import wraps, cache
 
 # from byron.classes.paranoid import Paranoid
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 
 

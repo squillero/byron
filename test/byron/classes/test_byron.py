@@ -9,7 +9,6 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import pytest
 from byron.classes.byron import Byron
 import networkx as nx
 

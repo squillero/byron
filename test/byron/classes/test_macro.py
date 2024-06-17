@@ -10,7 +10,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import pytest
-from byron.classes.macro import Macro, ValueBag, NodeView
+from byron.classes.macro import Macro, ValueBag
+from byron.classes.node_view import NodeView
 import math
 import random
 

@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from enum import Enum, Flag, auto
-from typing import Sequence, List, Dict, Set, Callable, Collection
-import byron
-from byron.classes import ParameterABC, Macro, ParameterStructuralABC, FrameABC
+from typing import Dict, Set
 from .riscv_instruction_format import RiscvInstructionFormat
 from .riscv_isa_base import RiscvIsaBase
 from .riscv_isa_extension import RiscvIsaExtension

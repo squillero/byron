@@ -17,7 +17,6 @@ import byron
 
 NUM_BITS = 50
 
-from icecream import ic
 
 
 @byron.fitness_function

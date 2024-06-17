@@ -41,7 +41,6 @@ import time
 import warnings
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 
 BASE_STACKLEVEL = 3
 
@@ -101,12 +100,12 @@ def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
 #############################################################################
 # CUSTOMIZATIONS
 
-assert "logger" not in globals(), f"SystemError (paranoia check): byron logger already initialized"
+assert "logger" not in globals(), "SystemError (paranoia check): byron logger already initialized"
 logging.basicConfig()  # Initialize logging
 logger = logging.getLogger('byron')
 logger.propagate = False
 
-assert 'logger' in globals(), f"SystemError (paranoia check): byron logger not initialized"
+assert 'logger' in globals(), "SystemError (paranoia check): byron logger not initialized"
 
 if test_mode:
     logger.setLevel(logging.WARNING)
@@ -121,7 +120,6 @@ else:
 
 from rich import logging as rich_logging
 from rich import highlighter as rich_highlighter
-from rich import console as rich_console
 
 # console_handler = logging.StreamHandler()
 # console_handler.setFormatter(console_formatter)

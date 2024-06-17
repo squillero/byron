@@ -27,14 +27,12 @@
 
 __all__ = ["NodeView"]
 
-import dataclasses
 from dataclasses import dataclass
 from functools import cached_property
 
 import networkx as nx
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.value_bag import ValueBag
 from byron.classes.node_reference import NodeReference

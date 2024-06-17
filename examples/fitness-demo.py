@@ -11,7 +11,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from math import sqrt
-from itertools import combinations
 
 import byron
 

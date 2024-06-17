@@ -1,16 +1,13 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-from enum import Enum, Flag, auto
-from typing import Sequence, List, Dict, Set, Callable, Collection
-import byron
-from byron.classes import ParameterABC, Macro, ParameterStructuralABC, FrameABC
+from typing import Sequence, Dict, Collection
+from byron.classes import Macro, FrameABC
 from .riscv_instruction_format import RiscvInstructionFormat
 
 
 class RiscvIsa:
     def __init__(self, operations: Dict[RiscvInstructionFormat, Collection[str]], registers: Collection[str]):
-        assert len(registers) > 0, f"No registers initialized"
+        assert len(registers) > 0, "No registers initialized"
         # self._registers = byron.f.choice_parameter(registers)
         self._registers = registers
 

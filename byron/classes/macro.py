@@ -27,9 +27,7 @@
 
 __all__ = ["Macro"]
 
-from collections import defaultdict
 from typing import Any
-from copy import copy
 
 from byron.user_messages import *
 
@@ -37,7 +35,6 @@ from byron.classes.selement import SElement
 from byron.classes.paranoid import Paranoid
 from byron.classes.value_bag import USER_PARAMETER
 from byron.classes.value_bag import ValueBag
-from byron.classes.node_view import NodeView
 from byron.classes.parameter import ParameterABC
 
 

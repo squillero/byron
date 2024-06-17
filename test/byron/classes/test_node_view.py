@@ -18,7 +18,6 @@ from byron.classes.node_reference import NodeReference
 from byron.classes.node import Node
 from byron.classes.selement import SElement
 from byron.classes.parameter import ParameterABC
-from byron.classes.value_bag import ValueBag
 from typing import Any
 
 

@@ -39,9 +39,6 @@ from byron.classes.node import NODE_ZERO
 # noinspection PyUnresolvedReferences
 from byron import user_messages
 
-# noinspection PyUnresolvedReferences
-from byron import user_messages
-
 ##from _byron.user_messages.exception import *
 ### noinspection PyUnresolvedReferences
 
@@ -111,7 +108,7 @@ from byron.tools.entropy import *
 
 __welcome__ = (
     f'[bold]This is Byron v{__version__.rsplit(".", maxsplit=1)[0]} "[italic]{__codename__}[/italic]"[/]\n'
-    + f"[bold](c) 2023-24 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
+    + "[bold](c) 2023-24 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
 )
 
 

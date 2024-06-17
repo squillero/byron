@@ -12,7 +12,6 @@
 
 import logging
 import argparse
-from typing import Sequence
 
 import byron
 import library_riscv as library

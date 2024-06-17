@@ -129,7 +129,7 @@ class Population(Iterable):
     def __isub__(self, individual):
         assert check_valid_types(individual, Sequence)
         assert all(check_valid_types(i, Individual) for i in individual)
-        assert all(i.valid for i in individual), f"ValueError: invalid individual"
+        assert all(i.valid for i in individual), "ValueError: invalid individual"
         for i in individual:
             try:
                 self._individuals.remove(i)

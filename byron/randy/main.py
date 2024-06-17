@@ -109,7 +109,7 @@ class Randy:
         """A value from between [a, b) by permutating 'loc' with a give 'strength'."""
         assert (
             self.__check_saved_state()
-        ), f"SystemError (paranoia check): Randy the Random internal state has been modified"
+        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
         assert Randy._check_parameters(a, b, loc=loc, strength=strength)
         self._calls += 1
         if loc is None or strength == 1.0:
@@ -134,7 +134,7 @@ class Randy:
         """A value from between [a, b) by permutating 'loc' with a give 'strength'."""
         assert (
             self.__check_saved_state()
-        ), f"SystemError (paranoia check): Randy the Random internal state has been modified"
+        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
         assert Randy._check_parameters(a, b, loc=loc, strength=strength)
         self._calls += 1
         if loc is None or strength == 1.0:
@@ -175,7 +175,7 @@ class Randy:
         """Shuffle list x in place, and return None."""
         assert (
             self.__check_saved_state()
-        ), f"SystemError (paranoia check): Randy the Random internal state has been modified"
+        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
         self._generator.shuffle(seq)
         assert self.__save_state()
 

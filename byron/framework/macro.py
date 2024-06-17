@@ -30,7 +30,6 @@ __all__ = ["macro"]
 from functools import cache
 from typing import Any
 
-from byron.global_symbols import FRAMEWORK
 from byron.user_messages import *
 from byron.classes.macro import Macro
 from byron.classes.parameter import ParameterABC

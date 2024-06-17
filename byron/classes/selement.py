@@ -30,11 +30,9 @@ __all__ = ['SElement', 'SElementMeta']
 
 from typing import Callable, Sequence, Optional
 from collections import defaultdict
-import re
 from uuid import uuid1 as generate_uuid
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 
 

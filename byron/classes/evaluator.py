@@ -44,7 +44,6 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 
 if joblib_available:
     import joblib
@@ -55,7 +54,6 @@ from byron.fitness import make_fitness
 from byron.classes.population import Population
 from byron.registry import *
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 
 
 @dataclass(kw_only=True, slots=True)
@@ -251,7 +249,7 @@ class PythonEvaluator(EvaluatorABC):
             (i, I, self.cook(population.dump_individual(i))) for i, I in population.not_finalized_individuals
         ]
         if not individuals:
-            logger.debug(f"PythonEvaluator: All individuals in the population have already been finalized")
+            logger.debug("PythonEvaluator: All individuals in the population have already been finalized")
             return
 
         if self._max_workers == 1 or not self._backend:
@@ -416,14 +414,14 @@ class MakefileEvaluator(EvaluatorABC):
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
         if not indexes:
-            logger.debug(f"MakefileEvaluator: All individuals in the population have already been finalized")
+            logger.debug("MakefileEvaluator: All individuals in the population have already been finalized")
             return
 
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:
             for i, result in zip(indexes, pool.map(self._evaluate, phenotypes)):
                 self._fitness_calls += 1
                 if result is None:
-                    raise RuntimeError(f"Thread failed (returned None)")
+                    raise RuntimeError("Thread failed (returned None)")
                 else:
                     if self._stdout_cleaner is None:
                         value = [float(r) if '.' in r else int(r) for r in result.stdout.split()]
@@ -497,7 +495,7 @@ class ScriptEvaluator(EvaluatorABC):
     def evaluate_population(self, population: Population) -> None:
         individuals = population.not_finalized_individuals
         if not individuals:
-            logger.debug(f"ScriptEvaluator: All individuals in the population have already been finalized")
+            logger.debug("ScriptEvaluator: All individuals in the population have already been finalized")
             return
         files = list()
         for idx, ind in individuals:
@@ -657,7 +655,7 @@ class ParallelScriptEvaluator(EvaluatorABC):
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
         if not indexes:
-            logger.debug(f"ParallelScriptEvaluator: All individuals in the population have already been finalized")
+            logger.debug("ParallelScriptEvaluator: All individuals in the population have already been finalized")
             return
 
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:

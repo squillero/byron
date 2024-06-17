@@ -70,14 +70,14 @@ class Estimator:
     ):
         self._population = population
         self._operators = dict([[o.__name__, self.I(o, 0, 0)] for o in take_operators(False, operators)])
-        assert time_horizon > 0, f"time_horizon need to be positive integer"
+        assert time_horizon > 0, "time_horizon need to be positive integer"
         self._horizon = time_horizon
         self._time = population.generation
-        assert len(rewards) == 2, f"must specify two value for reward"
+        assert len(rewards) == 2, "must specify two value for reward"
         self._rewards = rewards
         self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
         self._exploit = False
-        assert temperature > 0, f"temperature must be greater then 0"
+        assert temperature > 0, "temperature must be greater then 0"
         self._temperature = temperature
         self._max_t = temperature
         self._best = None

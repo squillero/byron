@@ -10,7 +10,6 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import pytest
-import logging
 from byron.classes.selement import SElement
 
 
