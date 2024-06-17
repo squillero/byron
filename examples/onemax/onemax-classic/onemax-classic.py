@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 ###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
@@ -16,7 +15,6 @@ import logging
 import byron
 
 NUM_BITS = 50
-
 
 
 @byron.fitness_function

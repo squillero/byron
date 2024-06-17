@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
@@ -8,7 +7,6 @@
 #################################### ' #####################################
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
-
 
 
 class TestObject:

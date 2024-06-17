@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 ###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
@@ -518,8 +517,8 @@ class ScriptEvaluator(EvaluatorABC):
             raise RuntimeError(f"Process returned empty stdout (stderr: '{result.stderr}')")
         else:
             results = list(filter(lambda s: bool(s), result.stdout.split("\n")))
-            assert (
-                len(results) == len(individuals)
+            assert len(results) == len(
+                individuals
             ), f"{PARANOIA_VALUE_ERROR}: Number of results and number of individual mismatch: found {len(results)} expected {len(individuals)}"
             for ind, line in zip_longest(individuals, results):
                 value = [float(r) for r in line.split()]
