@@ -12,7 +12,7 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/byron?label=pypi)](https://pypi.org/project/byron/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=downloads)](https://pypi.org/project/byron/)
 
-> Formerly known as [MicroGP](https://github.com/orgs/microgp/repositories?q=visibility%3Apublic+sort%3Aname-asc) v4
+> Formerly known as [MicroGP4](https://cad-polito-it.github.io/byron/history)
 
 Byron is a generic [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization) designed to support source code [fuzzing](https://en.wikipedia.org/wiki/Fuzzing), either in assembly or in higher level languages. It starts by generating a set of random programs, which are then iteratively improved by an [evolutionary algorithm](https://cad-polito-it.github.io/byron/evolution). It can handle quite complex structures including subroutines, local and global variables, jumps, conditionals, and loops.
 

@@ -36,9 +36,5 @@ class ByronError(ByronException):
     """Exception for a serious error in byron."""
 
 
-# class InvalidIndividual(MicroGPException):
-#    """Exception when an individual is invalid."""
-
-
 class ByronOperatorFailure(ByronException):
     """Exception when a Genetic Operator can't generate a valid individual."""
