@@ -24,7 +24,8 @@
 
 # =[ HISTORY ]===============================================================
 # v1 / June 2023 / Squillero (GX)
-"""THE FIRST ONE IS FOR THE DEFINING CLASSES AND THE SECOND ONE IS FOR THE DEFINING METACLASS. """
+"""THE FIRST ONE IS FOR THE DEFINING CLASSES AND THE SECOND ONE IS FOR THE DEFINING METACLASS."""
+
 __all__ = ['SElement', 'SElementMeta']
 
 from typing import Callable, Sequence, Optional

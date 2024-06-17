@@ -14,6 +14,7 @@ import byron
 
 generators = [op for op in byron.sys.get_operators() if op.num_parents is None]
 
+
 def get_base_macros():
     macros = list()
     macros.append(byron.f.macro('int 0x{num:X}', num=byron.f.integer_parameter(0, 2**32)))

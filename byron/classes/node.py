@@ -32,6 +32,7 @@ import networkx as nx
 
 class Node(int):
     r"""Simple helper to guarantee Node ids uniqueness"""
+
     __slots__ = []
     __LAST_BYRON_NODE = 0
 

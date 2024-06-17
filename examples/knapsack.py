@@ -22,7 +22,7 @@ import byron
 MAX_WEIGHT = 50
 WEIGHTS = [31, 10, 20, 19, 4, 3, 6]
 VALUES = [70, 20, 39, 37, 7, 5, 10]
-#max value: 107
+# max value: 107
 
 
 @byron.fitness_function
@@ -43,12 +43,11 @@ def fitness(genotype):
 
 
 def main():
+    macro1 = byron.f.macro('{v}', v=byron.f.integer_parameter(1, 3))
+    macro2 = byron.f.macro('{v}', v=byron.f.integer_parameter(3, 6))
+    macro3 = byron.f.macro('{v}', v=byron.f.integer_parameter(6, 8))
 
-    macro1 = byron.f.macro('{v}', v=byron.f.integer_parameter(1,3))
-    macro2 = byron.f.macro('{v}', v=byron.f.integer_parameter(3,6))
-    macro3 = byron.f.macro('{v}', v=byron.f.integer_parameter(6,8))
-
-    top_frame = byron.f.bunch([macro1, macro2, macro3], (1,181))
+    top_frame = byron.f.bunch([macro1, macro2, macro3], (1, 181))
 
     evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True)
     # evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True, backend='thread_pool')
@@ -56,9 +55,7 @@ def main():
 
     byron.logger.info("main: Using %s", evaluator)
 
-    population = byron.ea.adaptive_ea(
-        top_frame, evaluator, max_generation=500, lambda_=20, mu=10, top_n=1, lifespan=2
-    )
+    population = byron.ea.adaptive_ea(top_frame, evaluator, max_generation=500, lambda_=20, mu=10, top_n=1, lifespan=2)
 
     byron.sys.log_operators()
 

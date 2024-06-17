@@ -33,8 +33,10 @@ def main():
     # evaluator = byron.evaluator.PythonEvaluator(dummy_fitness)
 
     byron.f.set_global_option('$dump_node_info', True)
-    #final_population = byron.ea.vanilla_ea(top_frame, evaluator, max_generation=1_000, mu=50, lambda_=20, max_fitness=64.0)
-    final_population = byron.ea.adaptive_ea(top_frame, evaluator, max_generation=1_000, mu=50, lambda_=20, max_fitness=64.0)
+    # final_population = byron.ea.vanilla_ea(top_frame, evaluator, max_generation=1_000, mu=50, lambda_=20, max_fitness=64.0)
+    final_population = byron.ea.adaptive_ea(
+        top_frame, evaluator, max_generation=1_000, mu=50, lambda_=20, max_fitness=64.0
+    )
 
     # byron.logger.info("[b]POPULATION[/b]")
     # max_f = max(i.fitness for i in final_population.individuals)

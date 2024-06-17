@@ -56,7 +56,7 @@ __all__ = [
     'DEFAULT_EXTRA_PARAMETERS',
     'DEFAULT_OPTIONS',
     'LOG_LAPSES',
-    'SE_DIRECTORY'
+    'SE_DIRECTORY',
 ]
 
 import logging

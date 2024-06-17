@@ -115,11 +115,14 @@
     line-length = 120
 
 [tool.ruff.lint]
-    extend-select = [
-        "UP",  # pyupgrade
-        "D",   # pydocstyle
-    ]
+    #extend-select = [
+    #    "UP",  # pyupgrade
+    #    "D",   # pydocstyle
+    #]
 
+[tool.ruff.format]
+    # Prefer single quotes over double quotes.
+    quote-style = "preserve"
 
 [tool.bumpver]
     current_version = "0.8a1.dev50"

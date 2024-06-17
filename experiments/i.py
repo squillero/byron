@@ -20,7 +20,9 @@ asm_instruction = byron.f.macro(
     imm=byron.f.integer_parameter(0, 2**16),
 )
 
-section_proc = byron.f.sequence([byron.f.macro("proc {_node} near:"), byron.f.bunch(asm_instruction, 3), byron.f.macro("ret")], name="zap")
+section_proc = byron.f.sequence(
+    [byron.f.macro("proc {_node} near:"), byron.f.bunch(asm_instruction, 3), byron.f.macro("ret")], name="zap"
+)
 
 asm_call = byron.f.macro("call {target}", target=byron.f.global_reference("zap", creative_zeal=1))
 

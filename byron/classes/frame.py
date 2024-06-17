@@ -74,6 +74,7 @@ class FrameSequence:
     --------
     `sequence` factory function
     """
+
     pass
 
 
@@ -84,6 +85,7 @@ class FrameAlternative:
     --------
     `altrnative` factory function
     """
+
     pass
 
 
@@ -94,4 +96,5 @@ class FrameMacroBunch:
     --------
     `bunch` factory function
     """
+
     pass
