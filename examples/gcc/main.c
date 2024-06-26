@@ -1,10 +1,13 @@
-// (!) by Giovanni Squillero <giovanni.squillero@polito.it>
-// +---------------------------------------------------------+
-// |   -=*=-  THIS FILE IS NOT INTENDED FOR SHARING  -=*=-   |
-// +---------------------------------------------------------+
-// The intellectual and technical concepts are proprietary.
-// Reproduction or distribution is prohibited and may result
-// in civil charges and criminal penalties.
+/**************************************************************************\
+ *  _____                          |   |                                  *
+ * |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an  *
+ * |  __ <  |  |   _|  _  |     |  |___|  intelligent source-code fuzzer. *
+ * |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"            *
+ *       |_____|                    \|/                                   *
+ **************************************************************************
+ * Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+ * SPDX-License-Identifier: Apache-2.0
+\**************************************************************************/
 
 #include <stdio.h>
 

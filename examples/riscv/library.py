@@ -1,17 +1,18 @@
 #!/usr/bin/env python3
 ###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import byron
 from isa.riscv_isa_builder import RiscvIsaBuilder, RiscvRegisters
 from isa.riscv_isa_custom_operation_set import RiscvIsaCustomOperationSet
+
+import byron
 
 COMMENT = '#'
 
