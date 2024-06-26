@@ -1,7 +1,7 @@
 @echo off
 rem    __                          (`/\
 rem   |  |--.--.--.----.-----.-----`=\/\   This file is part of Byron v0.8
-rem   |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer
+rem   |  _  |  |  |   _|  _  |     |`=\/\  intelligent source-code fuzzer
 rem   |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron
 rem         |_____|                     \
 rem

@@ -1,13 +1,10 @@
-#############################################################################
-#           __________                                                      #
-#    __  __/ ____/ __ \__ __   This file is part of MicroGP v4!2.0          #
-#   / / / / / __/ /_/ / // /   A versatile evolutionary optimizer & fuzzer  #
-#  / /_/ / /_/ / ____/ // /_   https://github.com/microgp/microgp4          #
-#  \__  /\____/_/   /__  __/                                                #
-#    /_/ --MicroGP4-- /_/      You don't need a big goal, be μ-ambitious!   #
-#                                                                           #
-#############################################################################
-
+###################################|###|####################################
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 

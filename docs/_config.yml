@@ -1,5 +1,13 @@
+###################################|###|####################################
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
+
 title: Byron
-#description: [Multi-purpose extensible self-adaptive optimizer and fuzzer]
+#description: [An evolutionary source code fuzzer]
 
 remote_theme: pages-themes/cayman@v0.2.0
 
