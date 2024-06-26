@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 ###################################|###|####################################
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
@@ -12,11 +11,13 @@
 import argparse
 import logging
 
+from icecream import ic
+
 import byron
 
 
 def main():
-    pass
+    ic(42)
 
 
 if __name__ == '__main__':

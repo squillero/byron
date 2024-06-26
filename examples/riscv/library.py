@@ -10,8 +10,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import byron
-from riscv.riscv_isa_builder import RiscvIsaBuilder, RiscvRegisters
-from riscv.riscv_isa_custom_operation_set import RiscvIsaCustomOperationSet
+from isa.riscv_isa_builder import RiscvIsaBuilder, RiscvRegisters
+from isa.riscv_isa_custom_operation_set import RiscvIsaCustomOperationSet
 
 COMMENT = '#'
 

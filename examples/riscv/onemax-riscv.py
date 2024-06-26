@@ -12,7 +12,7 @@
 import argparse
 import logging
 
-import library_riscv as library
+import library
 
 import byron
 
