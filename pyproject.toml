@@ -10,7 +10,7 @@
 
 [tool.poetry]
     name = "byron"
-    version = "0.8a1.dev51"
+    version = "0.8a1.dev52"
     description = "An evolutionary fuzzer for ASM & HLLs"
     authors = [
         "Cyber Romanticists",
@@ -119,7 +119,7 @@
         quote-style = "preserve"
 
 [tool.bumpver]
-    current_version = "0.8a1.dev51"
+    current_version = "0.8a1.dev52"
     version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
     commit_message  = "Bump version to {new_version}"
     commit          = true
