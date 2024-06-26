@@ -6,7 +6,7 @@ Programs can be evaluated using a user-defined Python function or an external to
 
 Byron, formerly known as [MicroGP](https://github.com/microgp) v4, was made possible by the contributions of [many individuals](contributors) over [many years](history). 
 
-### Installation
+### Installation and Usage
 
 **⚠️ Byron is currently in [alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha) and under active development**
 
