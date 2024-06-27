@@ -208,12 +208,34 @@ def fasten_subtree_parameters(node_reference: NodeReference):
 def discard_useless_components(G: nx.MultiDiGraph) -> None:
     """Removes unconnected and unreached components"""
     H = nx.MultiDiGraph()
+    H_framework = nx.MultiDiGraph()
     H.add_edges_from(G.out_edges(keys=False))
+    H_framework.add_edges_from((u, v) for u, v, d in G.out_edges(keys=False, data='_type') if d == FRAMEWORK)
     H.remove_node(NODE_ZERO)
+    H_framework.remove_node(NODE_ZERO)
     node_zero, first_tree = next((u, v) for u, v in G.edges(NODE_ZERO))
     H.add_edge(node_zero, first_tree)
-    directly_connected_nodes = H.nodes - (nx.descendants(H, node_zero) | {node_zero})
-    G.remove_nodes_from(directly_connected_nodes)
+    H_framework.add_edge(node_zero, first_tree)
+    H_descendants = nx.descendants(H, NODE_ZERO)
+    H_framework_descendants = nx.descendants(H_framework, NODE_ZERO)
+    nodes_to_connect = H_descendants - H_framework_descendants  # are nodes that are parts of subroutines
+    for n in nodes_to_connect:
+
+        def recursevily_rise_the_tree(node):
+            in_edges_nodes = [u for u, v in H_framework.in_edges(node)]
+            if len(in_edges_nodes) > 1:
+                logger.debug(f"generic_node_crossover: Failed (invalid structure, only one framework in_edge possible)")
+                raise ByronOperatorFailure
+            if len(in_edges_nodes) == 0:
+                return node
+            return recursevily_rise_the_tree(in_edges_nodes[0])
+
+        tree_parent = recursevily_rise_the_tree(n)
+        tree_descendants = nx.descendants(H_framework, tree_parent)  # maybe rec over H
+        H_descendants |= tree_descendants | {tree_parent}
+
+    nodes_to_remove = H.nodes - (H_descendants | {NODE_ZERO})
+    G.remove_nodes_from(nodes_to_remove)
 
 
 def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:
