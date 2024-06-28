@@ -41,7 +41,6 @@ class RiscvIsaExtension(RiscvIsaOperationSet):
             ],
         ],
     )
-    A = ("", [])
-    F = ("", [])
-    D = ("", [])
-    Q = ("", [])
+    # A = ("", [])
+    # F = ("", [])
+    # D = ("", [])

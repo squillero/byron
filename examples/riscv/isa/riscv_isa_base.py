@@ -47,8 +47,9 @@ class RiscvIsaBase(RiscvIsaOperationSet):
             RiscvOperation.BLTU,
             RiscvOperation.BGE,
             RiscvOperation.BGEU,
+            # Missing load, store, fence, csr
         ],
     )
-    RV32E = ("RV32E", [])
-    RV64I = ("RV64I", [*RV32I[1], *[]])
-    RV128I = ("RV128I", [])
+    # RV32E = ("RV32E", [])
+    # RV64I = ("RV64I", [*RV32I[1], *[]])
+    # RV128I = ("RV128I", [])

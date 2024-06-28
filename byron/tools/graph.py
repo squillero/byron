@@ -206,13 +206,35 @@ def fasten_subtree_parameters(node_reference: NodeReference):
 
 def discard_useless_components(G: nx.MultiDiGraph) -> None:
     """Removes unconnected and unreached components"""
-    H = nx.MultiDiGraph()
-    H.add_edges_from(G.out_edges(keys=False))
-    H.remove_node(NODE_ZERO)
-    node_zero, first_tree = next((u, v) for u, v in G.edges(NODE_ZERO))
-    H.add_edge(node_zero, first_tree)
-    directly_connected_nodes = H.nodes - (nx.descendants(H, node_zero) | {node_zero})
-    G.remove_nodes_from(directly_connected_nodes)
+
+    # generate a MultiDiGraph with the provided edges and unconnect all the tree except the first
+    def multi_di_graph_with_unconnected_zero(edges):
+        h = nx.MultiDiGraph()
+        h.add_edges_from(edges)
+        h.remove_node(NODE_ZERO)
+        node_zero, first_tree = next((u, v) for u, v in G.edges(NODE_ZERO))
+        h.add_edge(node_zero, first_tree)
+        return h
+
+    # generate the 2 multi di graph (the second only with framework edges)
+    H = multi_di_graph_with_unconnected_zero(G.out_edges(keys=False))
+    H_framework = multi_di_graph_with_unconnected_zero(
+        (u, v) for u, v, d in G.out_edges(keys=False, data='_type') if d == FRAMEWORK
+    )
+
+    # remove unconnected nodes
+    G.remove_nodes_from(G.nodes - H.nodes)
+
+    # add recursively to the H and H_framework graph the connections to the subroutine subtrees
+    while len(nodes_to_connect := nx.descendants(H, NODE_ZERO) - nx.descendants(H_framework, NODE_ZERO)) != 0:
+        for n in nodes_to_connect:
+            tree_parent = next(iter(nx.ancestors(H_framework, n)))
+            H.add_edge(NODE_ZERO, tree_parent)
+            H_framework.add_edge(NODE_ZERO, tree_parent)
+
+    # removes the node not usefull(node that are not descendants of the first tree or there are not part of subroutines called by the first tree)
+    nodes_to_remove = H.nodes - (nx.descendants(H, NODE_ZERO) | {NODE_ZERO})
+    G.remove_nodes_from(nodes_to_remove)
 
 
 def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:
