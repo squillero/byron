@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -30,11 +29,11 @@
 
 import networkx as nx
 
-from byron.tools.graph import *
-from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
 from byron.classes.node_reference import NodeReference
 from byron.classes.node_view import NodeView
+from byron.global_symbols import *
+from byron.tools.graph import *
 
 if matplotlib_available:
     import matplotlib.pyplot as plt

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
@@ -11,15 +10,16 @@
 
 
 import dataclasses
-import pytest
-import networkx as nx
-from byron.classes.node_view import NodeView
-from byron.classes.node_reference import NodeReference
-from byron.classes.node import Node
-from byron.classes.selement import SElement
-from byron.classes.parameter import ParameterABC
-from byron.classes.value_bag import ValueBag
 from typing import Any
+
+import networkx as nx
+import pytest
+
+from byron.classes.node import Node
+from byron.classes.node_reference import NodeReference
+from byron.classes.node_view import NodeView
+from byron.classes.parameter import ParameterABC
+from byron.classes.selement import SElement
 
 
 class MockSElement(SElement):

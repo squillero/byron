@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -43,17 +42,17 @@ __all__ = [
     'set_successors_order',
 ]
 
+from collections import deque
 from collections.abc import Sequence
 from functools import lru_cache
-from collections import deque
 
 import networkx as nx
 
-from byron.global_symbols import *
 from byron.classes.node import *
-from byron.user_messages import *
 from byron.classes.node_reference import NodeReference
 from byron.classes.parameter import ParameterABC, ParameterStructuralABC
+from byron.global_symbols import *
+from byron.user_messages import *
 
 # =[PUBLIC FUNCTIONS]===================================================================================================
 
@@ -78,7 +77,7 @@ def get_siblings(ref: NodeReference) -> tuple[int]:
         A list of node indexes
     """
 
-    assert ref.node != NODE_ZERO, f"ValueError: NODE_ZERO has ho siblings."
+    assert ref.node != NODE_ZERO, "ValueError: NODE_ZERO has ho siblings."
     return get_successors(NodeReference(ref.graph, get_predecessor(ref)))
 
 
@@ -86,7 +85,7 @@ def set_successors_order(ref: NodeReference, new_order: Sequence[int]) -> None:
     assert check_valid_type(new_order, Sequence)
     G = ref.graph
     current = tuple((u, v, k) for u, v, k, d in G.out_edges(ref.node, keys=True, data="_type") if d == FRAMEWORK)
-    assert all(k == 0 for u, v, k in current), f"ValueError: Found a FRAMEWORK edge with key != 0."
+    assert all(k == 0 for u, v, k in current), "ValueError: Found a FRAMEWORK edge with key != 0."
     assert {v for u, v, k in current} == set(
         new_order
     ), f"{PARANOIA_VALUE_ERROR}: Mismatching new order: {[v for u, v, k in current]} vs. {new_order}."

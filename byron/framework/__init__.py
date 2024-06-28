@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -34,15 +33,15 @@ Notes:
       Python operator ``is`` returns ``True``
 """
 
-from .defaults import *
+from byron.classes.readymade_frames import *
+from byron.classes.readymade_macros import *
+
 from .bnf import *
+from .defaults import *
 from .framework import *
 from .macro import *
 from .parameter import *
-from .parameter_structural_local import *
 from .parameter_structural_global import *
+from .parameter_structural_local import *
 from .shared import *
 from .show_element import *
-
-from byron.classes.readymade_macros import *
-from byron.classes.readymade_frames import *

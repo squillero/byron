@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -33,29 +32,26 @@ __all__ = [
     'ScriptEvaluator',
 ]
 
-from typing import Callable, Sequence
-from abc import ABC, abstractmethod
-from dataclasses import dataclass
-from itertools import zip_longest
-
 import os
 import subprocess
 import tempfile
+from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
+from itertools import zip_longest
+from typing import Callable, Sequence
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 
 if joblib_available:
     import joblib
 
-from byron.user_messages import *
 from byron.classes.fitness import FitnessABC
-from byron.fitness import make_fitness
 from byron.classes.population import Population
-from byron.registry import *
+from byron.fitness import make_fitness
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
+from byron.registry import *
+from byron.user_messages import *
 
 
 @dataclass(kw_only=True, slots=True)
@@ -251,7 +247,7 @@ class PythonEvaluator(EvaluatorABC):
             (i, I, self.cook(population.dump_individual(i))) for i, I in population.not_finalized_individuals
         ]
         if not individuals:
-            logger.debug(f"PythonEvaluator: All individuals in the population have already been finalized")
+            logger.debug("PythonEvaluator: All individuals in the population have already been finalized")
             return
 
         if self._max_workers == 1 or not self._backend:
@@ -416,14 +412,14 @@ class MakefileEvaluator(EvaluatorABC):
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
         if not indexes:
-            logger.debug(f"MakefileEvaluator: All individuals in the population have already been finalized")
+            logger.debug("MakefileEvaluator: All individuals in the population have already been finalized")
             return
 
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:
             for i, result in zip(indexes, pool.map(self._evaluate, phenotypes)):
                 self._fitness_calls += 1
                 if result is None:
-                    raise RuntimeError(f"Thread failed (returned None)")
+                    raise RuntimeError("Thread failed (returned None)")
                 else:
                     if self._stdout_cleaner is None:
                         value = [float(r) if '.' in r else int(r) for r in result.stdout.split()]
@@ -497,7 +493,7 @@ class ScriptEvaluator(EvaluatorABC):
     def evaluate_population(self, population: Population) -> None:
         individuals = population.not_finalized_individuals
         if not individuals:
-            logger.debug(f"ScriptEvaluator: All individuals in the population have already been finalized")
+            logger.debug("ScriptEvaluator: All individuals in the population have already been finalized")
             return
         files = list()
         for idx, ind in individuals:
@@ -521,8 +517,8 @@ class ScriptEvaluator(EvaluatorABC):
             raise RuntimeError(f"Process returned empty stdout (stderr: '{result.stderr}')")
         else:
             results = list(filter(lambda s: bool(s), result.stdout.split("\n")))
-            assert len(results) == len(
-                individuals
+            assert (
+                len(results) == len(individuals)
             ), f"{PARANOIA_VALUE_ERROR}: Number of results and number of individual mismatch: found {len(results)} expected {len(individuals)}"
             for ind, line in zip_longest(individuals, results):
                 value = [float(r) for r in line.split()]
@@ -657,7 +653,7 @@ class ParallelScriptEvaluator(EvaluatorABC):
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
         if not indexes:
-            logger.debug(f"ParallelScriptEvaluator: All individuals in the population have already been finalized")
+            logger.debug("ParallelScriptEvaluator: All individuals in the population have already been finalized")
             return
 
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:
@@ -672,7 +668,7 @@ class ParallelScriptEvaluator(EvaluatorABC):
                         + f"\n[red]---[/red]\n{result.stderr}\n[red]---[/red]"
                     )
                     result.stdout = self._default_result + '\n'
-                elif not self._default_result:
+                elif result.returncode and not self._default_result:
                     logger.error(f"ParallelScriptEvaluator: failed to evaluate {population[i]}")
                     logger.error(
                         f"command \"{result.cmdline}\" exit status: {result.returncode}"

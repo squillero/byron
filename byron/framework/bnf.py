@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -27,13 +26,11 @@
 
 __all__ = ["bnf"]
 
-from byron.global_symbols import FRAMEWORK
 from byron.classes.frame import FrameABC
-from byron.classes.selement import SElement
 from byron.classes.macro import Macro
 from byron.classes.readymade_frames import SELF
+from byron.classes.selement import SElement
 from byron.tools.names import base_name
-from byron.framework.macro import macro
 
 from .framework import *
 

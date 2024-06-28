@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -29,20 +28,17 @@ __all__ = ['unroll_individual', 'unroll_selement', 'initialize_subtree', 'fasten
 
 import networkx as nx
 
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
-
 from byron.classes import monitor
-from byron.classes.node import Node
-from byron.classes.node_reference import *
-from byron.classes.individual import Individual
-from byron.classes.selement import SElement
-from byron.classes.macro import Macro
-from byron.classes.parameter import *
-
-from byron.user_messages.checks import *
 from byron.classes.frame import FrameABC
+from byron.classes.individual import Individual
+from byron.classes.macro import Macro
+from byron.classes.node import NODE_ZERO, Node
+from byron.classes.node_reference import *
+from byron.classes.parameter import *
+from byron.classes.selement import SElement
+from byron.global_symbols import *
 from byron.tools.graph import *
+from byron.user_messages.checks import *
 
 
 @monitor.failure_rate

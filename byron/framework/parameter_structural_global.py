@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-import functools
 
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
@@ -26,22 +24,19 @@ import functools
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-from itertools import chain
-from functools import cache, lru_cache
+from functools import cache
 from numbers import Number
 
 import networkx as nx
 
-from byron.classes import NodeReference
-from byron.user_messages import *
-from byron.randy import rrandom
-from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
-
 from byron.classes.parameter import ParameterStructuralABC
-from byron.operators.graph_tools import *
 from byron.classes.selement import SElement
+from byron.global_symbols import *
+from byron.operators.graph_tools import *
+from byron.randy import rrandom
 from byron.tools.graph import *
+from byron.user_messages import *
 
 __all__ = ["global_reference"]
 
@@ -105,7 +100,7 @@ def _global_reference(
             if strength == 1.0:
                 target = rrandom.choice(potential_targets)
             else:
-                target = rrandom.choice(potential_targets, self.value, sigma=strength)
+                target = rrandom.choice(potential_targets, potential_targets.index(self.value), strength=strength)
             if target is None:
                 # get_all_macros(G, root=f, data=False, node_id=True)
                 new_node = unroll_selement(self._target_frame, self._node_reference.graph)

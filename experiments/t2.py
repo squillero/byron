@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
@@ -14,8 +13,9 @@ from copy import deepcopy
 
 try:
     import byron
-except ModuleNotFoundError as e:
-    import sys, os
+except ModuleNotFoundError:
+    import os
+    import sys
 
     sys.path.append(os.curdir)
     sys.path.append(os.pardir)
@@ -79,7 +79,7 @@ I0.as_lgp(filename="code.png", figsize=(25, 15), bbox_inches="tight")
 
 byron.rrandom.seed()
 print(I0 == I1)
-I1.G.dfs_nodes[19]["_macro"].population_extra_parameters["target"].mutate(1)
+I1.G.dfs_nodes[19]["_macro"].population_extra_parameters["target"].safe_mutate(1)
 print(I0 == I1)
 
 with open("p0.s", "w") as F:

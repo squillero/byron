@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -27,21 +26,18 @@
 
 __all__ = ["vanilla_ea"]
 
+from datetime import timedelta
+from time import perf_counter_ns, process_time_ns
 from typing import Optional
 
-from time import perf_counter_ns, process_time_ns
-from datetime import timedelta
-
-from tqdm.auto import tqdm
-from tqdm.contrib.logging import logging_redirect_tqdm, tqdm_logging_redirect
-
+from byron.classes.evaluator import *
+from byron.classes.frame import *
+from byron.classes.selement import *
+from byron.fitness import make_fitness
 from byron.operators import *
 from byron.sys import *
-from byron.classes.selement import *
-from byron.classes.frame import *
-from byron.classes.evaluator import *
-from byron.fitness import make_fitness
 from byron.user_messages import logger as byron_logger
+
 from .common import take_operators
 from .selection import *
 
@@ -59,7 +55,7 @@ def _elapsed(start, *, process: bool = False, steps: int = 0):
     if process:
         e = str(timedelta(microseconds=(end[1] - start[1]) // 1e3)) + '.0000000000'
         s = e[: e.index('.') + 3] + ' [byron]'
-        data.append('⏱️  ' + s)
+        data.append('🕙️  ' + s)
     return ' / '.join(data)
 
 
@@ -155,6 +151,7 @@ def vanilla_ea(
         population.sort()
         population.individuals[mu:] = []
         best = population[0]
+        # ic(best.fitness, f"{best.fitness}", old_best.fitness, f"{old_best.fitness}")
         if best.fitness >> old_best.fitness:
             _new_best(population, evaluator)
 

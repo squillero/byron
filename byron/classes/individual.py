@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -29,24 +28,22 @@
 
 __all__ = ['Individual', 'Lineage', 'Age']
 
-from typing import Any, Callable
-from itertools import chain
-from copy import deepcopy, copy
 import operator
+from copy import copy, deepcopy
+from dataclasses import dataclass
+from itertools import chain
+from typing import Callable
 
 import networkx as nx
 
-from byron.user_messages import *
-from byron.user_messages.messaging import logger as byron_logger
-from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
+from byron.global_symbols import *
 from byron.tools.graph import *
+from byron.user_messages import *
 
 if matplotlib_available:
-    import matplotlib.pyplot as plt
+    pass
 
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.classes.byron import Byron
 from byron.classes.dump import *
 from byron.classes.fitness import FitnessABC
@@ -59,6 +56,7 @@ from byron.classes.parameter import ParameterABC, ParameterStructuralABC
 from byron.classes.paranoid import Paranoid
 from byron.classes.readymade_macros import MacroZero
 from byron.classes.value_bag import ValueBag
+from byron.global_symbols import *
 
 
 @dataclass(frozen=True, slots=True)
@@ -120,7 +118,7 @@ class Individual(Paranoid):
 
     BYRON: Byron = Byron()
 
-    from ._individual_as import as_forest, as_lgp, _draw_forest, _draw_multipartite
+    from ._individual_as import _draw_forest, _draw_multipartite, as_forest, as_lgp
 
     def __init__(self, top_frame: type[FrameABC], genome: nx.MultiDiGraph | None = None) -> None:
         Individual.__LAST_BYRON_INDIVIDUAL += 1

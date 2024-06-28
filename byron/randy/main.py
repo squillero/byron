@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # ______________   ______   __
 # |____/|____|| \  ||   \\_/
 # |R  \_|A   ||N \_||D__/ |Y
@@ -8,20 +7,16 @@
 #  ( >__< )    水の音
 #
 # https://github.com/squillero/randy
-# Copyright 2023 Giovanni Squillero.
+# Copyright 2023-24 Giovanni Squillero.
 # SPDX-License-Identifier: 0BSD
 
 import math
-from functools import lru_cache
-from typing import Any
-from collections.abc import Sequence, Iterable
+import random
+from collections.abc import Sequence
+from typing import Any, MutableSequence
 
-import numpy as np
-from scipy.stats import truncnorm
-
-from byron.user_messages import *
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
+from byron.user_messages import *
 
 __all__ = ["Randy"]
 
@@ -35,57 +30,40 @@ class Randy:
     __slots__ = ['_generator', '_calls', '_saved_state']
 
     def __getstate__(self):
-        return self._generator.__getstate__(), self._calls
+        return self.state
 
     def __setstate__(self, state):
-        self._generator.__setstate__(state[0])
-        _calls = state[1]
-        assert self._save_state()
+        self.state = state
 
-    def __init__(self, seed: Any = None) -> None:
-        self._generator = np.random.default_rng(seed)
+    def __init__(self, seed: Any = 42) -> None:
+        self._generator = random.Random(seed)
         self._calls = 0
         # with open(Randy.LOG_FILENAME, 'a') as fout:
         #    fout.write(f"Created new Randy: {self}\n")
-        self._save_state()
+        assert self.__save_state()
 
     def __str__(self) -> str:
-        description = ", ".join(f"{a}={b!r}" for a, b in self._generator.__getstate__().items())
-        return f"Randy @ {hex(id(self))} (calls={self._calls}, {description})"
+        return f"Randy @ {hex(id(self))} (state={self.state})"
 
     def __bool__(self):
         return self.boolean()
 
     @property
     def state(self):
-        return self._generator.bit_generator.state
+        return self._generator.getstate(), self._calls
 
     @state.setter
     def state(self, state):
-        self._generator.bit_generator.state = state
-        assert self._save_state()
+        self._generator.setstate(state[0])
+        self._calls = state[1]
+        assert self.__save_state()
 
-    def _get_current_state(self) -> dict:
-        return self._generator.bit_generator.state
-
-    def _save_state(self) -> bool:
-        self._saved_state = self._get_current_state()
+    def __save_state(self) -> bool:
+        self._saved_state = self.state
         return True
 
-    def _save_state_log(self) -> bool:
-        self._saved_state = self._get_current_state()
-        with open(Randy.LOG_FILENAME, 'a') as fout:
-            fout.write(f"{self!r}: {self._saved_state}\n")
-        return True
-
-    def _get_saved_state(self) -> dict:
-        return self._saved_state
-
-    def _check_saved_state(self) -> bool:
-        assert (
-            self._get_current_state() == self._get_saved_state()
-        ), "State Error (paranoia check): internal generator has been modified"
-        return True
+    def __check_saved_state(self) -> bool:
+        return self._saved_state == self.state
 
     def seed(self, seed: Any = None) -> None:
         assert (
@@ -95,40 +73,29 @@ class Randy:
                 "Random seed is None: results will not be reproducible (generally a bad idea when debugging)"
             )
         )
-        self._generator = np.random.default_rng(seed)
+        self._generator = random.Random(seed)
         # with open(Randy.LOG_FILENAME, 'a') as fout:
         #    fout.write(f"New seed: {self}\n")
-        assert self._save_state()
+        assert self.__save_state()
 
     @staticmethod
-    def _check_parameters(a, b, *, loc: float | None = None, scale: float | None = None, sigma: float | None = None):
-        assert a <= b, "ValueError (paranoia check): 'a' must precede 'b': found ({a}, {b})"
-        assert not (
-            scale is not None and sigma is not None
-        ), "ValueError (paranoia check): 'scale' and 'sigma' cannot be both specified"
+    def _check_parameters(a, b, *, loc: float | None = None, strength: float | None = None):
+        assert a <= b, f"ValueError (paranoia check): 'a' must precede 'b': found ({a}, {b})"
         assert (
-            sigma is None or 0 <= sigma <= 1
-        ), f"ValueError (paranoia check): strength (σ) should be in [0, 1]. Found {sigma}"
-        assert loc is None or a <= loc <= b, "ValueError (paranoia check): 'loc' not in [{a}, {b}]"
-        assert scale is None or scale >= 0, "ValueError (paranoia check): scale must be positive. Found {scale}"
-
-        assert (loc is None and sigma is None and scale is None) or (
-            loc is not None and (sigma is not None or scale is not None)
-        ), "ValueError (paranoia check): 'loc' and 'scale'/'strength' not specified together"
+            strength is None or 0 <= strength <= 1
+        ), f"ValueError (paranoia check): strength (σ) should be in [0, 1]. Found {strength}"
+        assert loc is None or a <= loc <= b, f"ValueError (paranoia check): 'loc' ({loc}) not in [{a}, {b}]"
+        if strength is None:
+            strength = 1.0
+        assert strength == 1.0 or loc is not None, "ValueError (paranoia check): 'loc' not specified"
         return True
 
     @staticmethod
-    def get_truncnorm_parameters(
-        a: float, b: float, *, loc: float, scale: float | None = None, sigma: float | None = None
-    ) -> dict:
-        r"""Returns the 'a', 'b', 'loc', and 'scale' to be passed to 'truncnorm'"""
-        if sigma is not None:
-            x = sigma / 2 + 0.5
-            x = min(x, 1 - Randy.SMALL_NUMBER)
-            scale = math.log(x / (1 - x))
-            if math.isclose(scale, 0):
-                scale = Randy.SMALL_NUMBER
-        return {'a': (a - loc) / scale, 'b': (b - loc) / scale, 'loc': loc, 'scale': scale}
+    def _strength_to_scale(strength: float) -> float:
+        if strength > 0.999:
+            return 50
+        else:
+            return math.sqrt(1 / (1 - strength) - 1)
 
     def random_float(
         self,
@@ -136,30 +103,57 @@ class Randy:
         b: float | None = 1,
         *,
         loc: float | None = None,
-        scale: float | None = None,
-        sigma: float | None = None,
+        strength: float = 1.0,
     ) -> float:
-        """A value from a standard normal truncated to [a, b) with mean = 'loc' and standard deviation = 'scale'."""
+        """A value from between [a, b) by permutating 'loc' with a give 'strength'."""
+        assert (
+            self.__check_saved_state()
+        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
+        assert Randy._check_parameters(a, b, loc=loc, strength=strength)
         self._calls += 1
-        assert self._check_saved_state()
-        assert Randy._check_parameters(a, b, loc=loc, scale=scale, sigma=sigma)
-        if loc is None:
+        if loc is None or strength == 1.0:
             val = self._generator.random() * (b - a) + a
         else:
-            val = truncnorm.ppf(
-                self._generator.random(), **Randy.get_truncnorm_parameters(a, b, loc=loc, scale=scale, sigma=sigma)
-            )
-        assert self._save_state()
+            scale = Randy._strength_to_scale(strength) * (b - a)
+            offset = self._generator.gauss(0, scale)
+            val = loc + offset
+            if not a <= val < b:
+                val = self._generator.random() * (b - a) + a
+        assert self.__save_state()
         return val
 
-    def random_int(self, a, b, **kwargs) -> int:
-        """A value from a standard normal truncated to [a, b) with mean = 'loc' and standard deviation = 'scale'."""
-        val = self.random_float(a - 0.5, b - 0.5, **kwargs)
-        return round(val)
+    def random_int(
+        self,
+        a: int,
+        b: int,
+        *,
+        loc: int | None = None,
+        strength: float = 1.0,
+    ) -> int:
+        """A value from between [a, b) by permutating 'loc' with a give 'strength'."""
+        assert (
+            self.__check_saved_state()
+        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
+        assert Randy._check_parameters(a, b, loc=loc, strength=strength)
+        self._calls += 1
+        if loc is None or strength == 1.0:
+            val = self._generator.randint(a, b - 1)
+        else:
+            scale = Randy._strength_to_scale(strength) * (b - a) / 2
+            offset = round(self._generator.gauss(0, scale))
+            # ic(offset)
+            val = loc + offset
+            if not a <= val < b:
+                val = self._generator.randint(a, b - 1)
+        assert self.__save_state()
+        return val
 
-    def choice(self, seq: Sequence[Any], loc: int | None = None, sigma: float | None = None) -> Any:
+    def choice(self, seq: Sequence[Any], loc: int | None = None, strength: float | None = None) -> Any:
         """Returns a random element from seq by perturbing index loc with a given strength."""
-        index = self.random_int(0, len(seq), loc=loc, sigma=sigma)
+        assert (
+            loc is None or strength == 1 or 0 <= loc < len(seq)
+        ), f"ValueError (paranoia check): loc ({loc}) out of range"
+        index = self.random_int(0, len(seq), loc=loc, strength=strength)
         return seq[index]
 
     def boolean(self, p_true: float | None = None, p_false: float | None = None) -> bool:
@@ -176,11 +170,13 @@ class Randy:
             p_true = 1 - p_false
         return self.random_float(0, 1) < p_true
 
-    def shuffle(self, seq: Sequence) -> None:
+    def shuffle(self, seq: MutableSequence) -> None:
         """Shuffle list x in place, and return None."""
-        assert self._check_saved_state()
+        assert (
+            self.__check_saved_state()
+        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
         self._generator.shuffle(seq)
-        assert self._save_state()
+        assert self.__save_state()
 
     def weighted_choice(self, seq: Sequence[Any], p: Sequence[float]) -> Any:
         """Returns a random element from seq using the probabilities in p."""

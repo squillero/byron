@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -32,6 +31,7 @@ import networkx as nx
 
 class Node(int):
     r"""Simple helper to guarantee Node ids uniqueness"""
+
     __slots__ = []
     __LAST_BYRON_NODE = 0
 
@@ -47,8 +47,8 @@ class Node(int):
     @staticmethod
     def reset_labels(G: nx.MultiDiGraph) -> None:
         """Set Graph node labels to unique numbers"""
-        from byron.tools.graph import fasten_subtree_parameters
         from byron.classes.node_reference import NodeReference
+        from byron.tools.graph import fasten_subtree_parameters
 
         new_labels = {k: Node() for k in G.nodes if k != NODE_ZERO}
         nx.relabel_nodes(G, new_labels, copy=False)
@@ -59,8 +59,8 @@ class Node(int):
     @staticmethod
     def relabel_to_canonic_form(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
         """Set Graph node labels to "canonic" labels"""
-        from byron.tools.graph import fasten_subtree_parameters
         from byron.classes.node_reference import NodeReference
+        from byron.tools.graph import fasten_subtree_parameters
 
         new_labels = {k: Node(i) for i, k in enumerate(G.nodes)}
         G = nx.relabel_nodes(G, new_labels, copy=True)

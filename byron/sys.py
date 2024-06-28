@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -33,6 +32,7 @@ __all__ = ['get_operators', 'log_operators', 'SYSINFO']
 
 import inspect
 from pprint import pformat
+
 from byron.operators import *
 
 
@@ -116,12 +116,12 @@ def log_operators():
 
     descr = {None: 'init', 1: 'mut', 2: 'xover'}
 
-    logger.info(f"[b]GENETIC OPERATORS[/b]")
+    logger.info("[b]GENETIC OPERATORS[/b]")
     for op in all_ops:
         name = f'{op.__name__} ({descr[op.num_parents]})'
         logger.info(f"[blue]*[/blue] {name:.<50s}: {op.stats}")
 
 
-assert "SYSINFO" not in globals(), f"SystemError (paranoia check): SYSINFO already initialized."
+assert "SYSINFO" not in globals(), "SystemError (paranoia check): SYSINFO already initialized."
 SYSINFO = SysInfo()
-assert "SYSINFO" in globals(), f"SystemError (paranoia check): SYSINFO not initialized."
+assert "SYSINFO" in globals(), "SystemError (paranoia check): SYSINFO not initialized."

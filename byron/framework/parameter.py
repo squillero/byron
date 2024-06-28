@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -32,9 +31,9 @@ from functools import cache
 from numbers import Number
 from typing import Any, Hashable, SupportsInt
 
-from byron.user_messages import *
 from byron.classes.parameter import *
 from byron.randy import rrandom
+from byron.user_messages import *
 
 
 @cache
@@ -60,18 +59,12 @@ def _numeric(*, type_, min_, max_):
         if type_ == int:
 
             def mutate(self, strength: float = 1.0) -> None:
-                if strength == 1.0:
-                    self.value = rrandom.random_int(min_, max_)
-                else:
-                    self.value = rrandom.random_int(min_, max_, loc=self._value, strength=strength)
+                self.value = rrandom.random_int(min_, max_, loc=self._value, strength=strength)
 
         elif type_ == float:
 
             def mutate(self, strength: float = 1.0) -> None:
-                if strength == 1.0:
-                    self.value = rrandom.random_float(min_, max_)
-                else:
-                    self.value = rrandom.random_float(min_, max_, loc=self._value, strength=strength)
+                self.value = rrandom.random_float(min_, max_, loc=self._value, strength=strength)
 
     if type_ == int and min_ == 0 and any(max_ == 2**n for n in range(4, 128 + 1)):
         p = next(n for n in range(4, 128 + 1) if max_ == 2**n)
@@ -147,7 +140,7 @@ def _choice_parameter(alternatives: tuple[Hashable]) -> type[ParameterABC]:
             if strength == 1.0:
                 self.value = rrandom.choice(alternatives)
             else:
-                self.value = rrandom.choice(alternatives, loc=alternatives.index(self._value), sigma=strength)
+                self.value = rrandom.choice(alternatives, loc=alternatives.index(self._value), strength=strength)
 
     # NOTE[GX]: alternative symbol: – (not a minus!)
     T._patch_info(name='Choice[' + '┊'.join(str(a) for a in alternatives) + ']')

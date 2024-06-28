@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -28,20 +27,20 @@
 __all__ = ["Population"]
 
 import logging
-from collections.abc import Sequence
-from typing import Callable, Any
+from collections.abc import Iterable, Sequence
 from copy import copy
+from typing import Any, Callable
 
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
-from byron.user_messages import *
-from byron.classes.selement import SElement
 from byron.classes.fitness import FitnessABC
 from byron.classes.individual import Individual
+from byron.classes.node import NODE_ZERO
+from byron.classes.selement import SElement
+from byron.global_symbols import *
 from byron.tools.entropy import *
+from byron.user_messages import *
 
 
-class Population:
+class Population(Iterable):
     _top_frame: type[SElement]
     _fitness_function: Callable[[Any], FitnessABC]
     _individuals: list[Individual]
@@ -129,7 +128,7 @@ class Population:
     def __isub__(self, individual):
         assert check_valid_types(individual, Sequence)
         assert all(check_valid_types(i, Individual) for i in individual)
-        assert all(i.valid for i in individual), f"ValueError: invalid individual"
+        assert all(i.valid for i in individual), "ValueError: invalid individual"
         for i in individual:
             try:
                 self._individuals.remove(i)

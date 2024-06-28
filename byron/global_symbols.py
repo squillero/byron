@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -56,16 +55,16 @@ __all__ = [
     'DEFAULT_EXTRA_PARAMETERS',
     'DEFAULT_OPTIONS',
     'LOG_LAPSES',
-    'SE_DIRECTORY'
+    'SE_DIRECTORY',
 ]
 
 import logging
+import multiprocessing
 import sys
 from collections import defaultdict
-import multiprocessing
 
-__version__ = "0.8a1.dev45"
-__date__ = "25-01-2024"
+__version__ = "0.8a1.dev53"
+__date__ = "26-06-2024"
 __codename__ = "Don Juan"
 __author__ = "Giovanni Squillero and Alberto Tonda"
 __copyright__ = "Copyright (c) 2023-24 Giovanni Squillero and Alberto Tonda"
@@ -113,7 +112,6 @@ except ModuleNotFoundError:
     pass
 
 debug_mode = __debug__
-
 
 #############################################################################
 # PARANOID MODE
@@ -170,6 +168,6 @@ LOG_LAPSES = defaultdict(float)
 
 #####################################################################################################################
 
-assert "SE_DIRECTORY" not in globals(), f"SystemError (paranoia check): SElement Directory already initialized"
+assert "SE_DIRECTORY" not in globals(), "SystemError (paranoia check): SElement Directory already initialized"
 SE_DIRECTORY = set()
-assert "SE_DIRECTORY" in globals(), f"SystemError (paranoia check): SElement Directory not initialized"
+assert "SE_DIRECTORY" in globals(), "SystemError (paranoia check): SElement Directory not initialized"

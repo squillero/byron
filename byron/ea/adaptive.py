@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -23,28 +22,48 @@
 # limitations under the License.
 
 # =[ HISTORY ]===============================================================
-# v1 / July 2023 / Squillero (GX)
+# v1 / January 2024 / Sacchet (MS)
 
 __all__ = ["adaptive_ea"]
 
 
-from typing import Callable
+from datetime import timedelta
 from inspect import signature
+from time import perf_counter_ns, process_time_ns
+from typing import Callable
 
+from byron.classes.evaluator import *
+from byron.classes.frame import *
+from byron.fitness import make_fitness
 from byron.operators import *
 from byron.sys import *
-from byron.classes.selement import *
-from byron.classes.frame import *
-from byron.classes.evaluator import *
-from byron.fitness import make_fitness
 from byron.user_messages import *
+from byron.user_messages import logger as byron_logger
+
 from .common import take_operators
-from .selection import *
 from .estimator import Estimator
+from .selection import *
+
+
+def _elapsed(start, *, process: bool = False, steps: int = 0):
+    data = list()
+    end = [process_time_ns(), perf_counter_ns()][::-1]
+    e = str(timedelta(microseconds=(end[0] - start[0]) // 1e3)) + '.0000000000'
+    s = e[: e.index('.') + 3] + ' [t]'
+    data.append('⌛ ' + s)
+    if steps:
+        e = str(timedelta(microseconds=(end[0] - start[0]) // 1e3 // steps)) + '.0000000000'
+        s = e[: e.index('.') + 3]
+        data.append('🏃 ' + s)
+    if process:
+        e = str(timedelta(microseconds=(end[1] - start[1]) // 1e3)) + '.0000000000'
+        s = e[: e.index('.') + 3] + ' [byron]'
+        data.append('🕙  ' + s)
+    return ' / '.join(data)
 
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
-    logger.info(
+    byron_logger.info(
         f"AdaptiveEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
         + f" [🕓 gen: {population.generation:,} / fcalls: {evaluator.fitness_calls:,}]"
     )
@@ -102,6 +121,9 @@ def adaptive_ea(
         The last population
     """
 
+    start = perf_counter_ns(), process_time_ns()
+    byron_logger.info("AdaptiveEA: 🧬 [b]AdaptiveEA started[/] ┈ %s", _elapsed(start, process=True))
+
     if end_conditions:
         stopping_conditions = end_conditions
     else:
@@ -111,12 +133,13 @@ def adaptive_ea(
         max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
 
+    silent_pause = 1
+    if notebook_mode:
+        silent_pause = 5
 
     # initialize population
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
-    
     ext = Estimator(population, max_generation, rewards, operators, max_fitness, temperature)
-    
     ops0 = take_operators(True, operators)
 
     gen0 = list()
@@ -134,16 +157,20 @@ def adaptive_ea(
     # begin evolution!
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
-        sigma = ext.sigma(entropy)
+        strength = ext.strength(entropy)
         for _ in range(lambda_):
             op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
                 parents.append(tournament_selection(population, 1))
             if 'strength' in signature(op).parameters:
-                new_individuals += op(*parents, strength=sigma)
+                new_individuals += op(*parents, strength=strength)
             else:
                 new_individuals += op(*parents)
+        if not new_individuals:
+            byron_logger.warning(
+                "AdaptiveEA: empty offspring (no new individuals) ┈ %s", _elapsed(start, steps=evaluator.fitness_calls)
+            )
 
         if lifespan is not None:
             population.life_cycle(lifespan, 1, top_n)
@@ -155,12 +182,26 @@ def adaptive_ea(
         all_individuals |= set(population)
 
         population.individuals[mu:] = []
-        
+
         if best.fitness << population[0].fitness:
             best = population[0]
             _new_best(population, evaluator)
 
-    logger.info("AdaptiveEA: Genetic operators statistics:")
+        byron_logger.hesitant_log(
+            silent_pause,
+            LOGGING_INFO,
+            f"AdaptiveEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
+            population.generation,
+            _elapsed(start, steps=evaluator.fitness_calls),
+        )
+
+    end = process_time_ns()
+
+    byron_logger.info("AdaptiveEA: 🍦 [b]AdaptiveEA completed[/] ┈ %s", _elapsed(start, process=True))
+    byron_logger.info(
+        f"AdaptiveEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
+    )
+    byron_logger.info("AdaptiveEA: Genetic operators statistics:")
     for op in get_operators():
-        logger.info(f"AdaptiveEA: * {op.__qualname__}: {op.stats}")
+        byron_logger.info(f"AdaptiveEA: * {op.__qualname__}: {op.stats}")
     return population

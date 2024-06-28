@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -27,18 +26,15 @@
 
 __all__ = ['as_text', 'as_lgp', 'as_forest']
 
+from byron.classes.individual import Individual
+from byron.classes.node import NODE_ZERO
+from byron.classes.parameter import ParameterABC
+from byron.classes.selement import SElement
+from byron.framework.macro import macro
+from byron.global_symbols import *
+from byron.operators.initializers import *
 from byron.randy import rrandom
 from byron.sys import *
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
-from byron.classes.selement import SElement
-from byron.classes.frame import FrameABC
-from byron.framework.macro import macro
-from byron.classes.parameter import ParameterABC
-from byron.classes.population import Population
-from byron.classes.individual import Individual
-from byron.operators.initializers import *
-from byron.classes.readymade_macros import MacroZero
 
 
 def as_text(

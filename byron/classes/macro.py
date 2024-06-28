@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -27,18 +26,13 @@
 
 __all__ = ["Macro"]
 
-from collections import defaultdict
 from typing import Any
-from copy import copy
 
-from byron.user_messages import *
-
-from byron.classes.selement import SElement
-from byron.classes.paranoid import Paranoid
-from byron.classes.value_bag import USER_PARAMETER
-from byron.classes.value_bag import ValueBag
-from byron.classes.node_view import NodeView
 from byron.classes.parameter import ParameterABC
+from byron.classes.paranoid import Paranoid
+from byron.classes.selement import SElement
+from byron.classes.value_bag import USER_PARAMETER, ValueBag
+from byron.user_messages import *
 
 
 class Macro(SElement, Paranoid):

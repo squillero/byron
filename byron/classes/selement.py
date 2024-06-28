@@ -1,13 +1,12 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,16 +23,15 @@
 
 # =[ HISTORY ]===============================================================
 # v1 / June 2023 / Squillero (GX)
-"""THE FIRST ONE IS FOR THE DEFINING CLASSES AND THE SECOND ONE IS FOR THE DEFINING METACLASS. """
+"""THE FIRST ONE IS FOR THE DEFINING CLASSES AND THE SECOND ONE IS FOR THE DEFINING METACLASS."""
+
 __all__ = ['SElement', 'SElementMeta']
 
-from typing import Callable, Sequence, Optional
 from collections import defaultdict
-import re
+from typing import Callable, Optional, Sequence
 from uuid import uuid1 as generate_uuid
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 
 
@@ -88,8 +86,8 @@ class SElementMeta(type):
         tag: str | Sequence[str] = (),
         custom_class_id: str | None = None,
     ):
-        from byron.classes.macro import Macro
         from byron.classes.frame import FrameABC
+        from byron.classes.macro import Macro
         from byron.classes.parameter import ParameterABC
 
         if custom_class_id:

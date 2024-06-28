@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -27,11 +26,11 @@
 
 __all__ = ["check_valid_type", "check_valid_types", "check_value_range", "check_valid_length", "check_no_duplicates"]
 
-from numbers import Number
 from collections.abc import Collection
+from numbers import Number
 
-from .messaging import logger
 from .exception import *
+from .messaging import logger
 
 PARANOIA_TYPE_ERROR = 'TypeError (paranoia check)'
 PARANOIA_VALUE_ERROR = 'ValueError (paranoia check)'

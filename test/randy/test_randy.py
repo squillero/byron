@@ -1,15 +1,17 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
 import random
+
+import numpy as np
+
 import byron as byron
 
 BATCH_SIZE = 4096
@@ -47,7 +49,8 @@ def test_independence():
     v1 = [byron.rrandom.random_float() for _ in range(BATCH_SIZE)]
     byron.rrandom.seed(seed)
     v2_1 = [byron.rrandom.random_float() for _ in range(BATCH_SIZE // 2)]
-    z = [random.random() for _ in range(BATCH_SIZE)]
+    z1 = [random.random() for _ in range(BATCH_SIZE)]
+    z2 = [np.random.random() for _ in range(BATCH_SIZE)]
     v2_2 = [byron.rrandom.random_float() for _ in range(BATCH_SIZE // 2)]
     assert v1 == v2_1 + v2_2
 
@@ -64,7 +67,7 @@ def test_randy_choice():
     alphabet = "ABCDEFGHIJKLMNOPQRTUVWXYZ"
     for _ in range(10):
         for i, c in enumerate(alphabet):
-            val = byron.rrandom.choice(alphabet, loc=i, sigma=0)
+            val = byron.rrandom.choice(alphabet, loc=i, strength=0)
             assert val == c
 
 

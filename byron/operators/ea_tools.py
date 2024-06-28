@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -32,20 +31,19 @@ __all__ = [
     'group_parameters_on_classpath',
 ]
 
+from collections import defaultdict
+from typing import Sequence
+
 import networkx as nx
 
-from typing import Sequence
-from collections import defaultdict
-from functools import partial
-
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.classes.individual import Individual
 from byron.classes.macro import Macro
+from byron.classes.node import NODE_ZERO
 from byron.classes.node_reference import *
 from byron.classes.parameter import ParameterABC
 from byron.classes.readymade_macros import MacroZero
 from byron.classes.selement import SElement
+from byron.global_symbols import *
 from byron.operators.graph_tools import *
 
 

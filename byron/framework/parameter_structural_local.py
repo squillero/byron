@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -25,18 +24,13 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-from itertools import chain
 from functools import cache
 
-from byron.user_messages import *
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
-
 from byron.classes.parameter import ParameterStructuralABC
-from byron.classes.node_reference import NodeReference
+from byron.global_symbols import *
 from byron.randy import rrandom
-
 from byron.tools.graph import *
+from byron.user_messages import *
 
 __all__ = ["local_reference"]
 
@@ -86,7 +80,7 @@ def _local_reference(
             if strength == 1 or self.value is None:
                 self.value = rrandom.choice(pt, None)
             else:
-                self.value = rrandom.sigmachoice(pt, pt.index(self.value), strength)
+                self.value = rrandom.choice(pt, pt.index(self.value), strength=strength)
 
     T._patch_info(
         name=f"LocalReference[{'<' if backward else '≮'}{'=' if self_loop else '≠'}{'>' if forward else '≯'}]"

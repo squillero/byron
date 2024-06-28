@@ -1,0 +1,22 @@
+###################################|###|####################################
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
+
+SHELL=/bin/sh
+
+.PHONY: run
+
+run:
+	./onemax-shell.sh `tail -1 genome.dat`
+
+clean:
+	-rm -f *.dat
+	-rm -f *.svg *.png
+
+

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -27,13 +26,11 @@
 
 __all__ = ["FrameABC", "FrameAlternative", "FrameSequence", "FrameMacroBunch"]
 
-from typing import Sequence
 from abc import abstractmethod
 
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
-from byron.classes.selement import SElement
 from byron.classes.paranoid import Paranoid
+from byron.classes.selement import SElement
+from byron.global_symbols import *
 
 
 class FrameABC(SElement, Paranoid):
@@ -74,6 +71,7 @@ class FrameSequence:
     --------
     `sequence` factory function
     """
+
     pass
 
 
@@ -84,6 +82,7 @@ class FrameAlternative:
     --------
     `altrnative` factory function
     """
+
     pass
 
 
@@ -94,4 +93,5 @@ class FrameMacroBunch:
     --------
     `bunch` factory function
     """
+
     pass

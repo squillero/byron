@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -27,22 +26,19 @@
 
 __all__ = ["NodeView"]
 
-import dataclasses
 from dataclasses import dataclass
 from functools import cached_property
 
 import networkx as nx
 
-from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
-from byron.user_messages import *
-from byron.classes.value_bag import ValueBag
-from byron.classes.node_reference import NodeReference
-from byron.classes.selement import SElement
-from byron.classes.parameter import ParameterABC
 from byron.classes.node import Node
-
+from byron.classes.node_reference import NodeReference
+from byron.classes.parameter import ParameterABC
+from byron.classes.selement import SElement
+from byron.classes.value_bag import ValueBag
+from byron.global_symbols import *
 from byron.tools.graph import *
+from byron.user_messages import *
 
 # NOTE[GX]: Rewritten almost from scratch taking advantage of 'dataclasses' (py>=3.7) and
 # '@cached_property' (py>=3.8)

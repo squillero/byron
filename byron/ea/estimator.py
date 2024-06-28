@@ -1,12 +1,11 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-# Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,14 +25,14 @@
 
 __all__ = ["Estimator"]
 
+from math import ceil, log, sqrt
 from typing import Callable, Sequence
-from math import sqrt, log, ceil
 
-from byron.fitness import make_fitness
-from byron.randy import rrandom
 from byron.classes import Population
 from byron.classes.fitness import FitnessABC
 from byron.ea.common import take_operators
+from byron.fitness import make_fitness
+from byron.randy import rrandom
 
 
 class Estimator:
@@ -70,14 +69,14 @@ class Estimator:
     ):
         self._population = population
         self._operators = dict([[o.__name__, self.I(o, 0, 0)] for o in take_operators(False, operators)])
-        assert time_horizon > 0, f"time_horizon need to be positive integer"
+        assert time_horizon > 0, "time_horizon need to be positive integer"
         self._horizon = time_horizon
         self._time = population.generation
-        assert len(rewards) == 2, f"must specify two value for reward"
+        assert len(rewards) == 2, "must specify two value for reward"
         self._rewards = rewards
         self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
         self._exploit = False
-        assert temperature > 0, f"temperature must be greater then 0"
+        assert temperature > 0, "temperature must be greater then 0"
         self._temperature = temperature
         self._max_t = temperature
         self._best = None
@@ -116,7 +115,6 @@ class Estimator:
             return max_l
 
     def _update(self):
-
         if self._time < self._population.generation:
             self._time = self._population.generation
 
@@ -138,14 +136,14 @@ class Estimator:
             # every quarter of the run check again also discarded operators
             if self._time % ceil(self._horizon / 4) == 0:
                 self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
-        
+
     def take(self) -> Callable:
         return self._operators[
             rrandom.weighted_choice([p[0] for p in self._probabilities], [p[1] for p in self._probabilities])
         ].operator
 
     # TODO: Remove use_entropy when entropy will be fully implemented
-    def sigma(self, use_entropy) -> float:
+    def strength(self, use_entropy) -> float:
         self._update()
         # check fitness but also check entropy to avoid excessive reduction in diversity in the population
         if self._near is not None and self._population[0].fitness > self._near:

@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -41,7 +40,6 @@ import time
 import warnings
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 
 BASE_STACKLEVEL = 3
 
@@ -101,12 +99,12 @@ def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
 #############################################################################
 # CUSTOMIZATIONS
 
-assert "logger" not in globals(), f"SystemError (paranoia check): byron logger already initialized"
+assert "logger" not in globals(), "SystemError (paranoia check): byron logger already initialized"
 logging.basicConfig()  # Initialize logging
 logger = logging.getLogger('byron')
 logger.propagate = False
 
-assert 'logger' in globals(), f"SystemError (paranoia check): byron logger not initialized"
+assert 'logger' in globals(), "SystemError (paranoia check): byron logger not initialized"
 
 if test_mode:
     logger.setLevel(logging.WARNING)
@@ -119,35 +117,26 @@ else:
 
 # Alternative symbols: ⍄ ┊
 
-from rich import logging as rich_logging
 from rich import highlighter as rich_highlighter
-
+from rich import logging as rich_logging
 
 # console_handler = logging.StreamHandler()
 # console_handler.setFormatter(console_formatter)
-if notebook_mode:
-    console_handler = logging.StreamHandler()
-    # console_formatter = logging.Formatter('%(asctime)s ▷ %(levelname)s ▷ %(name)s::%(message)s', datefmt='%H:%M:%S')
-    console_formatter = logging.Formatter('%(levelname)s ▷ %(message)s')
-else:
-    console_handler = rich_logging.RichHandler(
-        log_time_format='%H:%M:%S',  # '%H:%M:%S.%f'
-        omit_repeated_times=False,
-        show_path=False,
-        markup=True,
-        highlighter=rich_highlighter.NullHighlighter(),
-        keywords=['▷'],
-    )
-    console_formatter = logging.Formatter('▷ %(message)s')
+# if notebook_mode:
+#    console_handler = logging.StreamHandler()
+#    console_formatter = logging.Formatter('%(levelname)s ▷ %(message)s')
+console_handler = rich_logging.RichHandler(
+    log_time_format='%H:%M:%S',  # '%H:%M:%S.%f'
+    omit_repeated_times=False,
+    show_path=False,
+    markup=True,
+    highlighter=rich_highlighter.NullHighlighter(),
+    keywords=['▷'],
+    # console=rich_console.Console(width=120) if debug_mode else None,
+)
+console_formatter = logging.Formatter('▷ %(message)s')
 console_handler.setFormatter(console_formatter)
 logger.handlers = [console_handler]
-# logger.handlers = []
-
-# file_formatter = logging.Formatter('[%(asctime)s] %(levelname)s %(name)s::%(message)s', datefmt="%Y-%m-%d %H:%M:%S,uuu")
-# file_handler = logging.FileHandler('debug.log')
-# file_handler.setLevel(logging.DEBUG)
-# file_handler.setFormatter(formatter)
-# logger.addHandler(file_handler)
 
 # Avoid excessive warnings...
 if not sys.warnoptions:

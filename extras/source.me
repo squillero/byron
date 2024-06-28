@@ -1,0 +1,20 @@
+###################################|###|####################################
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
+
+dir=$PWD
+n=0
+while [[ ! -f "${dir}/byron/__init__.py" ]]; do
+  [[ "$(realpath "$dir")" == "/" ]] && break
+  dir="$(realpath "${dir}/..")"
+done
+[[ -f "${dir}/byron/__init__.py" ]] && export PYTHONPATH="${PYTHONPATH}:${dir}"
+
+echo "export PYTHONPATH=\"${PYTHONPATH}\""
+echo "#export PYTHONOPTIMIZE=1"

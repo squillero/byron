@@ -1,13 +1,10 @@
-# -*- coding: utf-8 -*-
-#############################################################################
-#           __________                                                      #
-#    __  __/ ____/ __ \__ __   This file is part of MicroGP v4!2.0          #
-#   / / / / / __/ /_/ / // /   A versatile evolutionary optimizer & fuzzer  #
-#  / /_/ / /_/ / ____/ // /_   https://github.com/microgp/microgp4          #
-#  \__  /\____/_/   /__  __/                                                #
-#    /_/ --MicroGP4-- /_/      You don't need a big goal, be μ-ambitious!   #
-#                                                                           #
-#############################################################################
+###################################|###|####################################
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
@@ -29,11 +26,10 @@
 
 __all__ = ['set_global_parameter', 'set_global_option']
 
-from typing import Any
 import re
+from typing import Any
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.global_symbols import DEFAULT_EXTRA_PARAMETERS, DEFAULT_OPTIONS
 
 

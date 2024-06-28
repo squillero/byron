@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
-##################################@|###|##################################@#
+###################################|###|####################################
 #   _____                          |   |                                   #
-#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
-#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
-#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
+#  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
+#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
@@ -27,6 +26,6 @@
 
 from .main import *
 
-assert "rrandom" not in globals(), f"SystemError (paranoia check): Randy the Random already initialized"
+assert "rrandom" not in globals(), "SystemError (paranoia check): Randy the Random already initialized"
 rrandom = Randy(42)
-assert "rrandom" in globals(), f"SystemError (paranoia check): Randy the Random not initialized"
+assert "rrandom" in globals(), "SystemError (paranoia check): Randy the Random not initialized"
