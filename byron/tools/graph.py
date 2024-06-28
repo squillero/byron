@@ -225,19 +225,7 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
 
     while len(nodes_to_connect := nx.descendants(H, NODE_ZERO) - nx.descendants(H_framework, NODE_ZERO)) != 0:
         for n in nodes_to_connect:
-
-            def recursevily_rise_the_tree(node):
-                in_edges_nodes = [u for u, v in H_framework.in_edges(node)]
-                if len(in_edges_nodes) > 1:
-                    logger.debug(
-                        f"generic_node_crossover: Failed (invalid structure, only one framework in_edge possible)"
-                    )
-                    raise ByronOperatorFailure
-                if len(in_edges_nodes) == 0:
-                    return node
-                return recursevily_rise_the_tree(in_edges_nodes[0])
-
-            tree_parent = recursevily_rise_the_tree(n)
+            tree_parent = next(iter(nx.ancestors(H_framework, n)))
             H.add_edge(NODE_ZERO, tree_parent)
             H_framework.add_edge(NODE_ZERO, tree_parent)
 

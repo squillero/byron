@@ -100,6 +100,7 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
         raise ByronOperatorFailure
     node2_frame_parent = node2_frame_parent[0][0]
 
+    # remove the framework connection to node1 and add it to node2 maintaining the order
     node1_parent_framework_fanout = tuple(new_genome.edges(node1_frame_parent, data=True, keys=True))
     for edge in node1_parent_framework_fanout:
         new_genome.remove_edge(edge[0], edge[1], key=edge[2])
@@ -113,11 +114,24 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
         else:
             new_genome.add_edge(edge[0], edge[1], key=edge[2], **edge[3])
 
+    # add a connection from the framework parent of node1 to the descendants of node2
+    # that have the same framework parent of node2 and remove the connection to their parent
+    node2_descendants = nx.descendants(new_genome, node2)
+    for desc in node2_descendants:
+        try:
+            new_genome.remove_edge(node2_frame_parent, desc)
+            new_genome.add_edge(node1_frame_parent, desc, key=0, **{'_type': FRAMEWORK})
+        except nx.exception.NetworkXError:
+            pass
+
+    # replace all the LINK input connection to node1 with node2
     node1_fanin_link = [(u, v, k, d) for u, v, k, d in node1_fanin if d['_type'] == LINK]
     for edge in node1_fanin_link:
         new_genome.remove_edge(edge[0], edge[1])
         new_genome.add_edge(edge[0], node2, edge[2], **edge[3])
 
+    # remove all the LINK output from node1
+    # maybe replace it by simply removing node1
     node1_fanout_link = [
         (u, v, k, d) for u, v, k, d in new_genome.edges(node1, keys=True, data=True) if d['_type'] == LINK
     ]
