@@ -79,70 +79,62 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     new_genome = nx.compose(P1, P2)
     node1_fanin = new_genome.in_edges(node1, data=True, keys=True)
     node2_fanin = new_genome.in_edges(node2, data=True, keys=True)
-    node1_parent_link = rrandom.choice([(u, v, k, d) for u, v, k, d in node1_fanin if d['_type'] == link_type])
+    # node1_parent_link = rrandom.choice([(u, v, k, d) for u, v, k, d in node1_fanin if d['_type'] == link_type])
     # node2_parent_link = rrandom.choice(
     #    [(u, v, k, d) for u, v, k, d in node2_fanin if d['_type'] == node1_parent_link[3]['_type']]
     # )
 
-    # 1. trovare i successori di node2
-    # 2. trovare il nodo p1 = parent strutturale di node1
-    # 3. per S = {node2, tutti i suoi successori} definire P = {parents strutturali di ogni nodo di S}
-    # 4. dato P' = P - S, se P' != {p2(parent strutturale di node 2)} => fallisce
-    # 5. scollegare i nodi che possiedono parent strutturale p2 da esso e collegarli al p1
-    new_nodes_of_P2 = nx.descendants(new_genome, node2) | {node2}
-    node1_parent = node1_parent_link[0]
-    node1_parent_struct = [
-        u for u, v, k, d in new_genome.in_edges(node1_parent, keys=True, data='_type') if d == FRAMEWORK
-    ]
-    if len(node1_parent_struct) != 1:
-        logger.debug(f"generic_node_crossover: Failed (node 1 have many structural parent)")
+    node1_frame_parent = [(u, v, k, d) for u, v, k, d in node1_fanin if d['_type'] == FRAMEWORK]
+    if len(node1_frame_parent) != 1:
+        logger.debug(
+            f"generic_node_crossover: Failed (invalid structure, every node must have one and only one FRAMEWORK edge as input)"
+        )
         raise ByronOperatorFailure
-    node1_parent_struct = node1_parent_struct[0]
-    node2_parent_struct = [u for u, v, k, d in new_genome.in_edges(node2, keys=True, data='_type') if d == FRAMEWORK]
-    if len(node2_parent_struct) != 1:
-        logger.debug(f"generic_node_crossover: Failed (node 2 have many structural parent)")
+    node1_frame_parent = node1_frame_parent[0][0]
+
+    node2_frame_parent = [(u, v, k, d) for u, v, k, d in node2_fanin if d['_type'] == FRAMEWORK]
+    if len(node2_frame_parent) != 1:
+        logger.debug(
+            f"generic_node_crossover: Failed (invalid structure, every node must have one and only one FRAMEWORK edge as input)"
+        )
         raise ByronOperatorFailure
-    node2_parent_struct = node2_parent_struct[0]
+    node2_frame_parent = node2_frame_parent[0][0]
 
-    parents_struct = set()
-    for new_node in new_nodes_of_P2:
-        parent_struct = [
-            (u, k) for u, v, k, d in new_genome.in_edges(new_node, keys=True, data='_type') if d == FRAMEWORK
-        ]
-        if len(parent_struct) != 1:
-            logger.debug(f"generic_node_crossover: Failed (new successor have many structural parent)")
-            raise ByronOperatorFailure
-        parent_struct = parent_struct[0]
-        parents_struct.add(parent_struct[0])
-        if (parent_struct[0]) == node2_parent_struct:
-            new_genome.remove_edge(node2_parent_struct, new_node, parent_struct[1])
-            new_genome.add_edge(node1_parent_struct, new_node, parent_struct[1], **{'_type': FRAMEWORK})
-
-    different_parent_struct = parents_struct - new_nodes_of_P2
-    if different_parent_struct != {node2_parent_struct}:
-        logger.debug(f"generic_node_crossover: Failed (invalid structure)")
-        raise ByronOperatorFailure
-
-    logger.debug(
-        f"generic_node_crossover: "
-        + f"{node1}/{new_genome.nodes[node1]['_selement'].__class__}"
-        + " <-> "
-        + f"{node2}/{new_genome.nodes[node2]['_selement'].__class__}"
-    )
-
-    # NOTE[GX]: replace link in node1_parent -> node1 with node1_parent -> node2 preserving links order
-    node1_parent_complete_fanout = tuple(new_genome.edges(node1_parent_link[0], data=True, keys=True))
-    for edge in node1_parent_complete_fanout:
+    node1_parent_framework_fanout = tuple(new_genome.edges(node1_frame_parent, data=True, keys=True))
+    for edge in node1_parent_framework_fanout:
         new_genome.remove_edge(edge[0], edge[1], key=edge[2])
-    for edge in node1_parent_complete_fanout:
-        if edge == node1_parent_link:
-            new_genome.add_edge(edge[0], node2, edge[2], **edge[3])
+    for edge in node1_parent_framework_fanout:
+        if edge[1] == node1:
+            try:
+                new_genome.remove_edge(node2_frame_parent, node2)
+            except nx.exception.NetworkXError:
+                pass
+            new_genome.add_edge(edge[0], node2, key=edge[2], **edge[3])
         else:
             new_genome.add_edge(edge[0], edge[1], key=edge[2], **edge[3])
+
+    node1_fanin_link = [(u, v, k, d) for u, v, k, d in node1_fanin if d['_type'] == LINK]
+    for edge in node1_fanin_link:
+        new_genome.remove_edge(edge[0], edge[1])
+        new_genome.add_edge(edge[0], node2, edge[2], **edge[3])
+
+    node1_fanout_link = [
+        (u, v, k, d) for u, v, k, d in new_genome.edges(node1, keys=True, data=True) if d['_type'] == LINK
+    ]
+    for edge in node1_fanout_link:
+        new_genome.remove_edge(edge[0], edge[1])
+
+    # logger.debug(
+    #     f"generic_node_crossover: "
+    #     + f"{node1}/{new_genome.nodes[node1]['_selement'].__class__}"
+    #     + " <-> "
+    #     + f"{node2}/{new_genome.nodes[node2]['_selement'].__class__}"
+    # )
+
     discard_useless_components(new_genome)
 
     if not get_structure_tree(new_genome):
-        logger.debug(f"generic_node_crossover: Failed (invalid structure)")
+        logger.debug(f"generic_node_crossover: Failed (invalid structure, tree)")
         raise ByronOperatorFailure
 
     Node.reset_labels(new_genome)

@@ -221,6 +221,8 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
         (u, v) for u, v, d in G.out_edges(keys=False, data='_type') if d == FRAMEWORK
     )
 
+    G.remove_nodes_from(G.nodes - H.nodes)
+
     while len(nodes_to_connect := nx.descendants(H, NODE_ZERO) - nx.descendants(H_framework, NODE_ZERO)) != 0:
         for n in nodes_to_connect:
 
@@ -245,6 +247,8 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
 
 def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:
     tree = make_digraph(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK))
+    # a = nx.is_branching(tree)
+    # b = nx.is_weakly_connected(tree)
     if not nx.is_branching(tree) or not nx.is_weakly_connected(tree):
         return None
     return tree
