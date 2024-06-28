@@ -221,12 +221,7 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
         (u, v) for u, v, d in G.out_edges(keys=False, data='_type') if d == FRAMEWORK
     )
 
-    while True:
-        H_descendants = nx.descendants(H, NODE_ZERO)
-        H_framework_descendants = nx.descendants(H_framework, NODE_ZERO)
-        nodes_to_connect = H_descendants - H_framework_descendants  # are nodes that are parts of subroutines
-        if len(nodes_to_connect) == 0:
-            break
+    while len(nodes_to_connect := nx.descendants(H, NODE_ZERO) - nx.descendants(H_framework, NODE_ZERO)) != 0:
         for n in nodes_to_connect:
 
             def recursevily_rise_the_tree(node):
@@ -241,12 +236,10 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
                 return recursevily_rise_the_tree(in_edges_nodes[0])
 
             tree_parent = recursevily_rise_the_tree(n)
-            # tree_descendants = nx.descendants(H_framework, tree_parent)  # maybe rec over H
-            # H_descendants |= tree_descendants | {tree_parent}
             H.add_edge(NODE_ZERO, tree_parent)
             H_framework.add_edge(NODE_ZERO, tree_parent)
 
-    nodes_to_remove = H.nodes - (H_descendants | {NODE_ZERO})
+    nodes_to_remove = H.nodes - (nx.descendants(H, NODE_ZERO) | {NODE_ZERO})
     G.remove_nodes_from(nodes_to_remove)
 
 
