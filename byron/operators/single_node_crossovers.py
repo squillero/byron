@@ -115,7 +115,10 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
             new_genome.add_edge(edge[0], edge[1], key=edge[2], **edge[3])
 
     # add a connection from the framework parent of node1 to the descendants of node2
-    # that have the same framework parent of node2 and remove the connection to their parent
+    # that have the same framework parent of node2 and remove the connection to their parent.
+    # the connection are added at the end
+    # TODO
+    # evaluate if it is correct to add the connections at the end
     node2_descendants = nx.descendants(new_genome, node2)
     for desc in node2_descendants:
         try:
