@@ -228,7 +228,10 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
     # add recursively to the H and H_framework graph the connections to the subroutine subtrees
     while len(nodes_to_connect := nx.descendants(H, NODE_ZERO) - nx.descendants(H_framework, NODE_ZERO)) != 0:
         for n in nodes_to_connect:
-            tree_parent = next(iter(nx.ancestors(H_framework, n)))
+            if n in H_framework.nodes:
+                tree_parent = next(iter(nx.ancestors(H_framework, n) | {n}))
+            else:
+                tree_parent = n
             H.add_edge(NODE_ZERO, tree_parent)
             H_framework.add_edge(NODE_ZERO, tree_parent)
 
