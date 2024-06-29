@@ -2,7 +2,7 @@
 #   _____                          |   |                                   #
 #  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an   #
 #  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer. #
-#  |____/ ___  |__| |_____|__|__|   ).(   -- v0.8a1 "Don Juan"             #
+#  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"         #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
@@ -10,7 +10,7 @@
 
 [tool.poetry]
     name = "byron"
-    version = "0.8a1.dev53"
+    version = "0.8a1.dev54"
     description = "An evolutionary source-code fuzzer"
     authors = [
         "Cyber Romanticists",
@@ -119,9 +119,9 @@
         quote-style = "preserve"
 
 [tool.bumpver]
-    current_version = "0.8a1.dev53"
+    current_version = "0.8a1.dev54"
     version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
-    commit_message  = "Bump version to {new_version}"
+    commit_message  = "style(bumpver): Bump version to {new_version}"
     commit          = true
     push            = false
 

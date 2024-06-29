@@ -1,10 +1,10 @@
 @echo off
-rem    __                          (`/\
-rem   |  |--.--.--.----.-----.-----`=\/\   This file is part of Byron v0.8
-rem   |  _  |  |  |   _|  _  |     |`=\/\  intelligent source-code fuzzer
-rem   |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron
-rem         |_____|                     \
-rem
+rem   _____                          |   |
+rem  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron, an
+rem  |  __ <  |  |   _|  _  |     |  |___|  evolutionary source-code fuzzer.
+rem  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"
+rem        |_____|                    \|/
+rem                                    '
 rem Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 rem SPDX-License-Identifier: Apache-2.0
 
