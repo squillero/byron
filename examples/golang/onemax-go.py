@@ -17,24 +17,24 @@ import golang
 import byron
 
 
-@byron.fitness_function
+@byron.fitness_function(type_=byron.fitness.basic.Scalar)
 def dummy_fitness(text):
-    return 1 / len(text)
+    return 0.0+text.count('func ')
 
 
 def main():
     top_frame = golang.framework()
 
     # evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
-    evaluator = byron.evaluator.ParallelScriptEvaluator(
-        'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=300, default_result='-1'
-    )
-    # evaluator = byron.evaluator.PythonEvaluator(dummy_fitness)
+    #evaluator = byron.evaluator.ParallelScriptEvaluator(
+    #    'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=300, default_result='-1'
+    #)
+    evaluator = byron.evaluator.PythonEvaluator(dummy_fitness)
 
     byron.f.set_global_option('$dump_node_info', True)
     # final_population = byron.ea.vanilla_ea(top_frame, evaluator, max_generation=1_000, mu=50, lambda_=20, max_fitness=64.0)
     final_population = byron.ea.adaptive_ea(
-        top_frame, evaluator, max_generation=1_000, mu=50, lambda_=20, max_fitness=64.0
+        top_frame, evaluator, max_generation=1_000, mu=50, lambda_=20, max_fitness=64.0-64+7
     )
 
     # byron.logger.info("[b]POPULATION[/b]")

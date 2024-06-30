@@ -10,6 +10,7 @@
 
 # temporrary files created during examples
 *.dat
+*.go
 *.lst
 *.o
 *.out
