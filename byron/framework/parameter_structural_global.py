@@ -97,10 +97,16 @@ def _global_reference(
 
             # first try
             potential_targets = self.get_potential_targets()
-            if strength == 1.0:
-                target = rrandom.choice(potential_targets)
+
+            if self.value in potential_targets:
+                potential_targets.remove(self.value)
+
+            if len(potential_targets) == 0:
+                target = None
             else:
-                target = rrandom.choice(potential_targets, potential_targets.index(self.value), strength=strength)
+                # loc = None => rand_int without permutation of the values
+                target = rrandom.choice(potential_targets, loc=None, strength=strength)
+
             if target is None:
                 # get_all_macros(G, root=f, data=False, node_id=True)
                 new_node = unroll_selement(self._target_frame, self._node_reference.graph)
