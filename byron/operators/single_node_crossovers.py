@@ -107,10 +107,8 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
         new_genome.remove_edge(edge[0], edge[1], key=edge[2])
     for edge in node1_parent_framework_fanout:
         if edge[1] == node1:
-            try:
+            if new_genome.has_edge(node2_frame_parent, node2):
                 new_genome.remove_edge(node2_frame_parent, node2)
-            except nx.exception.NetworkXError:
-                pass
             new_genome.add_edge(edge[0], node2, key=edge[2], **edge[3])
         else:
             new_genome.add_edge(edge[0], edge[1], key=edge[2], **edge[3])
@@ -122,11 +120,9 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     # evaluate if it is correct to add the connections at the end
     node2_descendants = nx.descendants(new_genome, node2)
     for desc in node2_descendants:
-        try:
+        if new_genome.has_edge(node2_frame_parent, desc):
             new_genome.remove_edge(node2_frame_parent, desc)
             new_genome.add_edge(node1_frame_parent, desc, key=0, **{'_type': FRAMEWORK})
-        except nx.exception.NetworkXError:
-            pass
 
     # replace all the LINK input connection to node1 with node2
     node1_fanin_link = [(u, v, k, d) for u, v, k, d in node1_fanin if d['_type'] == LINK]
