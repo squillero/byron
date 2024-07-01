@@ -104,8 +104,8 @@ def _global_reference(
             if len(potential_targets) == 0:
                 target = None
             else:
-                # loc = None => rand_int without permutation of the values
-                target = rrandom.choice(potential_targets, loc=None, strength=strength)
+                # loc = None => no use of strength!!!
+                target = rrandom.choice(potential_targets)
 
             if target is None:
                 # get_all_macros(G, root=f, data=False, node_id=True)
