@@ -27,10 +27,10 @@
 from functools import cache
 
 import networkx as nx
-from classes import NodeReference
 
 from byron.classes.frame import FrameMacroBunch
 from byron.classes.node import NODE_ZERO
+from byron.classes.node_reference import NodeReference
 from byron.classes.parameter import ParameterStructuralABC
 from byron.classes.selement import SElement
 from byron.global_symbols import *
