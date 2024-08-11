@@ -28,8 +28,8 @@ __all__ = [
     '_get_first_macro',
     'discard_useless_components',
     'fasten_subtree_parameters',
-    'get_all_frames',
-    'get_all_macros',
+    # 'get_all_frames',
+    # 'get_all_macros',
     'get_all_parameters',
     'get_dfs_subtree',
     'get_node_color_dict',
@@ -38,7 +38,7 @@ __all__ = [
     'get_siblings',
     'get_structure_tree',
     'get_successors',
-    'make_digraph',
+    'make_digraph_cached',
     'set_successors_order',
 ]
 
@@ -51,6 +51,7 @@ import networkx as nx
 from byron.classes.node import *
 from byron.classes.node_reference import NodeReference
 from byron.classes.parameter import ParameterABC, ParameterStructuralABC
+from byron.classes.selement import SElement
 from byron.global_symbols import *
 from byron.user_messages import *
 
@@ -59,11 +60,11 @@ from byron.user_messages import *
 
 def get_successors(ref: NodeReference) -> tuple[int]:
     G = ref.graph
-    return tuple(v for u, v, d in G.out_edges(ref.node, data="_type") if d == FRAMEWORK)
+    return tuple(v for u, v, d in G.out_edges(ref.node, data='_type') if d == FRAMEWORK)
 
 
 def get_predecessor(ref: NodeReference) -> int:
-    return next((u for u, v, k in ref.graph.in_edges(ref.node, data="_type") if k == FRAMEWORK), 0)
+    return next((u for u, v, k in ref.graph.in_edges(ref.node, data='_type') if k == FRAMEWORK), 0)
 
 
 def get_siblings(ref: NodeReference) -> tuple[int]:
@@ -84,7 +85,7 @@ def get_siblings(ref: NodeReference) -> tuple[int]:
 def set_successors_order(ref: NodeReference, new_order: Sequence[int]) -> None:
     assert check_valid_type(new_order, Sequence)
     G = ref.graph
-    current = tuple((u, v, k) for u, v, k, d in G.out_edges(ref.node, keys=True, data="_type") if d == FRAMEWORK)
+    current = tuple((u, v, k) for u, v, k, d in G.out_edges(ref.node, keys=True, data='_type') if d == FRAMEWORK)
     assert all(k == 0 for u, v, k in current), "ValueError: Found a FRAMEWORK edge with key != 0."
     assert {v for u, v, k in current} == set(
         new_order
@@ -100,22 +101,26 @@ def set_successors_order(ref: NodeReference, new_order: Sequence[int]) -> None:
 
 def get_node_color_dict(G: nx.MultiDiGraph) -> dict[int, int]:
     """Assign an index to each node based on the name of the underlying macro."""
-    known_labels = dict()
+    known_labels: dict[str, int] = dict()
     colors = dict()
     for n in G:
-        name = G.nodes[n]["_selement"].__class__.__name__
+        name = G.nodes[n]['_selement'].__class__.__name__
         if name not in known_labels:
             known_labels[name] = len(known_labels)
         colors[n] = known_labels[name]
     return colors
 
 
+def get_all_successors(ref: NodeReference, with_path: bool = True, filter_type: SElement | None = None): ...
+
+
+# TODO[gx]: Unused! Remove?
 def get_all_frames(
     G: nx.classes.MultiDiGraph, root: int | None = None, *, data: bool = True, node_id: bool = False
 ) -> tuple:
     node_lst = _get_node_list(G, root=root, type_=FRAME_NODE)
     if data:
-        data_lst = tuple(G.nodes[n]["_selement"] for n in node_lst)
+        data_lst = tuple(G.nodes[n]['_selement'] for n in node_lst)
     if data and node_id:
         return tuple(zip(data_lst, node_lst))
     elif data and not node_id:
@@ -123,15 +128,16 @@ def get_all_frames(
     elif not data and node_id:
         return node_lst
     else:
-        raise tuple()
+        raise NotImplementedError
 
 
+# TODO[gx]: Unused! Remove?
 def get_all_macros(
     G: nx.classes.MultiDiGraph, root: int | None = None, *, data: bool = True, node_id: bool = False
 ) -> tuple:
     node_lst = _get_node_list(G, root=root, type_=MACRO_NODE)
     if data:
-        data_lst = tuple(G.nodes[n]["_selement"] for n in node_lst)
+        data_lst = tuple(G.nodes[n]['_selement'] for n in node_lst)
     if data and node_id:
         return tuple(zip(data_lst, node_lst))
     elif data and not node_id:
@@ -183,16 +189,16 @@ def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None, *, n
 
 def _get_first_macro(root: int, G: nx.MultiDiGraph, T: nx.DiGraph) -> int:
     """Quick n' dirty."""
-    return next((n for n in nx.dfs_preorder_nodes(T, root) if G.nodes[n]["_type"] == MACRO_NODE), None)
+    return next((n for n in nx.dfs_preorder_nodes(T, root) if G.nodes[n]['_type'] == MACRO_NODE), None)
 
 
-def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int, type_: str | None) -> tuple:
+def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int | None, type_: str | None) -> tuple:
     """Get all nodes, or some nodes through dfs"""
     if root is None:
-        return tuple(n for n in G.nodes if type_ is None or G.nodes[n]["_type"] == type_)
+        return tuple(n for n in G.nodes if type_ is None or G.nodes[n]['_type'] == type_)
     else:
-        tree = make_digraph(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK))
-        return tuple(n for n in nx.dfs_preorder_nodes(tree, root) if type_ is None or G.nodes[n]["_type"] == type_)
+        tree = make_digraph_cached(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data='_type') if k == FRAMEWORK))
+        return tuple(n for n in nx.dfs_preorder_nodes(tree, root) if type_ is None or G.nodes[n]['_type'] == type_)
 
 
 def fasten_subtree_parameters(node_reference: NodeReference):
@@ -240,17 +246,39 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
     G.remove_nodes_from(nodes_to_remove)
 
 
-def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:
-    tree = make_digraph(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK))
-    if not nx.is_branching(tree) or not nx.is_weakly_connected(tree):
+def get_structure_tree(G: nx.MultiDiGraph, with_path: bool = False) -> nx.DiGraph | None:
+    r"""
+    Calculate the structure tree of a Graph
+
+    Parameters
+    ----------
+    G :
+        the Graph
+    with_path :
+        add `_path` attribute to nodes in tree
+
+    Returns
+    -------
+    A tree
+
+    """
+    tree = make_digraph_cached(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data='_type') if k == FRAMEWORK))
+    # See https://networkx.org/documentation/stable/reference/algorithms/tree.html
+    if not nx.is_arborescence:
         return None
+    assert nx.is_branching(tree) and nx.is_weakly_connected(tree), "SystemError (paranoia check): Incorrect structure"
+
+    if with_path:
+        for node, path in nx.single_source_dijkstra_path(tree, NODE_ZERO).items():
+            tree.nodes[node]['_path'] = tuple(G.nodes[n]['_selement'].__class__ for n in path)
+
     return tree
 
 
 def get_parent_frame_dictionary(genome: nx.MultiDiGraph) -> dict:
     @lru_cache(1024)
     def get_parent_frame_dictionary_cached(G, nodes_list) -> dict:
-        tree = make_digraph(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK))
+        tree = make_digraph_cached(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data='_type') if k == FRAMEWORK))
         assert nx.is_branching(tree) and nx.is_weakly_connected(tree), f"{PARANOIA_SYSTEM_ERROR}: Not a valid genome"
         parent_frames = dict()
         for node, path in nx.single_source_dijkstra_path(tree, NODE_ZERO).items():
@@ -261,7 +289,10 @@ def get_parent_frame_dictionary(genome: nx.MultiDiGraph) -> dict:
 
 
 @lru_cache(1024)
-def make_digraph(nodes, edges):
+def make_digraph_cached(nodes, edges):
+    """Creates a directed graph from a list of nodes and a list of edges,
+    trying to exploit lru_cache using hashable nodes and edges"""
+    # TODO[gx]: the use frozen_set for nodes/edge should be evaluated
     tree = nx.DiGraph()
     tree.add_nodes_from(nodes)
     tree.add_edges_from(edges)

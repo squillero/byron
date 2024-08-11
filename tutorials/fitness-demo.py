@@ -11,8 +11,6 @@
 
 from math import sqrt
 
-from icecream import ic
-
 import byron
 
 FITNESS_TYPES = [

@@ -92,9 +92,9 @@ class Statistics:
             + "; "
             + Statistics.nice(self.aborts, "abort")
             + "; "
-            + ('😱 ' if self.calls == self.aborts else '')
             + Statistics.nice(self.offspring, "new individual")
-            + (f" (👍{self.successes:,} 👎{self.failures:,})" if self.successes or self.failures else "")
+            + (' (😱)' if self.calls == self.aborts else '')
+            + (f' (👍{self.successes:,} 👎{self.failures:,})' if self.successes or self.failures else '')
         )
 
 
@@ -121,7 +121,7 @@ def fitness_function(
         return wrapper
 
 
-def genetic_operator(*, num_parents: int = 1):
+def genetic_operator(*, num_parents: int | None = 1):
     r"""Register a function as a "genetic operator"
 
     A genetic operator creates individual. A genetic operators is given `num_parents` individual and produces a list

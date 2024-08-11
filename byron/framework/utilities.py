@@ -44,7 +44,7 @@ def cook_selement_list(raw_se_list: Sequence[type[SElement] | type[ParameterABC]
     for e in raw_se_list:
         assert isinstance(e, str) or check_valid_types(e, FrameABC, Macro, ParameterABC, subclass=True)
         if isinstance(e, str):
-            e = macro(e)
+            e = macro(e, _invalid_target=True)
         elif issubclass(e, ParameterABC):
             e = macro("{p}", p=e)
         cooked_se_list.append(e)

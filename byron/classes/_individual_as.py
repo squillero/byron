@@ -38,7 +38,6 @@ from byron.tools.graph import *
 if matplotlib_available:
     import matplotlib.pyplot as plt
 
-
 # A rainbow color mapping using matplotlib's tableau colors
 SHARP_COLORS_NUM = 7
 SHARP_COLORS_PALETTE = [
@@ -47,9 +46,9 @@ SHARP_COLORS_PALETTE = [
     "tab:green",  # 2ca02c
     "tab:red",  # d62728
     "tab:purple",  # 9467bd
-    #'tab:brown',  # 8c564b
-    #'tab:pink',  # e377c2
-    #'tab:gray',  # 7f7f7f
+    # 'tab:brown',  # 8c564b
+    # 'tab:pink',  # e377c2
+    # 'tab:gray',  # 7f7f7f
     "tab:olive",  # bcbd22
     "tab:cyan",  # 17becf
 ]
@@ -139,15 +138,17 @@ def as_lgp(self, filename: str | None = None, *, zoom: int = 1.0, **kwargs) -> N
         self.canonic_representation._draw_multipartite(zoom)
 
 
-def _draw_forest(self, zoom) -> None:
+def _draw_forest(self, zoom):
     """Draw individual using multipartite_layout"""
+
+    assert matplotlib_available, "RuntimeError: plotting of individuals is not available."
 
     T = self.structure_tree.copy()
 
     for n in T:
         T.nodes[n]["depth"] = len(nx.shortest_path(T, 0, n))
     height = max(T.nodes[n]["depth"] for n in T.nodes)
-    width = sum(1 for n in T if self.G.nodes[n]["_type"] == MACRO_NODE)
+    width = sum(1 for n in T if self.G.nodes[n]['_type'] == MACRO_NODE)
     fig = plt.figure(figsize=(10 + zoom * width * 0.8, zoom * height + width / 2))
     ax = fig.add_subplot()
 
@@ -161,12 +162,12 @@ def _draw_forest(self, zoom) -> None:
         T, pos, style=":", edge_color="lightgray", arrowstyle="-|>,head_length=.6,head_width=0.2", ax=ax
     )
     # draw macros
-    nodelist = [n for n in T if self.G.nodes[n]["_type"] == MACRO_NODE]
+    nodelist = [n for n in T if self.G.nodes[n]['_type'] == MACRO_NODE]
     nx.draw_networkx_nodes(
         T, pos, nodelist=nodelist, node_color=[colors[n] for n in nodelist], node_size=800, cmap=plt.cm.tab20, ax=ax
     )
     # draw frames
-    nodelist = [n for n in self.G if self.G.nodes[n]["_type"] == FRAME_NODE]
+    nodelist = [n for n in self.G if self.G.nodes[n]['_type'] == FRAME_NODE]
     nx.draw_networkx_nodes(
         T,
         pos,
@@ -184,7 +185,7 @@ def _draw_forest(self, zoom) -> None:
     T.remove_edges_from(tuple(T.edges))
     T.add_edges_from(
         (u, v)
-        for u, v, k in self.G.edges(data="_type")
+        for u, v, k in self.G.edges(data='_type')
         if u != v and k == LINK and T.nodes[u]["depth"] == T.nodes[v]["depth"]
     )
     nx.draw_networkx_edges(
@@ -198,7 +199,7 @@ def _draw_forest(self, zoom) -> None:
 
     T.remove_edges_from(tuple(T.edges))
     T.add_edges_from(
-        (u, v) for u, v, k in self.G.edges(data="_type") if k == LINK and T.nodes[u]["depth"] != T.nodes[v]["depth"]
+        (u, v) for u, v, k in self.G.edges(data='_type') if k == LINK and T.nodes[u]["depth"] != T.nodes[v]["depth"]
     )
     nx.draw_networkx_edges(
         T,
@@ -217,6 +218,8 @@ def _draw_forest(self, zoom) -> None:
 def _draw_multipartite(self, zoom: int) -> None:
     """Draw individual using multipartite_layout"""
 
+    assert matplotlib_available, "RuntimeError: plotting of individuals is not available."
+
     T = self.structure_tree.copy()
     extra_heads = list()
     for node in list(v for _, v in T.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
@@ -230,7 +233,7 @@ def _draw_multipartite(self, zoom: int) -> None:
     G = nx.DiGraph()
     sub_graphs = list()
     for s, head in enumerate(n for _, n in T.edges(0)):
-        nodes = [n for n in nx.dfs_preorder_nodes(T, head) if self.G.nodes[n]["_type"] == MACRO_NODE]
+        nodes = [n for n in nx.dfs_preorder_nodes(T, head) if self.G.nodes[n]['_type'] == MACRO_NODE]
         sub_graphs.append(nodes)
         G.add_nodes_from(nodes)
         for n1, n2 in zip(nodes, nodes[1:]):
@@ -277,7 +280,7 @@ def _draw_multipartite(self, zoom: int) -> None:
     for s in sub_graphs:
         G.add_edges_from(
             (u, v)
-            for u, v, k in self.G.edges(data="_type")
+            for u, v, k in self.G.edges(data='_type')
             if k == LINK and self.G.nodes[u]['_type'] == MACRO_NODE and u in s and v in s
         )
     nx.draw_networkx_edges(
@@ -295,7 +298,7 @@ def _draw_multipartite(self, zoom: int) -> None:
     for s in sub_graphs:
         G.add_edges_from(
             (u, v)
-            for u, v, k in self.G.edges(data="_type")
+            for u, v, k in self.G.edges(data='_type')
             if k == LINK and ((u in s and v not in s) or (u not in s and v in s))
         )
     nx.draw_networkx_edges(

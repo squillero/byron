@@ -93,39 +93,21 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
     candidates = [
         n
         for n in offspring.genome
-        if isinstance(G.nodes[n]["_selement"], FrameMacroBunch)
-        and G.out_degree[n] < G.nodes[n]["_selement"].SIZE[1] - 1
+        if isinstance(G.nodes[n]['_selement'], FrameMacroBunch)
+        and G.out_degree[n] < G.nodes[n]['_selement'].SIZE[1] - 1
     ]
     if not candidates:
         raise ByronOperatorFailure
+
     node = rrandom.choice(candidates)
-    successors = list(get_successors(NodeReference(G, node)))
-    # check if any macro in the pool is not present in successors
-    not_present = set(
-        [
-            i
-            for i, n in enumerate(G.nodes[node]["_selement"].POOL)
-            if n.BYRON_CLASS_NAME not in [G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors]
-        ]
-    )
-    if len(not_present) != 0 and strength >= 0.5:
-        new_macro_type = G.nodes[node]["_selement"].POOL[rrandom.choice(list(not_present))]
-    else:
-        # take a list of the successors ordered by frequency
-        frequency_ordered = [
-            n for n, _ in Counter([G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors]).most_common()
-        ]
-        macro_fo = [m for m in G.nodes[node]["_selement"].POOL if m.BYRON_CLASS_NAME in frequency_ordered]
-        # randomly select a macro. The less the strength, the less the variety of macros
-        new_macro_type = rrandom.choice(macro_fo[: ceil(len(macro_fo) * strength)])
+    macros_in_bunch = list(get_successors(NodeReference(G, node)))
+    new_macro_type = rrandom.choice(G.nodes[node]['_selement'].POOL)
+    new_macro = unroll_selement(new_macro_type, G)
 
-    # new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
-
-    new_macro_reference = unroll_selement(new_macro_type, G)
-    G.add_edge(node, new_macro_reference.node, _type=FRAMEWORK)
-    initialize_subtree(new_macro_reference)
-    i = rrandom.random_int(0, len(successors))
-    set_successors_order(NodeReference(G, node), successors[:i] + [new_macro_reference.node] + successors[i:])
+    G.add_edge(node, new_macro.node, _type=FRAMEWORK)
+    initialize_subtree(new_macro)
+    i = rrandom.random_int(0, len(macros_in_bunch))
+    set_successors_order(NodeReference(G, node), macros_in_bunch[:i] + [new_macro.node] + macros_in_bunch[i:])
     return [offspring]
 
 
@@ -136,15 +118,15 @@ def remove_macro_from_bunch(parent: Individual, strength=1.0) -> list['Individua
     frame_candidates = [
         n
         for n in offspring.genome
-        if isinstance(G.nodes[n]["_selement"], FrameMacroBunch) and G.out_degree[n] > G.nodes[n]["_selement"].SIZE[0]
+        if isinstance(G.nodes[n]['_selement'], FrameMacroBunch) and G.out_degree[n] > G.nodes[n]['_selement'].SIZE[0]
     ]
     if not frame_candidates:
         raise ByronOperatorFailure
     frame_node = rrandom.choice(frame_candidates)
     candidates = [
-        (n, G.nodes[n]["_selement"].BYRON_CLASS_NAME)
+        (n, G.nodes[n]['_selement'].BYRON_CLASS_NAME)
         for n in dfs_preorder_nodes(G, frame_node)
-        if isinstance(G.nodes[n]["_selement"], Macro) and G.in_degree(n) == 1
+        if isinstance(G.nodes[n]['_selement'], Macro) and G.in_degree(n) == 1
     ]
 
     if not candidates:

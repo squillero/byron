@@ -167,7 +167,7 @@ def sequence(
 
 def bunch(
     pool: Macro | abc.Collection[type[Macro]],
-    size: tuple[int, int] | int = 1,
+    size: tuple[int, int, int] | tuple[int, int] | int = 1,
     *,
     name: str | None = None,
     max_instances: int | None = None,
@@ -202,9 +202,13 @@ def bunch(
     if isinstance(size, int):
         size = (size, size + 1)
     else:
-        size = tuple(size)
-        assert len(size) == 2, f"{PARANOIA_VALUE_ERROR}: Not a half open range [min, max)"
-    assert 0 <= size[0] < size[1], f"{PARANOIA_VALUE_ERROR}: Min size is {size[0]} and max size is {size[1]-1}"
+        assert (
+            len(size) == 2 or len(size) == 3
+        ), f"{PARANOIA_VALUE_ERROR}: Not a half open range [min, max) with optional initial"
+    assert 0 <= size[0] < size[1], f"{PARANOIA_VALUE_ERROR}: Min size is {size[0]} and max size is {size[1] - 1}"
+    assert (
+        len(size) != 3 or size[0] <= size[2] < size[1]
+    ), f"{PARANOIA_VALUE_ERROR}: Initial size {size[2]} is not in [{size[0]}, {size[1]})"
 
     assert _debug_hints()
 
@@ -226,7 +230,10 @@ def bunch(
 
         @property
         def successors(self):
-            n_macros = rrandom.random_int(T.SIZE[0], T.SIZE[1])
+            if len(size) == 3:
+                n_macros = size[2]
+            else:
+                n_macros = rrandom.random_int(T.SIZE[0], T.SIZE[1])
             return [rrandom.choice(T.POOL) for _ in range(n_macros)]
 
     T.add_node_check(partial(_check_out_degree, min_=size[0], max_=size[1]))

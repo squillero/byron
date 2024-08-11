@@ -108,15 +108,15 @@ class NodeView:
 
     @cached_property
     def tree(self) -> nx.DiGraph:
-        return make_digraph(
+        return make_digraph_cached(
             tuple(self.ref.graph.nodes),
-            tuple((u, v) for u, v, k in self.ref.graph.edges(data="_type") if k == FRAMEWORK),
+            tuple((u, v) for u, v, k in self.ref.graph.edges(data='_type') if k == FRAMEWORK),
         )
 
     @cached_property
     def parent(self) -> 'NodeView':
         """NodeView of the parent in the structure tree"""
-        parent = next((u for u, v, k in self.ref.graph.in_edges(self.ref.node, data="_type") if k == FRAMEWORK), 0)
+        parent = next((u for u, v, k in self.ref.graph.in_edges(self.ref.node, data='_type') if k == FRAMEWORK), 0)
         return NodeView(NodeReference(self.ref.graph, parent))
 
     @property
@@ -124,7 +124,7 @@ class NodeView:
         """NodeViews of all children in the structure tree"""
         return [
             NodeView(NodeReference(self.ref.graph, v))
-            for u, v, d in self.ref.graph.out_edges(self.ref.node, data="_type")
+            for u, v, d in self.ref.graph.out_edges(self.ref.node, data='_type')
             if d == FRAMEWORK
         ]
 
@@ -135,14 +135,14 @@ class NodeView:
         node = self.ref.node
         while node > 0:
             path.append(NodeView(NodeReference(self.ref.graph, node)))
-            node = next(u for u, v, k in self.ref.graph.in_edges(node, data="_type") if k == FRAMEWORK)
+            node = next(u for u, v, k in self.ref.graph.in_edges(node, data='_type') if k == FRAMEWORK)
         path.append(NodeView(NodeReference(self.ref.graph, node)))
         return tuple(reversed(path))
 
     @cached_property
     def out_degree(self):
         """Number of successors in the structure tree"""
-        return sum(1 for u, v, k in self.ref.graph.out_edges(self.ref.node, data="_type") if k == FRAMEWORK)
+        return sum(1 for u, v, k in self.ref.graph.out_edges(self.ref.node, data='_type') if k == FRAMEWORK)
 
     @property
     def fields(self):

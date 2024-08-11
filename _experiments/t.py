@@ -10,15 +10,19 @@
 
 import byron
 
+initialized_variable = byron.f.macro('var {_node} = {value}', value=byron.f.integer_parameter(0, 256), _label='')
+bunch_of_initialized_variables = byron.f.bunch([initialized_variable], size=(1, 10))
+uninitialized_variable = byron.f.macro('var {_node}', _label='')
+bunch_of_uninitialized_variables = byron.f.bunch([uninitialized_variable], size=(0, 10, 0))
 
-def silly_check(nr):
-    values = list()
-    for s in nr.children:
-        values.append(s.p.num)  # lazy fingers: s.p.num
-    return sorted(values, reverse=True) == values
+variables = byron.f.sequence([bunch_of_initialized_variables, bunch_of_uninitialized_variables])
 
+operation = byron.f.macro(
+    "{dst} = func({arg})",
+    dst=byron.f.global_reference(variables),
+    arg=byron.f.global_reference(variables, creative_zeal=100),
+)
 
-foo = byron.f.macro('foo {num}', num=byron.f.integer_parameter(-1000, +1000))
-sorted_bunch = byron.f.bunch([foo], size=7)
-sorted_bunch.add_node_check(silly_check)
-byron.f.as_text(sorted_bunch)
+bunch_of_operations = byron.f.bunch([operation], size=1)
+program = byron.f.sequence([variables, bunch_of_operations])
+byron.f.as_text(program)

@@ -30,9 +30,11 @@ from functools import cache
 from typing import Any
 
 from byron.classes.macro import Macro
-from byron.classes.node_reference import NodeReference
+from byron.classes.node_view import NodeView
 from byron.classes.parameter import ParameterABC
-from byron.user_messages import *
+
+# from byron.user_messages import *
+from byron.user_messages import check_valid_type
 
 
 @cache
@@ -56,7 +58,7 @@ def _macro(
     return M
 
 
-def macro(text: str, **parameters: type[ParameterABC] | str) -> type[Macro]:
+def macro(text: str, **parameters) -> type[Macro]:
     """Class factory: Returns the class for a specific macro.
 
     A macro is a fragment of text with variable elements, the `parameters`, appearing
@@ -103,10 +105,10 @@ def macro(text: str, **parameters: type[ParameterABC] | str) -> type[Macro]:
     return _macro(text, tuple(sorted(macro_parameters)), tuple(sorted(extra_parameters)))
 
 
-def _check_parameters(node_ref: NodeReference):
+def _check_parameters(node_view: NodeView):
     # skip type and _selement because you don't need to check them
     return all(
-        node_ref.node_attributes[p].is_correct(node_ref.node_attributes[p].value)
-        for p in node_ref.node_attributes
-        if p != '_type' and p != '_selement' and p != '%old_label'
+        node_view.node_attributes[p].is_correct(node_view.node_attributes[p].value)
+        for p in node_view.node_attributes
+        if p[0] != '_' and p[0] != '%'
     )

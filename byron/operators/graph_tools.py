@@ -122,8 +122,8 @@ def _unroll_frame(frame_class: type[FrameABC], G: nx.classes.MultiDiGraph) -> in
     G.add_node(node_id)
 
     frame_instance = frame_class()
-    G.nodes[node_id]["_type"] = FRAME_NODE
-    G.nodes[node_id]["_selement"] = frame_instance
+    G.nodes[node_id]['_type'] = FRAME_NODE
+    G.nodes[node_id]['_selement'] = frame_instance
     for f in frame_instance.successors:
         new_node_id = _recursive_unroll(f, G)
         G.add_edge(node_id, new_node_id, _type=FRAMEWORK)  # Checkout test/paranoia/networkx
@@ -136,8 +136,8 @@ def _unroll_macro(macro_class: type[Macro], G: nx.classes.MultiDiGraph) -> int:
     G.add_node(node_id)
 
     macro_instance = macro_class()
-    G.nodes[node_id]["_type"] = MACRO_NODE
-    G.nodes[node_id]["_selement"] = macro_instance
+    G.nodes[node_id]['_type'] = MACRO_NODE
+    G.nodes[node_id]['_selement'] = macro_instance
     for k, p in macro_instance.parameter_types.items():
         G.nodes[node_id][k] = p()
 

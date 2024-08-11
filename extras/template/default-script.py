@@ -11,8 +11,6 @@
 import argparse
 import logging
 
-from icecream import ic
-
 import byron
 
 

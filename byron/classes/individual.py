@@ -277,14 +277,14 @@ class Individual(Paranoid):
     def macros(self) -> tuple[Macro]:
         """Return all macro instances in unreliable order."""
         return tuple(
-            self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == MACRO_NODE
+            self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == MACRO_NODE
         )
 
     @property
     def frames(self) -> tuple[FrameABC]:
         """Return all frame instances in unreliable order."""
         return tuple(
-            self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == FRAME_NODE
+            self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == FRAME_NODE
         )
 
     @property
@@ -342,11 +342,11 @@ class Individual(Paranoid):
 
         # ==[check edges (semantic)]=========================================
         edges = self._genome.edges(keys=True, data=True)
-        assert all("_type" in d for u, v, k, d in edges), "ValueError (paranoia check): missing '_type' attribute"
+        assert all('_type' in d for u, v, k, d in edges), "ValueError (paranoia check): missing '_type' attribute"
         assert all(
-            d["_type"] != FRAMEWORK or len(d) == 1 for u, v, k, d in edges
+            d['_type'] != FRAMEWORK or len(d) == 1 for u, v, k, d in edges
         ), "ValueError (paranoia check): unknown attribute in tree edge"
-        tree_edges = [(u, v) for u, v, k, d in edges if d["_type"] == FRAMEWORK]
+        tree_edges = [(u, v) for u, v, k, d in edges if d['_type'] == FRAMEWORK]
         assert len(tree_edges) == len(set(tree_edges)), "ValueError (paranoia check): duplicated framework edge"
 
         # ==[check nodes (semantic)]=========================================
@@ -421,17 +421,17 @@ class Individual(Paranoid):
         if include_fitness:
             delem.append(f"fitness: {self.fitness}")
         if include_structure:
-            node_types = list(t for n, t in self.G.nodes(data="_type"))
+            node_types = list(t for n, t in self.G.nodes(data='_type'))
             n_nodes = len(self.G)
             n_macros = node_types.count(MACRO_NODE) - 1
             n_frames = node_types.count(FRAME_NODE)
-            n_links = sum(True for _, _, k in self.G.edges(data="_type") if k != FRAMEWORK)
+            n_links = sum(True for _, _, k in self.G.edges(data='_type') if k != FRAMEWORK)
             n_params = sum(
                 True
                 for p in chain.from_iterable(
-                    self.G.nodes[n]["_selement"].parameter_types.items()
+                    self.G.nodes[n]['_selement'].parameter_types.items()
                     for n in self.G
-                    if self.G.nodes[n]["_type"] == MACRO_NODE
+                    if self.G.nodes[n]['_type'] == MACRO_NODE
                 )
             )
             delem.append(
@@ -475,8 +475,8 @@ class Individual(Paranoid):
             extra_parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS
 
         # =[Flatten the graph into a list of nodes]==========================
-        tree = make_digraph(
-            tuple(self._genome.nodes), tuple((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
+        tree = make_digraph_cached(
+            tuple(self._genome.nodes), tuple((u, v) for u, v, k in self._genome.edges(data='_type') if k == FRAMEWORK)
         )
         tree = tree.copy()
 
@@ -513,7 +513,7 @@ class Individual(Paranoid):
                         node_str += '  '
                     node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.type_}'.format(**bag)
                 node_str += '{_text_after_macro}'.format(**bag)
-            elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
+            elif nr.graph.nodes[nr.node]['_type'] == FRAME_NODE:
                 node_str += '{_text_before_frame}'.format(**bag)
                 if bag['$dump_node_info']:
                     node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.type_}{_text_after_macro}'.format(**bag)

@@ -77,7 +77,13 @@ def welcome(level=logging.DEBUG):
 
 
 #############################################################################
-# Warning
+# Welcome
+
+if main_process and not notebook_mode:
+    welcome(logging.INFO)
+
+#############################################################################
+# Warnings
 
 if notebook_mode and logging.getLogger().level <= logging.WARNING and paranoia_mode:
     assert (
@@ -98,15 +104,6 @@ elif not notebook_mode:
         )
     )
 
-#############################################################################
-# Welcome
-
-if main_process and not notebook_mode:
-    welcome(logging.INFO)
-
-#############################################################################
-# Warnings
-
 if not matplotlib_available:
     user_messages.runtime_warning("No 'matplotlib': plotting of individuals will not be available.")
 if not joblib_available:
@@ -116,6 +113,10 @@ if not psutil_available:
 
 #############################################################################
 # While debugging, let's use https://github.com/gruns/icecream
-from icecream import install
 
-install()
+try:
+    from icecream import install
+
+    install()
+except ModuleNotFoundError:
+    pass
