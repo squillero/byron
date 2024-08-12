@@ -154,7 +154,7 @@ def _draw_forest(self, zoom):
 
     T.remove_node(0)
     pos = nx.multipartite_layout(T, subset_key="depth", align="horizontal")
-    pos = {node: (-x, -y) for (node, (x, y)) in pos.items()}
+    patch_pos(self.structure_tree, pos)
     colors = get_node_color_dict(self.G)
 
     # draw structure
@@ -240,9 +240,11 @@ def _draw_multipartite(self, zoom: int) -> None:
             G.add_edge(n1, n2)
         for n in nodes:
             G.nodes[n]["subset"] = s
+
+    colors = get_node_color_dict(self.G)
     pos = nx.multipartite_layout(G)
-    # pos = {node: (-x, y) for (node, (x, y)) in pos.items()}
-    colors = get_node_color_dict(self._genome)
+    patch_pos(self.structure_tree, pos)
+
     nodelist = list(G.nodes)
 
     # figsize
@@ -316,3 +318,28 @@ def _draw_multipartite(self, zoom: int) -> None:
     plt.tight_layout()
 
     return fig
+
+
+def patch_pos(
+    G: nx.DiGraph,
+    pos: dict,
+):
+    pos_order = [n for n in list(nx.dfs_preorder_nodes(G, NODE_ZERO)) if n in pos]
+    swap_x, swap_y = 0, 0
+    for i in range(len(pos_order) - 1):
+        if pos[pos_order[i]][0] > pos[pos_order[i + 1]][0]:
+            swap_x -= 1
+        elif pos[pos_order[i]][0] > pos[pos_order[i + 1]][0]:
+            swap_x += 1
+        if pos[pos_order[i]][1] > pos[pos_order[i + 1]][1]:
+            swap_y += 1
+        elif pos[pos_order[i]][1] > pos[pos_order[i + 1]][1]:
+            swap_y -= 1
+    # ic(swap_x, swap_y)
+    if swap_x > 0:
+        for n in pos:
+            pos[n][0] = -pos[n][0]
+    if swap_y >= 0:
+        for n in pos:
+            pos[n][1] = -pos[n][1]
+    pass
