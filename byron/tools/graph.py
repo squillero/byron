@@ -266,7 +266,7 @@ def get_structure_tree(G: nx.MultiDiGraph, with_path: bool = False) -> nx.DiGrap
     """
     tree = make_digraph_cached(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data='_type') if k == FRAMEWORK))
     # See https://networkx.org/documentation/stable/reference/algorithms/tree.html
-    if not nx.is_arborescence:
+    if not nx.is_arborescence(tree):
         return None
     assert nx.is_branching(tree), "SystemError (paranoia check): Incorrect structure. Graph is not a forest"
     assert nx.is_weakly_connected(

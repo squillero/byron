@@ -6,8 +6,6 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"         #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-from collections import defaultdict
-
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +24,8 @@ from collections import defaultdict
 # =[ HISTORY ]===============================================================
 # v1 / August 2023 / Squillero (GX)
 
+
+from collections import defaultdict
 from copy import deepcopy
 from typing import Collection
 
@@ -88,7 +88,7 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     node1_frame_parent = [(u, v, k, d) for u, v, k, d in node1_fanin if d['_type'] == FRAMEWORK]
     if len(node1_frame_parent) != 1:
         logger.debug(
-            f"generic_node_crossover: Failed (invalid structure, every node must have one and only one FRAMEWORK edge as input)"
+            "generic_node_crossover: Failed (invalid structure, every node must have one and only one FRAMEWORK edge as input)"
         )
         raise ByronOperatorFailure
     node1_frame_parent = node1_frame_parent[0][0]
@@ -96,7 +96,7 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     node2_frame_parent = [(u, v, k, d) for u, v, k, d in node2_fanin if d['_type'] == FRAMEWORK]
     if len(node2_frame_parent) != 1:
         logger.debug(
-            f"generic_node_crossover: Failed (invalid structure, every node must have one and only one FRAMEWORK edge as input)"
+            "generic_node_crossover: Failed (invalid structure, every node must have one and only one FRAMEWORK edge as input)"
         )
         raise ByronOperatorFailure
     node2_frame_parent = node2_frame_parent[0][0]
@@ -148,7 +148,7 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     discard_useless_components(new_genome)
 
     if not get_structure_tree(new_genome):
-        logger.debug(f"generic_node_crossover: Failed (invalid structure, tree)")
+        logger.debug("generic_node_crossover: Failed (invalid structure, tree)")
         raise ByronOperatorFailure
 
     Node.reset_labels(new_genome)

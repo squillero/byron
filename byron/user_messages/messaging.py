@@ -106,6 +106,31 @@ logger.propagate = False
 
 assert 'logger' in globals(), "SystemError (paranoia check): byron logger not initialized"
 
+# Alternative symbols: ⍄ ┊
+
+if notebook_mode:
+    console_handler = logging.StreamHandler()
+    console_formatter = logging.Formatter('%(levelname)s ▷ %(message)s')
+else:
+    from rich import highlighter as rich_highlighter
+    from rich import logging as rich_logging
+
+    # console_handler = logging.StreamHandler()
+    # console_handler.setFormatter(console_formatter)
+    console_handler = rich_logging.RichHandler(
+        log_time_format='%H:%M:%S',  # '%H:%M:%S.%f'
+        omit_repeated_times=False,
+        show_path=False,
+        markup=True,
+        highlighter=rich_highlighter.NullHighlighter(),
+        keywords=['▷'],
+        # console=rich_console.Console(width=120) if debug_mode else None,
+    )
+    console_formatter = logging.Formatter('▷ %(message)s')
+
+console_handler.setFormatter(console_formatter)
+logger.handlers = [console_handler]
+
 if test_mode:
     logger.setLevel(logging.WARNING)
 elif notebook_mode:
@@ -114,29 +139,6 @@ elif __debug__:
     logger.setLevel(logging.DEBUG)
 else:
     logger.setLevel(logging.INFO)
-
-# Alternative symbols: ⍄ ┊
-
-from rich import highlighter as rich_highlighter
-from rich import logging as rich_logging
-
-# console_handler = logging.StreamHandler()
-# console_handler.setFormatter(console_formatter)
-# if notebook_mode:
-#    console_handler = logging.StreamHandler()
-#    console_formatter = logging.Formatter('%(levelname)s ▷ %(message)s')
-console_handler = rich_logging.RichHandler(
-    log_time_format='%H:%M:%S',  # '%H:%M:%S.%f'
-    omit_repeated_times=False,
-    show_path=False,
-    markup=True,
-    highlighter=rich_highlighter.NullHighlighter(),
-    keywords=['▷'],
-    # console=rich_console.Console(width=120) if debug_mode else None,
-)
-console_formatter = logging.Formatter('▷ %(message)s')
-console_handler.setFormatter(console_formatter)
-logger.handlers = [console_handler]
 
 # Avoid excessive warnings...
 if not sys.warnoptions:
