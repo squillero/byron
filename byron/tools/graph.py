@@ -256,6 +256,8 @@ def get_structure_tree(G: nx.MultiDiGraph, with_path: bool = False) -> nx.DiGrap
         the Graph
     with_path :
         add `_path` attribute to nodes in tree
+    with_parent :
+        add `_parent` attribute to nodes in tree
 
     Returns
     -------
@@ -266,11 +268,15 @@ def get_structure_tree(G: nx.MultiDiGraph, with_path: bool = False) -> nx.DiGrap
     # See https://networkx.org/documentation/stable/reference/algorithms/tree.html
     if not nx.is_arborescence:
         return None
-    assert nx.is_branching(tree) and nx.is_weakly_connected(tree), "SystemError (paranoia check): Incorrect structure"
+    assert nx.is_branching(tree), "SystemError (paranoia check): Incorrect structure. Graph is not a forest"
+    assert nx.is_weakly_connected(
+        tree
+    ), "SystemError (paranoia check): Incorrect structure. Graph is not weakly connected."
 
     if with_path:
         for node, path in nx.single_source_dijkstra_path(tree, NODE_ZERO).items():
-            tree.nodes[node]['_path'] = tuple(G.nodes[n]['_selement'].__class__ for n in path)
+            tree.nodes[node]['_path'] = tuple(G.nodes[n]['_selement'] for n in path)
+            tree.nodes[node]['_type_path'] = tuple(G.nodes[n]['_selement'].__class__ for n in path)
 
     return tree
 

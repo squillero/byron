@@ -29,21 +29,21 @@ MAGIC_NUMBERS = [
 def run_comparison(type_, n1, n2):
     f1 = type_(n1)
     f2 = type_(n2)
-    ic(f1 == f2)
-    ic(f1 < f2)
-    ic(f1 > f2)
-    ic(f1 << f2)
-    ic(f1 >> f2)
+    # ic(f1 == f2)
+    # ic(f1 < f2)
+    # ic(f1 > f2)
+    # ic(f1 << f2)
+    # ic(f1 >> f2)
 
 
 def main():
     for d, n1, n2 in MAGIC_NUMBERS:
-        ic()
+        # ic()
         for type_ in FITNESS_TYPES:
-            ic(d, type_)
+            # ic(d, type_)
             run_comparison(type_, n1, n2)
             type2_ = byron.fit.reverse_fitness(type_)
-            ic(d, type2_)
+            # ic(d, type2_)
             run_comparison(type2_, n1, n2)
 
 

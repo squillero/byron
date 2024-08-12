@@ -14,8 +14,7 @@ import logging
 import byron
 
 
-def main():
-    ic(42)
+def main(): ...
 
 
 if __name__ == '__main__':

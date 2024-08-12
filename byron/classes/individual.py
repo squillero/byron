@@ -164,9 +164,14 @@ class Individual(Paranoid):
 
     @property
     def valid(self) -> bool:
+        # for n in self.genome.nodes:
+        #     if not self.genome.nodes[n]['_selement'].is_valid(NodeView(NodeReference(self._genome, n))):
+        #         ic(f"Individual {n} invalid: {self.genome.nodes[n]['_selement']}")
+        #         return False
         return all(
             self.genome.nodes[n]['_selement'].is_valid(NodeView(NodeReference(self._genome, n))) for n in self._genome
         )
+        return True
 
     @property
     def clone(self) -> 'Individual':

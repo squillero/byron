@@ -2797,6 +2797,7 @@ files = [
 ]
 
 [package.dependencies]
+ipywidgets = {version = ">=7.5.1,<9", optional = true, markers = "extra == \"jupyter\""}
 markdown-it-py = ">=2.2.0"
 pygments = ">=2.13.0,<3.0.0"
 
@@ -3371,4 +3372,4 @@ plot = ["matplotlib"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "ad8570411221bf003a90b3395f69bc098ba592fa1e22100a064e4f50e2e0bb28"
+content-hash = "34087031a5dc5602f12b736bd984f8bc94728930db6fb41b0073f6878025970b"

@@ -62,18 +62,24 @@ __welcome__ = (
 
 
 def welcome(level=logging.DEBUG):
-    from sys import stderr, stdout
+    if notebook_mode:
+        from rich.console import Console
 
-    stderr.flush()
-    stdout.flush()
-    lines = __welcome__.split("\n")
-    for m in lines:
-        # stars: ⚝ ⭐// feathers: 🖋
-        # user_messages.logger.log(level, f"🖋: {m}")
-        user_messages.logger.log(level, f"{m}")
-    stderr.flush()
-    stdout.flush()
-    return True
+        console = Console(highlight=False)
+        console.print(__welcome__)
+    else:
+        from sys import stderr, stdout
+
+        stderr.flush()
+        stdout.flush()
+        lines = __welcome__.split("\n")
+        for m in lines:
+            # stars: ⚝ ⭐// feathers: 🖋
+            # user_messages.logger.log(level, f"🖋: {m}")
+            user_messages.logger.log(level, f"{m}")
+        stderr.flush()
+        stdout.flush()
+        return True
 
 
 #############################################################################

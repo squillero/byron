@@ -74,17 +74,21 @@ def _global_reference(
             """
 
             targets = [
-                (n, tree.nodes[n]['_path'])
+                (n, tree.nodes[n]['_type_path'])
                 for n in tree.nodes
                 if self._node_reference.graph.nodes[n]['_type'] == MACRO_NODE
-                and target_frame in tree.nodes[n]['_path']
+                and target_frame in tree.nodes[n]['_type_path']
                 and not (
                     '_invalid_target' in self._node_reference.graph.nodes[n]['_selement'].EXTRA_PARAMETERS
                     and self._node_reference.graph.nodes[n]['_selement'].EXTRA_PARAMETERS['_invalid_target']
                 )
             ]
             if first_macro:
-                targets = [c for i, c in enumerate(targets) if c[1] not in {_[1] for _ in targets[:i]}]
+                tmp = list()
+                for n, p in targets:
+                    idx = p.index(target_frame)
+                    tmp.append((n, tree.nodes[n]['_path'][idx]))
+                targets = [c for i, c in enumerate(tmp) if c[1] not in {_[1] for _ in tmp[:i]}]
 
             return [t[0] for t in targets]
 
@@ -116,12 +120,13 @@ def _global_reference(
 
             if target is None:
                 # We need to create a new target
+                # We don't need the first macro, let's see if we can grow a pool
                 growable_nodes = [
                     (n, p)
-                    for n, p in tree.nodes(data='_path')
+                    for n, p in tree.nodes(data='_type_path')
                     if self._target_frame in p
-                    and issubclass(p[-1], FrameMacroBunch)
-                    and G.out_degree(n) < p[-1].SIZE[1]
+                    and isinstance(G.nodes[n]['_selement'], FrameMacroBunch)
+                    and G.nodes[n]['_selement'].SIZE[0] <= G.out_degree(n) < G.nodes[n]['_selement'].SIZE[1] - 1
                 ]
                 if growable_nodes:
                     node = rrandom.choice(growable_nodes)[0]

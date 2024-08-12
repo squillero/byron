@@ -82,24 +82,28 @@ def integer_parameter(min_: int, max_: int) -> type[ParameterABC]:
     def check_range():
         if max_ - min_ == 1:
             syntax_warning_hint(
-                f"Parameter ranges are half-open: the value can only be {min_:,} — did you mean '({min_}, {max_+1})'?",
+                f"Parameter ranges are half-open: the value can only be {min_:,}"
+                + f" — did you mean '({min_}, {max_ + 1})'?",
                 stacklevel_offset=1,
             )
         elif any(max_ - min_ + 1 == 10**n for n in range(1, 10)):
             syntax_warning_hint(
-                f"Parameter ranges are half-open: the maximum value is {max_-1} (ie. a range of {max_-min_:,} possible values) — did you mean '({min_}, {max_+1})'?",
+                f"Parameter ranges are half-open: the maximum value is {max_ - 1}"
+                + f" (ie. a range of {max_ - min_:,} possible values)",
                 stacklevel_offset=1,
             )
         elif any(max_ - min_ == 2**n - 1 for n in range(6, 128 + 1)):
             p = next(n for n in range(128 + 1) if max_ - min_ == 2**n - 1)
             syntax_warning_hint(
-                f"Parameter ranges are half-open: the maximum value is {max_ - 1:,} (ie. a range of 2**{p}-1 possible values)",
+                f"Parameter ranges are half-open: the maximum value is {max_ - 1:,}"
+                + f" (ie. a range of 2**{p}-1 possible values)",
                 stacklevel_offset=1,
             )
         elif any(max_ - min_ == 2**n + 1 for n in range(6, 128 + 1)):
             p = next(n for n in range(128 + 1) if max_ - min_ == 2**n + 1)
             syntax_warning_hint(
-                f"Parameter ranges are half-open: the maximum value is {max_:,} (ie. a range of 2**{p}+1 possible values)",
+                f"Parameter ranges are half-open: the maximum value is {max_:,}"
+                + f" (ie. a range of 2**{p}+1 possible values)",
                 stacklevel_offset=1,
             )
         return True
