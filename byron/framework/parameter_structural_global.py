@@ -38,6 +38,7 @@ from byron.global_symbols import FRAMEWORK, PARANOIA_VALUE_ERROR
 from byron.operators.graph_tools import *
 from byron.randy import rrandom
 from byron.tools.graph import *
+from byron.tools.providers import *
 from byron.user_messages import *
 
 __all__ = ["global_reference"]
@@ -45,11 +46,11 @@ __all__ = ["global_reference"]
 
 @cache
 def _global_reference(
-    *,
-    target_name: str | None = None,
-    target_frame: type[SElement] | None = None,
-    first_macro: bool = True,
-    creative_zeal: int | float = 0,
+        *,
+        target_name: str | None = None,
+        target_frame: type[SElement] | None = None,
+        first_macro: bool = True,
+        creative_zeal: int | float = 0,
 ) -> type[ParameterStructuralABC]:
     class T(ParameterStructuralABC):
         __slots__ = ["_target_frame"]  # Preventing the automatic creation of __dict__
@@ -59,13 +60,13 @@ def _global_reference(
             # NOTE[GX] if target_frame is a string it works thanks to selement string magic!
             self._target_frame = target_frame
 
-        def get_potential_targets(self, tree: nx.DiGraph):
+        def get_potential_targets(self, T: nx.DiGraph):
             r"""
             Get potential targets for the global reference.
 
             Parameters
             ----------
-            tree :
+            T :
                 The structure tree of the inddividual with valid _path attributes.
 
             Returns
@@ -73,21 +74,23 @@ def _global_reference(
             List of potential targets for the global reference.
             """
 
+            G = self._node_reference.graph
+            provide_tags(G, '_path', '_typepath', force=True)
             targets = [
-                (n, tree.nodes[n]['_type_path'])
-                for n in tree.nodes
-                if self._node_reference.graph.nodes[n]['_type'] == MACRO_NODE
-                and target_frame in tree.nodes[n]['_type_path']
-                and not (
-                    '_invalid_target' in self._node_reference.graph.nodes[n]['_selement'].EXTRA_PARAMETERS
-                    and self._node_reference.graph.nodes[n]['_selement'].EXTRA_PARAMETERS['_invalid_target']
+                (n, G.nodes[n]['_typepath'])
+                for n in T.nodes
+                if G.nodes[n]['_type'] == MACRO
+                   and target_frame in G.nodes[n]['_typepath']
+                   and not (
+                        '_invalid_target' in G.nodes[n]['_selement'].EXTRA_PARAMETERS
+                        and G.nodes[n]['_selement'].EXTRA_PARAMETERS['_invalid_target']
                 )
             ]
             if first_macro:
                 tmp = list()
                 for n, p in targets:
                     idx = p.index(target_frame)
-                    tmp.append((n, tree.nodes[n]['_path'][idx]))
+                    tmp.append((n, G.nodes[n]['_path'][idx]))
                 targets = [c for i, c in enumerate(tmp) if c[1] not in {_[1] for _ in tmp[:i]}]
 
             return [t[0] for t in targets]
@@ -96,7 +99,9 @@ def _global_reference(
             assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: Node is unfastened"
 
             G = self._node_reference.graph
-            tree = get_structure_tree(G, with_path=True)
+            tree = get_structure(G)
+            provide_tags(G, '_typepath')
+
             # first try -- if needed add None
             potential_targets = self.get_potential_targets(tree)
             if self.value in potential_targets:
@@ -123,10 +128,10 @@ def _global_reference(
                 # We don't need the first macro, let's see if we can grow a pool
                 growable_nodes = [
                     (n, p)
-                    for n, p in tree.nodes(data='_type_path')
+                    for n, p in G.nodes(data='_typepath')
                     if self._target_frame in p
-                    and isinstance(G.nodes[n]['_selement'], FrameMacroBunch)
-                    and G.nodes[n]['_selement'].SIZE[0] <= G.out_degree(n) < G.nodes[n]['_selement'].SIZE[1] - 1
+                       and isinstance(G.nodes[n]['_selement'], FrameMacroBunch)
+                       and G.nodes[n]['_selement'].SIZE[0] <= G.out_degree(n) < G.nodes[n]['_selement'].SIZE[1] - 1
                 ]
                 if growable_nodes:
                     node = rrandom.choice(growable_nodes)[0]
@@ -150,7 +155,7 @@ def _global_reference(
                     self._node_reference.graph.add_edge(NODE_ZERO, new_node.node, _type=FRAMEWORK)
                     initialize_subtree(new_node)
 
-                    new_tree = get_structure_tree(G, with_path=True)
+                    new_tree = get_structure(G)
                     new_potential_targets = [
                         t for t in self.get_potential_targets(new_tree) if t not in potential_targets
                     ]
@@ -177,9 +182,9 @@ def _global_reference(
 
 
 def global_reference(
-    target_frame: str | type[SElement], *, creative_zeal=0, first_macro: bool = False
+        target_frame: str | type[SElement], *, creative_zeal=0, first_macro: bool = False
 ) -> type[ParameterStructuralABC]:
     assert (
-        isinstance(creative_zeal, int) or 0.0 <= creative_zeal <= 1.0
+            isinstance(creative_zeal, int) or 0.0 <= creative_zeal <= 1.0
     ), f"ValueError: creative zeal is integer or 0 <= float <= 1: found {creative_zeal}"
     return _global_reference(target_frame=target_frame, first_macro=bool(first_macro), creative_zeal=creative_zeal)

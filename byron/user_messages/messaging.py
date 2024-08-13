@@ -99,12 +99,12 @@ def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
 #############################################################################
 # CUSTOMIZATIONS
 
-assert "logger" not in globals(), "SystemError (paranoia check): byron logger already initialized"
+assert "logger" not in globals(), f"{PARANOIA_SYSTEM_ERROR}: byron logger already initialized"
 logging.basicConfig()  # Initialize logging
 logger = logging.getLogger('byron')
 logger.propagate = False
 
-assert 'logger' in globals(), "SystemError (paranoia check): byron logger not initialized"
+assert 'logger' in globals(), f"{PARANOIA_SYSTEM_ERROR}: byron logger not initialized"
 
 # Alternative symbols: ⍄ ┊
 
@@ -155,9 +155,9 @@ def hesitant_log(lapse: float, level: int, *args, **kwargs):
 
 
 assert (
-    getattr(logger, '__dict__') and 'hesitant_log' not in logger.__dict__
+        getattr(logger, '__dict__') and 'hesitant_log' not in logger.__dict__
 ), f"PANIC: {logger} has already the attribute 'hesitant_log'"
 logger.hesitant_log = hesitant_log
 assert (
-    getattr(logger, '__dict__') and 'hesitant_log' in logger.__dict__
+        getattr(logger, '__dict__') and 'hesitant_log' in logger.__dict__
 ), f"PANIC: cannot register attribute 'hesitant_log' in {logger}"

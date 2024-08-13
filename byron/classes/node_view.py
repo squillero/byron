@@ -40,6 +40,7 @@ from byron.global_symbols import *
 from byron.tools.graph import *
 from byron.user_messages import *
 
+
 # NOTE[GX]: Rewritten almost from scratch taking advantage of 'dataclasses' (py>=3.7) and
 # '@cached_property' (py>=3.8)
 
@@ -55,7 +56,7 @@ class NodeView:
 
     @property
     def safe_dump(self):
-        if self.ref.graph.nodes[self.ref.node]['_type'] == MACRO_NODE:
+        if self.ref.graph.nodes[self.ref.node]['_type'] == MACRO:
             extra_parameters = DEFAULT_EXTRA_PARAMETERS | self.ref.graph.nodes[self.ref.node]
             extra_parameters |= {'_node': NodeView(self.ref)}
             dumped = None
@@ -108,10 +109,7 @@ class NodeView:
 
     @cached_property
     def tree(self) -> nx.DiGraph:
-        return make_digraph_cached(
-            tuple(self.ref.graph.nodes),
-            tuple((u, v) for u, v, k in self.ref.graph.edges(data='_type') if k == FRAMEWORK),
-        )
+        return get_structure(self.ref.graph)
 
     @cached_property
     def parent(self) -> 'NodeView':

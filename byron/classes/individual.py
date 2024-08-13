@@ -40,10 +40,6 @@ from byron.classes.node import NODE_ZERO
 from byron.global_symbols import *
 from byron.tools.graph import *
 from byron.user_messages import *
-
-if matplotlib_available:
-    pass
-
 from byron.classes.byron import Byron
 from byron.classes.dump import *
 from byron.classes.fitness import FitnessABC
@@ -56,7 +52,6 @@ from byron.classes.parameter import ParameterABC, ParameterStructuralABC
 from byron.classes.paranoid import Paranoid
 from byron.classes.readymade_macros import MacroZero
 from byron.classes.value_bag import ValueBag
-from byron.global_symbols import *
 
 
 @dataclass(frozen=True, slots=True)
@@ -127,7 +122,8 @@ class Individual(Paranoid):
             self._genome = genome
         else:
             self._genome = nx.MultiDiGraph(top_frame=top_frame)
-            self._genome.add_node(NODE_ZERO, _selement=MacroZero(), _type=MACRO_NODE)
+            self._genome.add_node(NODE_ZERO, _selement=MacroZero(), _type=MACRO)
+            self._genome.graph[ATTRIBUTE_PROVIDERS] = set()
         self._fitness = None
         self._str = ''
         self._lineage = None
@@ -142,11 +138,11 @@ class Individual(Paranoid):
 
     def __eq__(self, other) -> bool:
         return (
-            type(self) == type(other)
-            and self._fitness == other._fitness
-            and nx.isomorphism.is_isomorphic(
-                self._genome, other._genome, node_match=operator.eq, edge_match=operator.eq
-            )
+                type(self) == type(other)
+                and self._fitness == other._fitness
+                and nx.isomorphism.is_isomorphic(
+            self._genome, other._genome, node_match=operator.eq, edge_match=operator.eq
+        )
         )
 
     def __hash__(self) -> int:
@@ -257,11 +253,11 @@ class Individual(Paranoid):
         assert self._check_fitness(value)
         self._fitness = value
         if any(value >> i.fitness for i in self._lineage.parents) and any(
-            value >> i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
+                value >> i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
         ):
             self._lineage.operator.stats.successes += 1
         elif any(value << i.fitness for i in self.lineage.parents) and any(
-            value << i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
+                value << i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
         ):
             self._lineage.operator.stats.failures += 1
         logger.debug(f"Individual: Fitness of {self}/{self.lineage} is {value}")
@@ -279,29 +275,29 @@ class Individual(Paranoid):
     # CACHED PROPERTIED
 
     @property
-    def macros(self) -> tuple[Macro]:
+    def macros(self) -> list[Macro]:
         """Return all macro instances in unreliable order."""
-        return tuple(
-            self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == MACRO_NODE
+        return list(
+            self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == MACRO
         )
 
     @property
-    def frames(self) -> tuple[FrameABC]:
+    def frames(self) -> list[FrameABC]:
         """Return all frame instances in unreliable order."""
-        return tuple(
-            self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == FRAME_NODE
+        return list(
+            self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == FRAME
         )
 
     @property
-    def parameters(self) -> tuple[ParameterABC]:
+    def parameters(self) -> list[ParameterABC]:
         """Return all parameter instances in unreliable order."""
-        return tuple(p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC))
+        return list(p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC))
 
     @property
     def structure_tree(self) -> nx.classes.DiGraph:
-        """A tree with the structure tree of the individual (ie. only edges of `kind=FRAMEWORK`)."""
-        tree = get_structure_tree(self._genome)
-        assert tree, f"{PARANOIA_VALUE_ERROR}: Structure of {self!r} is not a valid tree"
+        """A tree with the structure of the individual (ie. only edges of `kind=FRAMEWORK`)."""
+        tree = get_structure(self._genome)
+        assert nx.is_arborescence(tree), f"{PARANOIA_VALUE_ERROR}: Structure tree is not a tree!?"
         return tree
 
     #######################################################################
@@ -328,7 +324,7 @@ class Individual(Paranoid):
         G.add_edges_from(self.G.edges)
         G.remove_node(NODE_ZERO)
         assert (
-            sum(1 for _ in nx.weakly_connected_components(G)) == 1
+                sum(1 for _ in nx.weakly_connected_components(G)) == 1
         ), f"{PARANOIA_TYPE_ERROR}: Individual is not a weakly connected graph"
 
         assert nx.is_branching(self.structure_tree) and nx.is_weakly_connected(
@@ -336,13 +332,13 @@ class Individual(Paranoid):
         ), f"{PARANOIA_VALUE_ERROR}: Structure_tree of {self!r} is not a tree"
 
         assert set(self.genome.nodes) == set(self.structure_tree.nodes), (
-            f"{PARANOIA_VALUE_ERROR}: Node mismatch with structure tree: "
-            + f"{set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
+                f"{PARANOIA_VALUE_ERROR}: Node mismatch with structure tree: "
+                + f"{set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
         )
 
         # ==[check genome (fitness)]=========================================
         assert (self._fitness is None and not self.finalized) or (
-            self._fitness is not None and self.finalized
+                self._fitness is not None and self.finalized
         ), "Value Error (paranoia check): Mismatch fitness and is_finalized"
 
         # ==[check edges (semantic)]=========================================
@@ -366,19 +362,19 @@ class Individual(Paranoid):
         assert isinstance(self._genome.nodes[0]['_selement'], MacroZero), f"{PARANOIA_TYPE_ERROR}: Incorrect NodeZero"
 
         # ==[check structural parameter]=====================================
-        for node in (n for n, t in self._genome.nodes(data='_type') if t == MACRO_NODE):
+        for node in (n for n, t in self._genome.nodes(data='_type') if t == MACRO):
             for p_name, p_type in (
-                (p, P)
-                for p, P in self._genome.nodes[node]['_selement'].parameter_types.items()
-                if issubclass(P, ParameterStructuralABC)
+                    (p, P)
+                    for p, P in self._genome.nodes[node]['_selement'].parameter_types.items()
+                    if issubclass(P, ParameterStructuralABC)
             ):
                 assert (
-                    sum(
-                        1
-                        for u, v, k in self._genome.out_edges(node, keys=True)
-                        if k == self._genome.nodes[node][p_name].key
-                    )
-                    == 1
+                        sum(
+                            1
+                            for u, v, k in self._genome.out_edges(node, keys=True)
+                            if k == self._genome.nodes[node][p_name].key
+                        )
+                        == 1
                 ), f"{PARANOIA_VALUE_ERROR}: Problem with parameter '{p_name}' {p_type}"
             keys = [
                 self._genome.nodes[node][p].key
@@ -397,13 +393,13 @@ class Individual(Paranoid):
 
         structural_edges = [(u, v, k) for u, v, k, d in self._genome.edges(data='_type', keys=True) if d == LINK]
         assert len(structural_edges) == len(set(k for u, v, k in structural_edges)), (
-            f"{PARANOIA_VALUE_ERROR}: Found duplicated keys in structural edges: "
-            + f"{set(x for i, x in enumerate(list(k for u, v, k in structural_edges)) if i != list(k for u, v, k in structural_edges).index(x))}"
+                f"{PARANOIA_VALUE_ERROR}: Found duplicated keys in structural edges: "
+                + f"{set(x for i, x in enumerate(list(k for u, v, k in structural_edges)) if i != list(k for u, v, k in structural_edges).index(x))}"
         )
         structural_parameters = [p for p in self.parameters if isinstance(p, ParameterStructuralABC)]
         assert len(structural_edges) == len(structural_parameters), (
-            f"{PARANOIA_VALUE_ERROR}: Inconsistent number of structural edges: "
-            + f"found {len(structural_edges)}, expecting {len(structural_parameters)}"
+                f"{PARANOIA_VALUE_ERROR}: Inconsistent number of structural edges: "
+                + f"found {len(structural_edges)}, expecting {len(structural_parameters)}"
         )
         assert set(k for u, v, k in structural_edges) == set(
             p._key for p in structural_parameters
@@ -412,14 +408,14 @@ class Individual(Paranoid):
         return True
 
     def describe(
-        self,
-        *,
-        include_fitness: bool = True,
-        include_structure: bool = True,
-        include_age: bool = True,
-        include_lineage: bool = True,
-        max_recursion: int = 0,
-        _indent_level: str = '',
+            self,
+            *,
+            include_fitness: bool = True,
+            include_structure: bool = True,
+            include_age: bool = True,
+            include_lineage: bool = True,
+            max_recursion: int = 0,
+            _indent_level: str = '',
     ):
         desc = str(self)
         delem = list()
@@ -428,15 +424,15 @@ class Individual(Paranoid):
         if include_structure:
             node_types = list(t for n, t in self.G.nodes(data='_type'))
             n_nodes = len(self.G)
-            n_macros = node_types.count(MACRO_NODE) - 1
-            n_frames = node_types.count(FRAME_NODE)
+            n_macros = node_types.count(MACRO) - 1
+            n_frames = node_types.count(FRAME)
             n_links = sum(True for _, _, k in self.G.edges(data='_type') if k != FRAMEWORK)
             n_params = sum(
                 True
                 for p in chain.from_iterable(
                     self.G.nodes[n]['_selement'].parameter_types.items()
                     for n in self.G
-                    if self.G.nodes[n]['_type'] == MACRO_NODE
+                    if self.G.nodes[n]['_type'] == MACRO
                 )
             )
             delem.append(
@@ -480,10 +476,7 @@ class Individual(Paranoid):
             extra_parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS
 
         # =[Flatten the graph into a list of nodes]==========================
-        tree = make_digraph_cached(
-            tuple(self._genome.nodes), tuple((u, v) for u, v, k in self._genome.edges(data='_type') if k == FRAMEWORK)
-        )
-        tree = tree.copy()
+        tree = get_structure(self._genome).copy()
 
         for node in list(v for _, v in tree.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
             target = self.genome.nodes[node]['_selement'].FORCED_PARENT
@@ -510,7 +503,7 @@ class Individual(Paranoid):
             node_str = '{_text_before_node}'.format(**bag)
             if nr.graph.in_degree(nr.node) > 1:
                 node_str += bag['_label'].format(**bag)
-            if nr.graph.nodes[nr.node]['_type'] == MACRO_NODE:
+            if nr.graph.nodes[nr.node]['_type'] == MACRO:
                 node_str += '{_text_before_macro}'.format(**bag)
                 node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
                 if bag['$dump_node_info'] and nr.node != NODE_ZERO:
@@ -518,7 +511,7 @@ class Individual(Paranoid):
                         node_str += '  '
                     node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.type_}'.format(**bag)
                 node_str += '{_text_after_macro}'.format(**bag)
-            elif nr.graph.nodes[nr.node]['_type'] == FRAME_NODE:
+            elif nr.graph.nodes[nr.node]['_type'] == FRAME:
                 node_str += '{_text_before_frame}'.format(**bag)
                 if bag['$dump_node_info']:
                     node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.type_}{_text_after_macro}'.format(**bag)
@@ -534,7 +527,7 @@ class Individual(Paranoid):
 
     @staticmethod
     def _recursive_flatten_frames(
-        nr: NodeReference, T: nx.DiGraph, extra_parameters: dict, path: tuple, dump: list
+            nr: NodeReference, T: nx.DiGraph, extra_parameters: dict, path: tuple, dump: list
     ) -> list:
         local_parameters = copy(extra_parameters)
         local_parameters |= nr.graph.nodes[nr.node]['_selement'].EXTRA_PARAMETERS
@@ -558,13 +551,13 @@ class Individual(Paranoid):
         node_str = '{_text_before_node}'.format(**bag)
         if nr.graph.in_degree(nr.node) > 1:
             node_str += bag['_label'].format(**bag)
-        if nr.graph.nodes[nr.node]['_type'] == MACRO_NODE:
+        if nr.graph.nodes[nr.node]['_type'] == MACRO:
             node_str += '{_text_before_macro}'.format(**bag)
             node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
             if bag['$dump_node_info']:
                 node_str += '  {_comment} 🖋 {_node.path_string} ➜ {_node.type_}'.format(**bag)
             node_str += '{_text_after_macro}'.format(**bag)
-        elif nr.graph.nodes[nr.node]['_type'] == FRAME_NODE:
+        elif nr.graph.nodes[nr.node]['_type'] == FRAME:
             node_str += '{_text_before_frame}'.format(**bag)
             if bag['$dump_node_info']:
                 node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.type_}{_text_after_macro}'.format(**bag)

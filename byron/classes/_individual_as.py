@@ -148,7 +148,7 @@ def _draw_forest(self, zoom):
     for n in T:
         T.nodes[n]["depth"] = len(nx.shortest_path(T, 0, n))
     height = max(T.nodes[n]["depth"] for n in T.nodes)
-    width = sum(1 for n in T if self.G.nodes[n]['_type'] == MACRO_NODE)
+    width = sum(1 for n in T if self.G.nodes[n]['_type'] == MACRO)
     fig = plt.figure(figsize=(10 + zoom * width * 0.8, zoom * height + width / 2))
     ax = fig.add_subplot()
 
@@ -162,12 +162,12 @@ def _draw_forest(self, zoom):
         T, pos, style=":", edge_color="lightgray", arrowstyle="-|>,head_length=.6,head_width=0.2", ax=ax
     )
     # draw macros
-    nodelist = [n for n in T if self.G.nodes[n]['_type'] == MACRO_NODE]
+    nodelist = [n for n in T if self.G.nodes[n]['_type'] == MACRO]
     nx.draw_networkx_nodes(
         T, pos, nodelist=nodelist, node_color=[colors[n] for n in nodelist], node_size=800, cmap=plt.cm.tab20, ax=ax
     )
     # draw frames
-    nodelist = [n for n in self.G if self.G.nodes[n]['_type'] == FRAME_NODE]
+    nodelist = [n for n in self.G if self.G.nodes[n]['_type'] == FRAME]
     nx.draw_networkx_nodes(
         T,
         pos,
@@ -223,7 +223,7 @@ def _draw_multipartite(self, zoom: int) -> None:
     T = self.structure_tree.copy()
     extra_heads = list()
     for node in list(v for _, v in T.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
-        if self.genome.nodes[node]['_type'] == MACRO_NODE:
+        if self.genome.nodes[node]['_type'] == MACRO:
             extra_heads.append(node)
         target = self.genome.nodes[node]['_selement'].FORCED_PARENT
         T.remove_edge(NODE_ZERO, node)
@@ -233,7 +233,7 @@ def _draw_multipartite(self, zoom: int) -> None:
     G = nx.DiGraph()
     sub_graphs = list()
     for s, head in enumerate(n for _, n in T.edges(0)):
-        nodes = [n for n in nx.dfs_preorder_nodes(T, head) if self.G.nodes[n]['_type'] == MACRO_NODE]
+        nodes = [n for n in nx.dfs_preorder_nodes(T, head) if self.G.nodes[n]['_type'] == MACRO]
         sub_graphs.append(nodes)
         G.add_nodes_from(nodes)
         for n1, n2 in zip(nodes, nodes[1:]):
@@ -271,7 +271,7 @@ def _draw_multipartite(self, zoom: int) -> None:
     )
 
     labels = dict()
-    for n in [_ for _ in pos if self.genome.nodes[n]['_type'] == MACRO_NODE]:
+    for n in [_ for _ in pos if self.genome.nodes[n]['_type'] == MACRO]:
         pos[n] = (pos[n][0], pos[n][1])
         d = NodeView(NodeReference(self.genome, n)).safe_dump
         labels[n] = '     ' + d.split('\n')[0].strip() + (' …' if '\n' in d else '')
@@ -283,7 +283,7 @@ def _draw_multipartite(self, zoom: int) -> None:
         G.add_edges_from(
             (u, v)
             for u, v, k in self.G.edges(data='_type')
-            if k == LINK and self.G.nodes[u]['_type'] == MACRO_NODE and u in s and v in s
+            if k == LINK and self.G.nodes[u]['_type'] == MACRO and u in s and v in s
         )
     nx.draw_networkx_edges(
         G,
@@ -321,8 +321,8 @@ def _draw_multipartite(self, zoom: int) -> None:
 
 
 def patch_pos(
-    G: nx.DiGraph,
-    pos: dict,
+        G: nx.DiGraph,
+        pos: dict,
 ):
     pos_order = [n for n in list(nx.dfs_preorder_nodes(G, NODE_ZERO)) if n in pos]
     swap_x, swap_y = 0, 0

@@ -53,7 +53,7 @@ def _parent(G: nx.MultiDiGraph, n: int) -> int:
 
 def _is_head(G: nx.MultiDiGraph, n: int) -> bool:
     n = _parent(G, n)
-    while G.nodes[n]['_type'] != MACRO_NODE:
+    while G.nodes[n]['_type'] != MACRO:
         n = _parent(G, n)
     return isinstance(G.nodes[n]['_selement'], MacroZero)
 
@@ -63,7 +63,8 @@ def _is_target(G: nx.MultiDiGraph, n: int) -> bool:
 
 
 def group_selements(
-    individuals: Sequence[Individual], choosy: bool = False, only_direct_targets: bool = False, only_heads: bool = False
+        individuals: Sequence[Individual], choosy: bool = False, only_direct_targets: bool = False,
+        only_heads: bool = False
 ) -> dict[tuple[SElement], dict[Individual, list[int]]]:
     """Group macros"""
 
@@ -101,7 +102,7 @@ def group_selements(
 
 
 def group_parameters_on_macro(
-    individuals: Sequence[Individual], *, parameter_type=None
+        individuals: Sequence[Individual], *, parameter_type=None
 ) -> dict[SElement, dict[Individual, list[ParameterABC]]]:
     if parameter_type is None:
         parameter_type = ParameterABC
@@ -117,7 +118,7 @@ def group_parameters_on_macro(
 
 
 def group_parameters_on_classpath(
-    individuals: Sequence[Individual], *, parameter_type=None
+        individuals: Sequence[Individual], *, parameter_type=None
 ) -> dict[tuple[SElement], dict[Individual, list[ParameterABC]]]:
     if parameter_type is None:
         parameter_type = ParameterABC
@@ -125,9 +126,9 @@ def group_parameters_on_classpath(
     for ind in individuals:
         assert set(ind.structure_tree.nodes) == set(ind.genome.nodes)
         for node, path in (
-            (n, p)
-            for n, p in nx.single_source_dijkstra_path(ind.structure_tree, 0).items()
-            if isinstance(ind.genome.nodes[n]['_selement'], Macro)
+                (n, p)
+                for n, p in nx.single_source_dijkstra_path(ind.structure_tree, 0).items()
+                if isinstance(ind.genome.nodes[n]['_selement'], Macro)
         ):
             groups[tuple(ind.genome.nodes[v]['_selement'].__class__ for v in path)][ind].extend(
                 [p for p in ind.genome.nodes[node].values() if isinstance(p, parameter_type)]

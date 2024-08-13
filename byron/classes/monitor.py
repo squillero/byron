@@ -34,7 +34,7 @@ __all__ = ["failure_rate"]
 from collections import Counter
 from functools import wraps
 
-from byron.user_messages import performance_warning
+from byron.user_messages import performance_warning, ByronOperatorFailure
 
 _STAT = Counter()
 
@@ -51,7 +51,7 @@ def failure_rate(func):
         exception = None
         try:
             result = func(*args, **kwargs)
-        except Exception as e:
+        except ByronOperatorFailure as e:
             result = False
             exception = e
 
@@ -62,7 +62,7 @@ def failure_rate(func):
             failures = _STAT[(func, False)]
             successes = _STAT[(func, True)]
             total = failures + successes
-            if failures / total > 0.9 and any(total == 10**n for n in range(2, 10)):
+            if failures / total > 0.9 and any(total == 10 ** n for n in range(2, 10)):
                 performance_warning(
                     f"The failure rate of '{func.__qualname__}' is {100 * failures / total:g}% "
                     + f"({successes:,} success{'es' if successes != 1 else ''} out of {total:,} calls)"

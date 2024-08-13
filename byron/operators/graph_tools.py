@@ -82,9 +82,9 @@ def unroll_selement(top: type[SElement], G: nx.classes.MultiDiGraph) -> NodeRefe
 
 
 def initialize_subtree(node_reference: NodeReference):
-    for p in get_all_parameters(node_reference.graph, node_reference.node):
+    for _, p in get_node_parameters(node_reference.graph, node_reference.node):
         assert p.value is None or (
-            isinstance(p, ParameterSharedABC) and not p.is_owner
+                isinstance(p, ParameterSharedABC) and not p.is_owner
         ), f"{PARANOIA_VALUE_ERROR}: {p} already initialized"
         p.mutate(1)
 
@@ -122,7 +122,7 @@ def _unroll_frame(frame_class: type[FrameABC], G: nx.classes.MultiDiGraph) -> in
     G.add_node(node_id)
 
     frame_instance = frame_class()
-    G.nodes[node_id]['_type'] = FRAME_NODE
+    G.nodes[node_id]['_type'] = FRAME
     G.nodes[node_id]['_selement'] = frame_instance
     for f in frame_instance.successors:
         new_node_id = _recursive_unroll(f, G)
@@ -136,7 +136,7 @@ def _unroll_macro(macro_class: type[Macro], G: nx.classes.MultiDiGraph) -> int:
     G.add_node(node_id)
 
     macro_instance = macro_class()
-    G.nodes[node_id]['_type'] = MACRO_NODE
+    G.nodes[node_id]['_type'] = MACRO
     G.nodes[node_id]['_selement'] = macro_instance
     for k, p in macro_instance.parameter_types.items():
         G.nodes[node_id][k] = p()

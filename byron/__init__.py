@@ -40,6 +40,7 @@ from byron.randy import rrandom
 from byron.registry import *
 from byron.sys import SYSINFO as sysinfo
 from byron.tools.entropy import *
+from byron.tools.providers import *
 from byron.tools.graph import fasten_subtree_parameters
 from byron.user_messages.messaging import logger
 
@@ -55,9 +56,10 @@ from byron.user_messages.messaging import logger
 #     f'This is Byron v{__version__} "{__codename__}"\n' + f"(c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0"
 # )
 
+
 __welcome__ = (
-    f'[bold]This is Byron v{__version__.rsplit(".", maxsplit=1)[0]} "[italic]{__codename__}[/italic]"[/]\n'
-    + "[bold](c) 2023-24 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
+        f'[bold]This is Byron v{__version__.rsplit(".", maxsplit=1)[0]} "[italic]{__codename__}[/italic]"[/]\n'
+        + "[bold](c) 2023-24 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
 )
 
 
@@ -93,21 +95,21 @@ if main_process and not notebook_mode:
 
 if notebook_mode and logging.getLogger().level <= logging.WARNING and paranoia_mode:
     assert (
-        test_mode
-        or not main_process
-        or user_messages.performance_warning(
-            "Paranoia checks are enabled in this notebook: performances can be significantly impaired\n"
-            + "[see https://cad-polito-it.github.io/byron/paranoia for details]"
-        )
+            test_mode
+            or not main_process
+            or user_messages.performance_warning(
+        "Paranoia checks are enabled in this notebook: performances can be significantly impaired\n"
+        + "[see https://cad-polito-it.github.io/byron/paranoia for details]"
+    )
     )
 elif not notebook_mode:
     assert (
-        test_mode
-        or not main_process
-        or user_messages.performance_warning(
-            "Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'\n"
-            + "[see https://cad-polito-it.github.io/byron/paranoia for details]"
-        )
+            test_mode
+            or not main_process
+            or user_messages.performance_warning(
+        "Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'\n"
+        + "[see https://cad-polito-it.github.io/byron/paranoia for details]"
+    )
     )
 
 if not matplotlib_available:

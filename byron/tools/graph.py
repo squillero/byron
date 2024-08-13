@@ -23,20 +23,22 @@
 
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
+# v1.1 / August 2024 / Squillero (GX)
 
 __all__ = [
     '_get_first_macro',
     'discard_useless_components',
+    'get_structure',
     'fasten_subtree_parameters',
     # 'get_all_frames',
     # 'get_all_macros',
     'get_all_parameters',
+    'get_node_parameters',
     'get_dfs_subtree',
     'get_node_color_dict',
     'get_parent_frame_dictionary',
     'get_predecessor',
     'get_siblings',
-    'get_structure_tree',
     'get_successors',
     'make_digraph_cached',
     'set_successors_order',
@@ -54,6 +56,7 @@ from byron.classes.parameter import ParameterABC, ParameterStructuralABC
 from byron.classes.selement import SElement
 from byron.global_symbols import *
 from byron.user_messages import *
+
 
 # =[PUBLIC FUNCTIONS]===================================================================================================
 
@@ -114,42 +117,12 @@ def get_node_color_dict(G: nx.MultiDiGraph) -> dict[int, int]:
 def get_all_successors(ref: NodeReference, with_path: bool = True, filter_type: SElement | None = None): ...
 
 
-# TODO[gx]: Unused! Remove?
-def get_all_frames(
-    G: nx.classes.MultiDiGraph, root: int | None = None, *, data: bool = True, node_id: bool = False
-) -> tuple:
-    node_lst = _get_node_list(G, root=root, type_=FRAME_NODE)
-    if data:
-        data_lst = tuple(G.nodes[n]['_selement'] for n in node_lst)
-    if data and node_id:
-        return tuple(zip(data_lst, node_lst))
-    elif data and not node_id:
-        return data_lst
-    elif not data and node_id:
-        return node_lst
-    else:
-        raise NotImplementedError
+def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None) -> tuple:
+    raise NotImplementedError("This function is not yet implemented.")
 
 
-# TODO[gx]: Unused! Remove?
-def get_all_macros(
-    G: nx.classes.MultiDiGraph, root: int | None = None, *, data: bool = True, node_id: bool = False
-) -> tuple:
-    node_lst = _get_node_list(G, root=root, type_=MACRO_NODE)
-    if data:
-        data_lst = tuple(G.nodes[n]['_selement'] for n in node_lst)
-    if data and node_id:
-        return tuple(zip(data_lst, node_lst))
-    elif data and not node_id:
-        return data_lst
-    elif not data and node_id:
-        return node_lst
-    else:
-        raise NotImplementedError
-
-
-def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None, *, node_id: bool = False) -> tuple:
-    r"""Returns all parameters of all macro instances
+def get_node_parameters(G: nx.classes.MultiDiGraph, root: int | None = None) -> list[tuple]:
+    r"""Returns a list of `(node, parameter)` with all parameters of all macro instances
 
     Parameters
     ----------
@@ -158,8 +131,6 @@ def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None, *, n
     root
         If specified, the function returns only parameters in the node traversed by a depth-first visit of the
         framework tree starting from `root` (possibly much slower).
-    node_id
-        If ``True`` the functions returns a list of tuple `(parameter, node)`
 
     Return
     ------
@@ -168,20 +139,12 @@ def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None, *, n
         (ie. ``list[tuple[ParameterABC, node_id]]``)
     """
 
-    if node_id:
-        return tuple(
-            (p, n)
-            for n in _get_node_list(G, root=root, type_=None)
-            for p in G.nodes[n].values()
-            if isinstance(p, ParameterABC)
-        )
+    if root is None:
+        nodes = G.nodes
     else:
-        return tuple(
-            p
-            for n in _get_node_list(G, root=root, type_=None)
-            for p in G.nodes[n].values()
-            if isinstance(p, ParameterABC)
-        )
+        nodes = list(nx.dfs_preorder_nodes(get_structure(G), root))
+
+    return [(n, p) for n in nodes for p in G.nodes[n].values() if isinstance(p, ParameterABC)]
 
 
 # =[PRIVATE FUNCTIONS]==================================================================================================
@@ -189,7 +152,7 @@ def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None, *, n
 
 def _get_first_macro(root: int, G: nx.MultiDiGraph, T: nx.DiGraph) -> int:
     """Quick n' dirty."""
-    return next((n for n in nx.dfs_preorder_nodes(T, root) if G.nodes[n]['_type'] == MACRO_NODE), None)
+    return next((n for n in nx.dfs_preorder_nodes(T, root) if G.nodes[n]['_type'] == MACRO), None)
 
 
 def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int | None, type_: str | None) -> tuple:
@@ -197,17 +160,15 @@ def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int | None, type_: str |
     if root is None:
         return tuple(n for n in G.nodes if type_ is None or G.nodes[n]['_type'] == type_)
     else:
-        tree = make_digraph_cached(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data='_type') if k == FRAMEWORK))
+        # TODO[gx]: Understand WHY and WHERE this is used
+        tree = get_structure(G)
         return tuple(n for n in nx.dfs_preorder_nodes(tree, root) if type_ is None or G.nodes[n]['_type'] == type_)
 
 
 def fasten_subtree_parameters(node_reference: NodeReference):
-    for p, n in (
-        _
-        for _ in get_all_parameters(node_reference.graph, node_reference.node, node_id=True)
-        if isinstance(_[0], ParameterStructuralABC)
-    ):
-        p.fasten(NodeReference(node_reference.graph, n))
+    for n, p in get_node_parameters(node_reference.graph, node_reference.node):
+        if isinstance(p, ParameterStructuralABC):
+            p.fasten(NodeReference(node_reference.graph, n))
 
 
 def discard_useless_components(G: nx.MultiDiGraph) -> None:
@@ -246,41 +207,6 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
     G.remove_nodes_from(nodes_to_remove)
 
 
-def get_structure_tree(G: nx.MultiDiGraph, with_path: bool = False) -> nx.DiGraph | None:
-    r"""
-    Calculate the structure tree of a Graph
-
-    Parameters
-    ----------
-    G :
-        the Graph
-    with_path :
-        add `_path` attribute to nodes in tree
-    with_parent :
-        add `_parent` attribute to nodes in tree
-
-    Returns
-    -------
-    A tree
-
-    """
-    tree = make_digraph_cached(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data='_type') if k == FRAMEWORK))
-    # See https://networkx.org/documentation/stable/reference/algorithms/tree.html
-    if not nx.is_arborescence(tree):
-        return None
-    assert nx.is_branching(tree), "SystemError (paranoia check): Incorrect structure. Graph is not a forest"
-    assert nx.is_weakly_connected(
-        tree
-    ), "SystemError (paranoia check): Incorrect structure. Graph is not weakly connected."
-
-    if with_path:
-        for node, path in nx.single_source_dijkstra_path(tree, NODE_ZERO).items():
-            tree.nodes[node]['_path'] = tuple(G.nodes[n]['_selement'] for n in path)
-            tree.nodes[node]['_type_path'] = tuple(G.nodes[n]['_selement'].__class__ for n in path)
-
-    return tree
-
-
 def get_parent_frame_dictionary(genome: nx.MultiDiGraph) -> dict:
     @lru_cache(1024)
     def get_parent_frame_dictionary_cached(G, nodes_list) -> dict:
@@ -312,8 +238,26 @@ def get_dfs_subtree(G: nx.MultiDiGraph, root: Node):
     while queue:
         node = deque.pop()
         for new_node in reversed(v for u, v, k in G.out_edges(node, data='_kind') if k == FRAMEWORK):
-            if G.nodes[new_node]['_type'] == MACRO_NODE:
+            if G.nodes[new_node]['_type'] == MACRO:
                 subtree.append(new_node)
             else:
                 queue.append(new_node)
     return subtree
+
+
+def get_structure(G: nx.MultiDiGraph) -> nx.DiGraph:
+    r"""Returns the framework of a genome. Might be a tree or not."""
+    nodes = tuple(sorted(G.nodes))
+    edges = tuple(sorted((u, v) for u, v, k in G.edges(data='_type') if k == FRAMEWORK))
+    tree = _mk_digraph_cached(nodes, edges)
+    # if not nx.is_arborescence(tree):
+    #     ic(nx.is_arborescence(tree))
+    return tree
+
+
+@lru_cache(1024)
+def _mk_digraph_cached(nodes, edges):
+    tree = nx.DiGraph()
+    tree.add_nodes_from(nodes)
+    tree.add_edges_from(edges)
+    return tree

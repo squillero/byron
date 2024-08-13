@@ -122,6 +122,6 @@ def log_operators():
         logger.info(f"[blue]*[/blue] {name:.<50s}: {op.stats}")
 
 
-assert "SYSINFO" not in globals(), "SystemError (paranoia check): SYSINFO already initialized."
+assert "SYSINFO" not in globals(), f"{PARANOIA_SYSTEM_ERROR}: SYSINFO already initialized."
 SYSINFO = SysInfo()
-assert "SYSINFO" in globals(), "SystemError (paranoia check): SYSINFO not initialized."
+assert "SYSINFO" in globals(), f"{PARANOIA_SYSTEM_ERROR}: SYSINFO not initialized."

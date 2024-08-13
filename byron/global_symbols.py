@@ -25,37 +25,43 @@
 # v1 / April 2023 / Squillero (GX)
 
 __all__ = [
-    '__version__',
-    '__date__',
-    '__author__',
-    '__copyright__',
-    '__codename__',
-    'LOGGING_DEBUG',
-    'LOGGING_INFO',
-    'LOGGING_WARNING',
-    'LOGGING_ERROR',
-    'FRAMEWORK',
-    'LINK',
-    'FRAME_NODE',
-    'MACRO_NODE',
+    'ATTRIBUTE_PROVIDERS',
+    'ATTRIBUTE_SELEMENT',
     'BYRON_TAG',
-    'GENETIC_OPERATOR',
-    'FITNESS_FUNCTION',
-    'test_mode',
-    'notebook_mode',
-    'debug_mode',
-    'main_process',
-    'joblib_available',
-    'matplotlib_available',
-    'psutil_available',
-    'paranoia_mode',
-    'PARANOIA_TYPE_ERROR',
-    'PARANOIA_VALUE_ERROR',
-    'PARANOIA_SYSTEM_ERROR',
     'DEFAULT_EXTRA_PARAMETERS',
     'DEFAULT_OPTIONS',
+    'FITNESS_FUNCTION',
+    'FRAME',
+    'FRAMEWORK',
+    'FRAME_IS_ALTERNATIVE',
+    'FRAME_IS_BNF',
+    'FRAME_IS_MACRO_BUNCH',
+    'FRAME_IS_SEQUENCE',
+    'GENETIC_OPERATOR',
+    'LINK',
+    'LOGGING_DEBUG',
+    'LOGGING_ERROR',
+    'LOGGING_INFO',
+    'LOGGING_WARNING',
     'LOG_LAPSES',
+    'MACRO',
+    'PARANOIA_SYSTEM_ERROR',
+    'PARANOIA_TYPE_ERROR',
+    'PARANOIA_VALUE_ERROR',
     'SE_DIRECTORY',
+    '__author__',
+    '__codename__',
+    '__copyright__',
+    '__date__',
+    '__version__',
+    'debug_mode',
+    'joblib_available',
+    'main_process',
+    'matplotlib_available',
+    'notebook_mode',
+    'paranoia_mode',
+    'psutil_available',
+    'test_mode',
 ]
 
 import logging
@@ -97,7 +103,7 @@ except ModuleNotFoundError:
 
 matplotlib_available = False
 try:
-    import matplotlib
+    import XXmatplotlib
 
     matplotlib_available = True
 except ModuleNotFoundError:
@@ -112,6 +118,7 @@ except ModuleNotFoundError:
     pass
 
 debug_mode = __debug__
+
 
 #############################################################################
 # PARANOID MODE
@@ -134,21 +141,22 @@ LOGGING_WARNING = logging.WARNING
 LOGGING_ERROR = logging.ERROR
 
 # NODE_ZERO = Node(0) defined in class.node
-FRAMEWORK = 'framework'
-LINK = 'link'
-FRAME_NODE = 'frame'
-MACRO_NODE = 'macro'
-SEQUENCE_FRAME = 'sequence'
-ALTERNATIVE_FRAME = 'alternative'
-MACRO_BUNCH_FRAME = 'bunch'
-BNF_FRAME = 'bunch'
+ATTRIBUTE_PROVIDERS = '_providers'
+ATTRIBUTE_SELEMENT = '_selement'
 BYRON_TAG = 'To have joy, one must share it'
-GENETIC_OPERATOR = 'genetic_operator'
 FITNESS_FUNCTION = 'fitness_function'
+FRAMEWORK = 'framework'
+FRAME_IS_ALTERNATIVE = 'alternative'
+FRAME_IS_BNF = 'bunch'
+FRAME_IS_MACRO_BUNCH = 'bunch'
+FRAME_IS_SEQUENCE = 'sequence'
+GENETIC_OPERATOR = 'genetic_operator'
+LINK = 'link'
+FRAME = 'frame'
+MACRO = 'macro'
+PARANOIA_SYSTEM_ERROR = 'SystemError (paranoia check)'
 PARANOIA_TYPE_ERROR = 'TypeError (paranoia check)'
 PARANOIA_VALUE_ERROR = 'ValueError (paranoia check)'
-PARANOIA_SYSTEM_ERROR = 'SystemError (paranoia check)'
-
 
 DEFAULT_OPTIONS = {
     '$dump_node_info': False,
@@ -168,6 +176,6 @@ LOG_LAPSES = defaultdict(float)
 
 #####################################################################################################################
 
-assert "SE_DIRECTORY" not in globals(), "SystemError (paranoia check): SElement Directory already initialized"
+assert "SE_DIRECTORY" not in globals(), f"{PARANOIA_SYSTEM_ERROR}: SElement Directory already initialized"
 SE_DIRECTORY = set()
-assert "SE_DIRECTORY" in globals(), "SystemError (paranoia check): SElement Directory not initialized"
+assert "SE_DIRECTORY" in globals(), f"{PARANOIA_SYSTEM_ERROR}: SElement Directory not initialized"

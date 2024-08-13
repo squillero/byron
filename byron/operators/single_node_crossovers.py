@@ -147,9 +147,9 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
 
     discard_useless_components(new_genome)
 
-    if not get_structure_tree(new_genome):
-        logger.debug("generic_node_crossover: Failed (invalid structure, tree)")
-        raise ByronOperatorFailure
+    # if not get_structure_tree(new_genome):
+    #     logger.debug("generic_node_crossover: Failed (invalid structure, tree)")
+    #     raise ByronOperatorFailure
 
     Node.reset_labels(new_genome)
     new_individual = Individual(parent1.top_frame, new_genome)

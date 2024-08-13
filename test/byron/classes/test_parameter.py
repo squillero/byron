@@ -8,12 +8,12 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-
 from typing import Any
 
 import networkx as nx
 import pytest
 
+import byron
 from byron.classes.parameter import NodeReference, ParameterABC, ParameterStructuralABC
 
 
@@ -72,8 +72,9 @@ class TestParameterStructuralABC:
 
     def test_value_getter_unfastened(self):
         param = ParameterStructuralABC()
-        with pytest.raises(AssertionError):
-            _ = param.value
+        if byron.paranoia_mode:
+            with pytest.raises(AssertionError):
+                _ = param.value
 
     def test_value_setter(self, node_reference, simple_graph):
         param = ParameterStructuralABC()

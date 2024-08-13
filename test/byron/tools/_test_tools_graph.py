@@ -161,21 +161,6 @@ class Parameter(byron.classes.ParameterABC):
         pass
 
 
-def test_get_parameters():
-    G = nx.MultiDiGraph()
-    G.add_node(NODE_ZERO, _frame="frame", _macro={"param1": Parameter()})
-    G.add_node(1, _frame="frame1", _macro={"param2": Parameter()})
-    G.add_node(2, _frame="frame2", _macro={"param3": Parameter()})
-    G.add_node(3, _frame="frame3", _macro={"param4": Parameter()})
-    G.add_edge(NODE_ZERO, 1, kind=FRAMEWORK)
-    G.add_edge(NODE_ZERO, 2, kind=FRAMEWORK)
-    G.add_edge(NODE_ZERO, 3, kind=FRAMEWORK)
-
-    parameters = byron.tools.graph.get_parameters(G)
-    assert len(parameters) == 4
-    assert all(isinstance(param, Parameter) for param in parameters)
-
-
 def test_get_first_macro():
     G = nx.MultiDiGraph()
     T = nx.DiGraph()
