@@ -12,22 +12,25 @@
 [![PyPI - Version](https://img.shields.io/pypi/v/byron?label=pypi)](https://pypi.org/project/byron/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=downloads)](https://pypi.org/project/byron/)
 
-> Formerly known as [MicroGP4](https://cad-polito-it.github.io/byron/history)
+> Build on [MicroGP](https://cad-polito-it.github.io/byron/history) technology
 
 Byron is a source code [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) designed to support assembly and high-level languages. It starts by generating a set of random programs, which are then iteratively improved by an [evolutionary algorithm](https://cad-polito-it.github.io/byron/evolution). Internally, it encodes candidate solutions as [typed](https://rcor.me/papers/typed-graph-theory.pdf), [directed](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Directed_graph) [multigraphs](https://en.wikipedia.org/wiki/Multigraph), and can effectively handle complex, realistic structures containing local and global variables, conditional and looping statements, and subroutines.
 
 Programs can be evaluated using a user-defined Python function or an external tool, such as an interpreter or a simulator. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
-:package: The Python package is available on [PyPi](https://pypi.org/project/byron/); this repo is only useful if you want to hack the code. 
+:package: The Python package is available on [PyPi](https://pypi.org/project/byron/); this repo is only useful if you want to hack the code.
 
 ### TL;DR
 
-* Byron is currently in [alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha) and under active development
+* Byron is currently in [alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha) and under active
+  development
 * The default branch is always the more stable
 * Do not clone experimental branches `exp/*` unless you really know what you are doing
-* Follow this [style guide](https://github.com/squillero/style/blob/master/python.md) and keep the code formatted with [Ruff](https://docs.astral.sh/ruff/formatter/)
+* Follow this [style guide](https://github.com/squillero/style/blob/master/python.md) and keep the code formatted
+  with [Ruff](https://docs.astral.sh/ruff/formatter/)
 * Follow this [convention](https://github.com/squillero/style/blob/master/git.md) when drafting commit messages
-* Write as few lines of code and as many lines of comments as possible (ie. use builtins, exploit generators and list comprehension)
+* Write as few lines of code and as many lines of comments as possible (ie. use builtins, exploit generators and list
+  comprehension)
 * Be [paranoid](https://cad-polito-it.github.io/byron/paranoia) (cit. *"I need someone to show me the things"*)
 * Use [pytest](https://docs.pytest.org/) and [Coverage.py](https://coverage.readthedocs.io/) for unit testing (ie. `coverage run --module pytest --all`)
 * Use [Ruff](https://docs.astral.sh/ruff/linter/) for linting and [mypy](https://mypy-lang.org/) for type checking
@@ -47,5 +50,6 @@ Programs can be evaluated using a user-defined Python function or an external to
 
 ### Licence
 
-Copyright (c) 2023-24 [Giovanni Squillero](https://github.com/squillero) and [Alberto Tonda](https://github.com/albertotonda/)  
+Copyright (c) 2023-24 [Giovanni Squillero](https://github.com/squillero)
+and [Alberto Tonda](https://github.com/albertotonda/)  
 Byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software), and it is distributed under the permissive [Apache License 2.0](https://opensource.org/license/apache-2-0/).
