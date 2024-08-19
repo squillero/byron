@@ -103,7 +103,7 @@ except ModuleNotFoundError:
 
 matplotlib_available = False
 try:
-    import XXmatplotlib
+    import matplotlib
 
     matplotlib_available = True
 except ModuleNotFoundError:
