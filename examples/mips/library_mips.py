@@ -16,7 +16,7 @@ COMMENT = '#'
 
 def define_frame():
     register = byron.f.choice_parameter([f"${x}" for x in range(4, 27)])
-    int8 = byron.f.integer_parameter(0, 2**8)
+    int8 = byron.f.integer_parameter(0, 2 ** 8)
 
     operations_rrr = byron.f.choice_parameter(['add', 'sub', 'addu', 'subu'])
     operations_rri = byron.f.choice_parameter(['addi', 'addiu'])

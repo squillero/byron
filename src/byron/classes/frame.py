@@ -24,7 +24,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = ["FrameABC", "FrameAlternative", "FrameSequence", "FrameMacroBunch"]
+__all__ = ["FrameABC", "FrameAlternative", "FrameSequence", "MacroBunch", "FrameBunch"]
 
 from abc import abstractmethod
 
@@ -86,8 +86,19 @@ class FrameAlternative:
     pass
 
 
-class FrameMacroBunch:
+class MacroBunch:
     r"""Empty class to mark frames of type "MacroBunch"
+
+    See Also
+    --------
+    `bunch` factory function
+    """
+
+    pass
+
+
+class FrameBunch:
+    r"""Empty class to mark frames of type "FrameBunch"
 
     See Also
     --------

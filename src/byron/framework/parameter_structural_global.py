@@ -28,7 +28,7 @@ from functools import cache
 
 import networkx as nx
 
-from byron.classes.frame import FrameMacroBunch
+from byron.classes.frame import MacroBunch
 from byron.classes.node import NODE_ZERO
 from byron.classes.node_reference import NodeReference
 from byron.classes.parameter import ParameterStructuralABC
@@ -130,7 +130,7 @@ def _global_reference(
                     (n, p)
                     for n, p in G.nodes(data='_typepath')
                     if self._target_frame in p
-                       and isinstance(G.nodes[n]['_selement'], FrameMacroBunch)
+                       and isinstance(G.nodes[n]['_selement'], MacroBunch)
                        and G.nodes[n]['_selement'].SIZE[0] <= G.out_degree(n) < G.nodes[n]['_selement'].SIZE[1] - 1
                 ]
                 if growable_nodes:

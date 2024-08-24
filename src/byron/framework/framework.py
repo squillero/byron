@@ -192,7 +192,7 @@ def bunch(
     assert (
         (not isinstance(pool, abc.Collection) and check_valid_type(pool, Macro, subclass=True))
         or isinstance(pool, abc.Collection)
-        and (not pool or any(check_valid_type(t, Macro, subclass=True) for t in pool))
+        and (not pool or any(check_valid_type(t, SElement, subclass=True) for t in pool))
     )
     if isinstance(pool, type) and issubclass(pool, Macro):
         pool = [pool]
@@ -217,7 +217,14 @@ def bunch(
     else:
         assert len(weights) == len(pool), f"{PARANOIA_VALUE_ERROR}: Number of weights non coherent with pool size"
 
-    class T(FrameMacroBunch, FrameABC):
+    if all(issubclass(e, Macro) for e in pool):
+        class_type = MacroBunch
+    elif all(issubclass(e, FrameABC) for e in pool):
+        class_type = FrameBunch
+    else:
+        assert False, f"{PARANOIA_VALUE_ERROR}: Mixed Frame/Macro bunches are not yet supported"
+
+    class T(class_type, FrameABC):
         SIZE = size
         POOL = tuple(sum(([m] * w for m, w in zip(pool, weights)), start=list()))
         EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
@@ -241,14 +248,21 @@ def bunch(
         T.add_node_check(partial(_check_instances_number, max_instances=max_instances))
 
     # White parentheses: ⦅ ⦆  (U+2985, U+2986)
+    if class_type == MacroBunch:
+        t = 'Macro'
+    elif class_type == FrameBunch:
+        t = 'Frame'
+    else:
+        assert False, f"{PARANOIA_TYPE_ERROR}: {class_type} is not a valid class type"
+
     if name:
         T._patch_info(custom_class_id=name)
     elif size == (1, 2):
-        T._patch_info(name='SingleMacro#')
+        T._patch_info(name=f'Single{t}#')
     elif size[1] - size[0] == 1:
-        T._patch_info(name='MacroArray#')
+        T._patch_info(name=f'{t}Array#')
     else:
-        T._patch_info(name='MacroBunch#')
+        T._patch_info(name=f'{t}Bunch#')
 
     assert T not in SE_DIRECTORY, f"ValueError (paranoia check): Can't add {T}"
     SE_DIRECTORY.add(T)

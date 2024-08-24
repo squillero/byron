@@ -12,8 +12,8 @@ import byron
 
 reg8 = byron.f.choice_parameter(['ah', 'bh', 'ch', 'dh', 'al', 'bl', 'cl', 'dl'])
 reg16 = byron.f.choice_parameter(['ax', 'bx', 'cx', 'dx'])
-int8 = byron.f.integer_parameter(0, 2**8)
-int16 = byron.f.integer_parameter(0, 2**16)
+int8 = byron.f.integer_parameter(0, 2 ** 8)
+int16 = byron.f.integer_parameter(0, 2 ** 16)
 
 opcodes2 = byron.f.choice_parameter(['mov', 'add', 'sub', 'or', 'and'])
 opcodes1 = byron.f.choice_parameter(['not', 'neg', 'inc', 'dec'])

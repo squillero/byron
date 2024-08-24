@@ -24,6 +24,8 @@ def fitness(genotype):
 
 
 def main():
+    byron.welcome()
+
     macro = byron.f.macro('{v}', v=byron.f.array_parameter('01', NUM_BITS + 1))
     top_frame = byron.f.sequence([macro])
 

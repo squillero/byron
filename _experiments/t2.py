@@ -27,7 +27,7 @@ byron.logger.setLevel(logging.DEBUG)
 byron.rrandom.seed(42)
 
 register = byron.f.choice_parameter(["ah", "bh", "ch", "dh", "al", "bl", "cl", "dl"])
-byte = byron.f.integer_parameter(0, 2**8)
+byte = byron.f.integer_parameter(0, 2 ** 8)
 # test_10 = byron.f.integer_parameter(1, 10)
 # test_byte = byron.f.integer_parameter(0, 255)
 # test_byte = byron.f.integer_parameter(2, 65536 + 1)

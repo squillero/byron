@@ -14,7 +14,7 @@ asm_instruction = byron.f.macro(
     "{inst} {reg}, 0x{imm:04x}",
     inst=byron.f.choice_parameter(["add", "sub", "and", "or", "xor"]),
     reg=byron.f.choice_parameter(["ax", "bx", "cx", "dx"]),
-    imm=byron.f.integer_parameter(0, 2**16),
+    imm=byron.f.integer_parameter(0, 2 ** 16),
 )
 
 section_proc = byron.f.sequence(

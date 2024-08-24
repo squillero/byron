@@ -34,7 +34,7 @@ onemax:
         """
     )
 
-    op = byron.f.macro("	movl	${val:#x}, %eax", val=byron.f.integer_parameter(0, 2**32))
+    op = byron.f.macro("	movl	${val:#x}, %eax", val=byron.f.integer_parameter(0, 2 ** 32))
 
     core = byron.framework.bunch(op, size=(10, 50 + 1))
     return byron.framework.sequence([prologue, core, epilogue])

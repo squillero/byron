@@ -12,13 +12,14 @@ import byron
 
 COMMENT = ';'
 
+
 # Hacked as a blind monkey using <https://godbolt.org/>
 
 
 def define_frame():
     register = byron.f.choice_parameter([f"x{n}" for n in range(4)])
-    int8 = byron.f.integer_parameter(0, 2**8)
-    int16 = byron.f.integer_parameter(0, 2**16)
+    int8 = byron.f.integer_parameter(0, 2 ** 8)
+    int16 = byron.f.integer_parameter(0, 2 ** 16)
 
     # operations_rrr = byron.f.choice_parameter(['add', 'sub', 'and', 'eon', 'eor'])
     operations_rrr = byron.f.choice_parameter(['add', 'sub'])

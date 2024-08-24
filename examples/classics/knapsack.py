@@ -22,6 +22,8 @@ import byron
 MAX_WEIGHT = 50
 WEIGHTS = [31, 10, 20, 19, 4, 3, 6]
 VALUES = [70, 20, 39, 37, 7, 5, 10]
+
+
 # max value: 107
 
 

@@ -9,7 +9,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-from byron.classes.frame import FrameABC, FrameAlternative, FrameMacroBunch, FrameSequence
+from byron.classes.frame import FrameABC, FrameAlternative, MacroBunch, FrameSequence
 
 
 class TestFrame(FrameABC):
@@ -68,7 +68,7 @@ def test_frame_alternative_instantiation():
 
 
 def test_frame_macro_bunch_instantiation():
-    assert FrameMacroBunch() is not None
+    assert MacroBunch() is not None
 
 
 def test_frame_initialization_with_parameters():

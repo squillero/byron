@@ -19,7 +19,7 @@ def framework():
     # 'version', 'system', 'machine', 'python', and 'networkx'
     # To get all information use the macro 'byron.f.Info'
 
-    int64 = byron.f.integer_parameter(0, 2**64)
+    int64 = byron.f.integer_parameter(0, 2 ** 64)
     math_op = byron.f.choice_parameter(['+', '-', '*', '/', '&', '^', '|'])
     variable = byron.f.macro('var {_node} uint64', _label='')
     # variable.force_parent('prologue')
