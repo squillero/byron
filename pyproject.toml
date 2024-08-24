@@ -13,7 +13,7 @@
     packages = [
         {include = "byron", from = "src"}
     ]
-    version = "0.8a1.dev60"
+    version = "0.8a1.dev61"
     description = "An evolutionary source-code fuzzer"
     authors = [
         "Cyber Romanticists",
@@ -106,7 +106,7 @@
         quote-style = "preserve"
 
 [tool.bumpver]
-    current_version = "0.8a1.dev60"
+    current_version = "0.8a1.dev61"
     version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
     commit_message  = "style(bumpver): Bump version to {new_version}"
     commit          = true
@@ -118,7 +118,7 @@
             'version = "{pep440_version}"$',
         ]
         "docs/index.md" = [" v{pep440_version}"]
-        "byron/src/global_symbols.py" = [
+        "src/byron/global_symbols.py" = [
             '__date__ = "0D-0M-YYYY"',
             '__version__ = "{pep440_version}"',
         ]
