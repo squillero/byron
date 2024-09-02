@@ -93,8 +93,7 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
     candidates = [
         n
         for n in offspring.genome
-        if isinstance(G.nodes[n]['_selement'], MacroBunch)
-           and G.out_degree[n] < G.nodes[n]['_selement'].SIZE[1] - 1
+        if isinstance(G.nodes[n]['_selement'], MacroBunch) and G.out_degree[n] < G.nodes[n]['_selement'].SIZE[1] - 1
     ]
     if not candidates:
         raise ByronOperatorFailure
@@ -106,8 +105,9 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
 
     G.add_edge(node, new_macro.node, _type=FRAMEWORK)
     initialize_subtree(new_macro)
-    i = rrandom.random_int(0, len(macros_in_bunch))
-    set_successors_order(NodeReference(G, node), macros_in_bunch[:i] + [new_macro.node] + macros_in_bunch[i:])
+    if len(macros_in_bunch) > 0:
+        i = rrandom.random_int(0, len(macros_in_bunch))
+        set_successors_order(NodeReference(G, node), macros_in_bunch[:i] + [new_macro.node] + macros_in_bunch[i:])
     return [offspring]
 
 
@@ -136,6 +136,6 @@ def remove_macro_from_bunch(parent: Individual, strength=1.0) -> list['Individua
         c[0] for c in sorted(candidates, key=lambda x: Counter(i[1] for i in candidates)[x[1]], reverse=True)
     ]
 
-    node = rrandom.choice(frequency_candidates[floor(len(frequency_candidates) * (1 - strength)):])
+    node = rrandom.choice(frequency_candidates[floor(len(frequency_candidates) * (1 - strength)) :])
     G.remove_node(node)
     return [offspring]
