@@ -30,7 +30,6 @@ from typing import Callable, Sequence
 
 from byron.classes import Population
 from byron.classes.fitness import FitnessABC
-from byron.ea.common import take_operators
 from byron.fitness import make_fitness
 from byron.randy import rrandom
 
@@ -68,7 +67,7 @@ class Estimator:
         temperature: float = 0.85,
     ):
         self._population = population
-        self._operators = dict([[o.__name__, self.I(o, 0, 0)] for o in take_operators(False, operators)])
+        self._operators = dict([[o.__name__, self.I(o, 0, 0)] for o in operators])
         assert time_horizon > 0, "time_horizon need to be positive integer"
         self._horizon = time_horizon
         self._time = population.generation

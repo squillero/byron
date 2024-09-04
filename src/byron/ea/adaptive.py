@@ -40,7 +40,6 @@ from byron.sys import *
 from byron.user_messages import *
 from byron.user_messages import logger as byron_logger
 
-from .common import take_operators
 from .estimator import Estimator
 from .selection import *
 
@@ -132,6 +131,8 @@ def adaptive_ea(
     if max_fitness:
         max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
+    if not operators:
+        operators = get_operators()
 
     silent_pause = 1
     if notebook_mode:
@@ -139,8 +140,11 @@ def adaptive_ea(
 
     # initialize population
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
-    ext = Estimator(population, max_generation, rewards, operators, max_fitness, temperature)
-    ops0 = take_operators(True, operators)
+    ops0 = [op for op in operators if op.num_parents is None]
+    assert ops0, f"{PARANOIA_VALUE_ERROR}: No initializers"
+    ops = [op for op in operators if op.num_parents is not None]
+    assert ops, f"{PARANOIA_VALUE_ERROR}: No genetic operators"
+    ext = Estimator(population, max_generation, rewards, ops, max_fitness, temperature)
 
     gen0 = list()
     while len(gen0) < mu:

@@ -44,12 +44,6 @@ def reverse_fitness(fitness_class: type[FitnessABC]) -> type[FitnessABC]:
             ), f"TypeError: different types of fitness: '{self.__class__}' and '{other.__class__}'"
             return super(T, other).is_fitter(self)
 
-        def is_dominant(self, other: FitnessABC) -> bool:
-            assert (
-                self.__class__ == other.__class__
-            ), f"TypeError: different types of fitness: '{self.__class__}' and '{other.__class__}'"
-            return super(T, other).is_dominant(self)
-
         def _decorate(self) -> str:
             # return 'ᴙ⟦' + fitness_class._decorate(self) + '⟧'
             return "ᴙ" + fitness_class._decorate(self)

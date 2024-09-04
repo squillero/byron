@@ -38,7 +38,6 @@ from byron.operators import *
 from byron.sys import *
 from byron.user_messages import logger as byron_logger
 
-from .common import take_operators
 from .selection import *
 
 
@@ -101,7 +100,10 @@ def vanilla_ea(
 
     # Initialize population
     # ops0 = [op for op in get_operators() if op.num_parents is None]
-    ops0 = take_operators(True)
+    ops0 = [op for op in get_operators() if op.num_parents is None]
+    assert ops0, f"{PARANOIA_VALUE_ERROR}: No initializers"
+    ops = [op for op in get_operators() if op.num_parents is not None]
+    assert ops, f"{PARANOIA_VALUE_ERROR}: No genetic operators"
     gen0 = list()
     while len(gen0) < mu:
         o = rrandom.choice(ops0)
@@ -121,15 +123,13 @@ def vanilla_ea(
 
     stopping_conditions = list()
     stopping_conditions.append(lambda: population.generation >= max_generation)
-    if max_fitness:
+    if max_fitness is not None:
         if not isinstance(max_fitness, FitnessABC):
             max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
 
     # Let's roll
     while not any(s() for s in stopping_conditions):
-        # ops = [op for op in get_operators() if op.num_parents is not None]
-        ops = take_operators(False)
         new_individuals = list()
         for step in range(lambda_):
             op = rrandom.choice(ops)
