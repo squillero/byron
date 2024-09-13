@@ -179,7 +179,7 @@ def choice_parameter(alternatives: Collection[Hashable]) -> type[ParameterABC]:
 
 
 @cache
-def _array_parameter(symbols: tuple[str], length: int) -> type[ParameterABC]:
+def _array_parameter_str(symbols: tuple[str], length: int, sep: str) -> type[ParameterABC]:
     class T(ParameterArrayABC):
         __slots__ = []  # Preventing the automatic creation of __dict__
 
@@ -204,24 +204,70 @@ def _array_parameter(symbols: tuple[str], length: int) -> type[ParameterABC]:
                 new_value = [rrandom.choice(symbols) for _ in range(length)]
             else:
                 new_value = [rrandom.choice(symbols) if rrandom.boolean(strength) else old for old in self._value]
-            self.value = "".join(new_value)
+            self.value = sep.join(new_value)
 
     T._patch_info(name="Array[" + "".join(str(a) for a in symbols) + f"ｘ{length}]")
     return T
 
 
-def array_parameter(symbols: Collection[str], length: SupportsInt) -> type[ParameterABC]:
+@cache
+def _array_parameter_range(min_: int, max_: int, length: int, sep: str) -> type[ParameterABC]:
+    class T(ParameterArrayABC):
+        __slots__ = []  # Preventing the automatic creation of __dict__
+
+        MIN = min_
+        MAX = max_
+        LENGTH = length
+        SEP = sep
+
+        def __init__(self):
+            super().__init__()
+            self.raw_value = None
+
+        def is_correct(self, obj: Any) -> bool:
+            return all(min_ <= int(e) < max_ for e in obj.split(sep))
+
+        def run_paranoia_checks(self) -> bool:
+            # TODO: improve message
+            assert self.is_correct(self.value), f"ValueError: {self.value} not a valid array"
+            return super().run_paranoia_checks()
+
+        def mutate(self, strength: float = 1.0) -> None:
+            if strength == 1:
+                self.raw_value = [rrandom.random_int(min_, max_) for _ in range(length)]
+            else:
+                i = rrandom.random_int(0, length)
+                self.raw_value[i] = rrandom.random_int(min_, max_)
+                while rrandom.boolean(strength):
+                    i = rrandom.random_int(0, length)
+                    self.raw_value[i] = rrandom.random_int(min_, max_)
+            self.value = sep.join(str(_) for _ in self.raw_value)
+
+    T._patch_info(name=f"Array[range({min_}, {max_})]ｘ{length}]")
+    return T
+
+
+def array_parameter(
+    symbols: Collection[str] | range, length: SupportsInt, sep: str | None = None
+) -> type[ParameterABC]:
     r"""An Array parameter: a fixed-length array of symbols."""
 
-    assert check_valid_type(symbols, Collection)
-    assert check_valid_length(symbols, 1)
-    assert all(check_valid_type(d, str) for d in symbols)
-    assert check_no_duplicates(symbols)
-    assert all(check_valid_length(d, 1, 2) for d in symbols)
     assert check_valid_type(length, SupportsInt)
     assert check_value_range(int(length), 1)
-
-    return _array_parameter(tuple(sorted(symbols)), int(length))
+    if isinstance(symbols, range):
+        assert check_value_range(symbols.stop - symbols.start, min_=1)
+        return _array_parameter_range(symbols.start, symbols.stop, int(length), sep=sep)
+        if sep is None:
+            sep = ' '
+    else:
+        assert check_valid_type(symbols, Collection)
+        assert check_valid_length(symbols, 1)
+        assert all(check_valid_type(d, str) for d in symbols)
+        assert check_no_duplicates(symbols)
+        assert all(check_valid_length(d, 1, 2) for d in symbols)
+        if sep is None:
+            sep = ''
+        return _array_parameter_str(tuple(sorted(symbols)), int(length), sep=sep)
 
 
 @cache

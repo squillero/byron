@@ -29,6 +29,7 @@
 __all__ = ['Individual', 'Lineage', 'Age']
 
 import operator
+import sys
 from copy import copy, deepcopy
 from dataclasses import dataclass
 from itertools import chain
@@ -36,22 +37,22 @@ from typing import Callable
 
 import networkx as nx
 
-from byron.classes.node import NODE_ZERO
-from byron.global_symbols import *
-from byron.tools.graph import *
-from byron.user_messages import *
 from byron.classes.byron import Byron
 from byron.classes.dump import *
 from byron.classes.fitness import FitnessABC
 from byron.classes.frame import FrameABC
 from byron.classes.macro import Macro
 from byron.classes.node import *
+from byron.classes.node import NODE_ZERO
 from byron.classes.node_reference import NodeReference
 from byron.classes.node_view import NodeView
 from byron.classes.parameter import ParameterABC, ParameterStructuralABC
 from byron.classes.paranoid import Paranoid
 from byron.classes.readymade_macros import MacroZero
 from byron.classes.value_bag import ValueBag
+from byron.global_symbols import *
+from byron.tools.graph import *
+from byron.user_messages import *
 
 
 @dataclass(frozen=True, slots=True)
@@ -149,6 +150,15 @@ class Individual(Paranoid):
         return hash(self._id)
 
     # PROPERTIES
+
+    @property
+    def size(self):
+        s = sys.getsizeof(self)
+        s = sys.getsizeof(self._lineage)
+        s = sys.getsizeof(self._fitness)
+        s += sum(sys.getsizeof(n) for n in self._genome.nodes)
+        s += sum(sys.getsizeof(e) for e in self._genome.edges)
+        return s
 
     @property
     def id(self) -> int:
