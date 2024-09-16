@@ -26,23 +26,32 @@
 
 import logging
 
-from byron import classes, ea, framework, operators, sys, user_messages
-from byron import classes as C
-from byron import evaluator_ as evaluator
-from byron import fitness_ as fit
-from byron import fitness_ as fitness
-from byron import framework as f
-from byron import operators as op
-from byron.classes.node import NODE_ZERO
-from byron.fitness_log import *
-from byron.global_symbols import *
-from byron.randy import rrandom
-from byron.registry import *
-from byron.sys import SYSINFO as sysinfo
-from byron.tools.entropy import *
-from byron.tools.graph import fasten_subtree_parameters
-from byron.tools.providers import *
-from byron.user_messages.messaging import logger
+#############################################################################
+# While debugging, let's use https://github.com/gruns/icecream
+
+try:
+    from icecream import install
+
+    install()
+except ModuleNotFoundError:
+    pass
+
+from byron import classes, ea, framework, operators, sys, user_messages  # noqa: F401
+from byron import classes as C  # noqa: F401
+from byron import evaluator_ as evaluator  # noqa: F401
+from byron import fitness_ as fit  # noqa: F401
+from byron import fitness_ as fitness  # noqa: F401
+from byron import framework as f  # noqa: F401
+from byron import operators as op  # noqa: F401
+from byron.classes.node import NODE_ZERO  # noqa: F401
+from byron.fitness_log import *  # noqa: F403
+from byron.global_symbols import *  # noqa: F403
+from byron.randy import rrandom  # noqa: F401
+from byron.registry import *  # noqa: F403
+from byron.sys import SYSINFO as sysinfo  # noqa: F401
+from byron.tools.graph import fasten_subtree_parameters  # noqa: F401
+from byron.tools.providers import *  # noqa: F403
+from byron.user_messages.messaging import logger  # noqa: F401
 
 #############################################################################
 # Patch names to ease debugging and visualization
@@ -113,13 +122,3 @@ if not joblib_available:
     user_messages.runtime_warning("No 'joblib': process-based parallel evaluators will not be available.")
 if not psutil_available:
     user_messages.runtime_warning("No 'psutil': comprehensive machine information will not be available.")
-
-#############################################################################
-# While debugging, let's use https://github.com/gruns/icecream
-
-try:
-    from icecream import install
-
-    install()
-except ModuleNotFoundError:
-    pass
