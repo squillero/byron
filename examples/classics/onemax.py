@@ -14,7 +14,7 @@ import logging
 
 import byron
 
-NUM_BITS = 50
+NUM_BITS = 16
 
 
 @byron.fitness_function
@@ -26,23 +26,27 @@ def fitness(genotype):
 def main():
     byron.welcome()
 
-    macro = byron.f.macro('{v}', v=byron.f.array_parameter('01', NUM_BITS + 1))
+    macro = byron.f.macro('{v}', v=byron.f.array_parameter('01', NUM_BITS))
     top_frame = byron.f.sequence([macro])
+    evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True, backend=None)
+    byron.logger.info("main: Using %s", evaluator)
+    population = byron.ea.adaptive_ea(
+        top_frame, evaluator, max_generation=5_000, lambda_=20, mu=30, max_fitness=NUM_BITS
+    )
 
-    evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True)
+    macro = byron.f.macro('{v}', v=byron.f.array_parameter(range(2), NUM_BITS))
+    top_frame = byron.f.sequence([macro])
+    evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True, backend=None)
+    byron.logger.info("main: Using %s", evaluator)
+    population = byron.ea.adaptive_ea(
+        top_frame, evaluator, max_generation=5_000, lambda_=20, mu=30, max_fitness=NUM_BITS
+    )
+
+    # evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True)
     # evaluators.append(byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True, backend='thread_pool'))
     # evaluators.append(byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True, backend='joblib'))
     # evaluators.append(byron.evaluator.ScriptEvaluator('./onemax-shell.sh', args=['-f']))
     # evaluators.append(byron.evaluator.MakefileEvaluator('genome.dat', required_files=['onemax-shell.sh']))
-
-    byron.logger.info("main: Using %s", evaluator)
-    population = byron.ea.vanilla_ea(
-        top_frame, evaluator, max_generation=5_000, lambda_=20, mu=30, max_fitness=NUM_BITS
-    )
-
-    print()
-
-    byron.sys.log_operators()
 
 
 if __name__ == "__main__":

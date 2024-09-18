@@ -26,7 +26,7 @@
 
 from collections import Counter
 from copy import deepcopy
-from math import ceil, floor
+from math import floor
 
 from networkx import dfs_preorder_nodes
 
@@ -39,7 +39,7 @@ from byron.user_messages import *
 
 
 @genetic_operator(num_parents=1)
-def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
+def generic_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
     """Mutates a parameter
 
     The function tries at least 100 times to change the parameter by calling `mutate` with the given strength.
@@ -63,26 +63,14 @@ def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individ
 
 
 @genetic_operator(num_parents=1)
-def single_element_array_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
-    scale = 0.05
-    ext_mutation = 1 / (scale * strength)
+def array_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
     offspring = parent.clone
     candidates = [p for p in offspring.parameters if isinstance(p, ParameterArrayABC)]
     if not candidates:
         raise ByronOperatorFailure
 
     parameter = rrandom.choice(candidates)
-    old_value = list(parameter.value)
-    new_value = list(parameter.value)
-    for _ in range(ceil(len(parameter.value) // ext_mutation)):
-        i = rrandom.random_int(0, len(parameter.value))
-        new_value[i] = rrandom.choice(parameter.DIGITS)
-
-    if strength > 0 and parameter.value == old_value:
-        raise ByronOperatorFailure
-
-    parameter.value = ''.join(new_value)
-
+    parameter.mutate(strength=strength)
     return [offspring]
 
 
