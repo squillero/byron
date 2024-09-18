@@ -24,7 +24,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = ['as_text', 'as_lgp', 'as_forest', 'estimate_size']
+__all__ = ['as_text', 'as_lgp', 'as_forest']
 
 from byron.classes.individual import Individual
 from byron.classes.node import NODE_ZERO
@@ -43,7 +43,7 @@ def as_text(
     seed: int | None = 42,
     node_info: bool = True,
     extra_parameters: dict | None = None,
-):
+) -> str | None:
     if isinstance(element, type) and issubclass(element, ParameterABC):
         frame = macro(
             '{p1.__class__}\n'
@@ -123,24 +123,6 @@ def as_forest(
         return individual.as_forest('byron_forest.svg')
 
 
-def estimate_size(
-    element: type[SElement] | Individual,
-    *,
-    seed: int | None = 42,
-):
-    if isinstance(element, Individual):
-        individuals = element
-    else:
-        individual = _generate_random_individual(element, seed=seed)
-    size = individual.size
-    bp = ['', 'Ki', 'Mi', 'Gi', 'Ti', 'Pi', 'Ei', 'Zi']
-    i = 0
-    while size > 1024:
-        i += 1
-        size /= 1024
-    print(f"≈{size:.0f}{bp[i]}B")
-
-
 def _generate_random_individual(
     frame: type[SElement],
     *,
@@ -149,7 +131,7 @@ def _generate_random_individual(
     rrandom_state = rrandom.state
     rrandom.seed(seed)
 
-    random_individuals: list[Individual] = []
+    random_individuals = []
     while not random_individuals:
         random_individuals = random_individual(frame)
 

@@ -139,11 +139,11 @@ class Individual(Paranoid):
 
     def __eq__(self, other) -> bool:
         return (
-                type(self) == type(other)
-                and self._fitness == other._fitness
-                and nx.isomorphism.is_isomorphic(
-            self._genome, other._genome, node_match=operator.eq, edge_match=operator.eq
-        )
+            type(self) == type(other)
+            and self._fitness == other._fitness
+            and nx.isomorphism.is_isomorphic(
+                self._genome, other._genome, node_match=operator.eq, edge_match=operator.eq
+            )
         )
 
     def __hash__(self) -> int:
@@ -156,8 +156,8 @@ class Individual(Paranoid):
         s = sys.getsizeof(self)
         s = sys.getsizeof(self._lineage)
         s = sys.getsizeof(self._fitness)
-        s += sum(sys.getsizeof(n) for n in self._genome.nodes)
-        s += sum(sys.getsizeof(e) for e in self._genome.edges)
+        s += sum(sys.getsizeof(n) for n in self._genome.nodes) + sum(sys.getsizeof(e) for e in self._genome.edges)
+        s += sum(self._genome.nodes[n]['_selement'].size for n in self._genome)
         return s
 
     @property
@@ -263,11 +263,11 @@ class Individual(Paranoid):
         assert self._check_fitness(value)
         self._fitness = value
         if any(value >> i.fitness for i in self._lineage.parents) and any(
-                value >> i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
+            value >> i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
         ):
             self._lineage.operator.stats.successes += 1
         elif any(value << i.fitness for i in self.lineage.parents) and any(
-                value << i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
+            value << i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
         ):
             self._lineage.operator.stats.failures += 1
         logger.debug(f"Individual: Fitness of {self}/{self.lineage} is {value}")
@@ -287,16 +287,12 @@ class Individual(Paranoid):
     @property
     def macros(self) -> list[Macro]:
         """Return all macro instances in unreliable order."""
-        return list(
-            self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == MACRO
-        )
+        return list(self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == MACRO)
 
     @property
     def frames(self) -> list[FrameABC]:
         """Return all frame instances in unreliable order."""
-        return list(
-            self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == FRAME
-        )
+        return list(self._genome.nodes[n]['_selement'] for n in self._genome if self._genome.nodes[n]['_type'] == FRAME)
 
     @property
     def parameters(self) -> list[ParameterABC]:
@@ -334,7 +330,7 @@ class Individual(Paranoid):
         G.add_edges_from(self.G.edges)
         G.remove_node(NODE_ZERO)
         assert (
-                sum(1 for _ in nx.weakly_connected_components(G)) == 1
+            sum(1 for _ in nx.weakly_connected_components(G)) == 1
         ), f"{PARANOIA_TYPE_ERROR}: Individual is not a weakly connected graph"
 
         assert nx.is_branching(self.structure_tree) and nx.is_weakly_connected(
@@ -342,13 +338,13 @@ class Individual(Paranoid):
         ), f"{PARANOIA_VALUE_ERROR}: Structure_tree of {self!r} is not a tree"
 
         assert set(self.genome.nodes) == set(self.structure_tree.nodes), (
-                f"{PARANOIA_VALUE_ERROR}: Node mismatch with structure tree: "
-                + f"{set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
+            f"{PARANOIA_VALUE_ERROR}: Node mismatch with structure tree: "
+            + f"{set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
         )
 
         # ==[check genome (fitness)]=========================================
         assert (self._fitness is None and not self.finalized) or (
-                self._fitness is not None and self.finalized
+            self._fitness is not None and self.finalized
         ), "Value Error (paranoia check): Mismatch fitness and is_finalized"
 
         # ==[check edges (semantic)]=========================================
@@ -374,17 +370,17 @@ class Individual(Paranoid):
         # ==[check structural parameter]=====================================
         for node in (n for n, t in self._genome.nodes(data='_type') if t == MACRO):
             for p_name, p_type in (
-                    (p, P)
-                    for p, P in self._genome.nodes[node]['_selement'].parameter_types.items()
-                    if issubclass(P, ParameterStructuralABC)
+                (p, P)
+                for p, P in self._genome.nodes[node]['_selement'].parameter_types.items()
+                if issubclass(P, ParameterStructuralABC)
             ):
                 assert (
-                        sum(
-                            1
-                            for u, v, k in self._genome.out_edges(node, keys=True)
-                            if k == self._genome.nodes[node][p_name].key
-                        )
-                        == 1
+                    sum(
+                        1
+                        for u, v, k in self._genome.out_edges(node, keys=True)
+                        if k == self._genome.nodes[node][p_name].key
+                    )
+                    == 1
                 ), f"{PARANOIA_VALUE_ERROR}: Problem with parameter '{p_name}' {p_type}"
             keys = [
                 self._genome.nodes[node][p].key
@@ -403,13 +399,13 @@ class Individual(Paranoid):
 
         structural_edges = [(u, v, k) for u, v, k, d in self._genome.edges(data='_type', keys=True) if d == LINK]
         assert len(structural_edges) == len(set(k for u, v, k in structural_edges)), (
-                f"{PARANOIA_VALUE_ERROR}: Found duplicated keys in structural edges: "
-                + f"{set(x for i, x in enumerate(list(k for u, v, k in structural_edges)) if i != list(k for u, v, k in structural_edges).index(x))}"
+            f"{PARANOIA_VALUE_ERROR}: Found duplicated keys in structural edges: "
+            + f"{set(x for i, x in enumerate(list(k for u, v, k in structural_edges)) if i != list(k for u, v, k in structural_edges).index(x))}"
         )
         structural_parameters = [p for p in self.parameters if isinstance(p, ParameterStructuralABC)]
         assert len(structural_edges) == len(structural_parameters), (
-                f"{PARANOIA_VALUE_ERROR}: Inconsistent number of structural edges: "
-                + f"found {len(structural_edges)}, expecting {len(structural_parameters)}"
+            f"{PARANOIA_VALUE_ERROR}: Inconsistent number of structural edges: "
+            + f"found {len(structural_edges)}, expecting {len(structural_parameters)}"
         )
         assert set(k for u, v, k in structural_edges) == set(
             p._key for p in structural_parameters
@@ -418,14 +414,14 @@ class Individual(Paranoid):
         return True
 
     def describe(
-            self,
-            *,
-            include_fitness: bool = True,
-            include_structure: bool = True,
-            include_age: bool = True,
-            include_lineage: bool = True,
-            max_recursion: int = 0,
-            _indent_level: str = '',
+        self,
+        *,
+        include_fitness: bool = True,
+        include_structure: bool = True,
+        include_age: bool = True,
+        include_lineage: bool = True,
+        max_recursion: int = 0,
+        _indent_level: str = '',
     ):
         desc = str(self)
         delem = list()
@@ -537,7 +533,7 @@ class Individual(Paranoid):
 
     @staticmethod
     def _recursive_flatten_frames(
-            nr: NodeReference, T: nx.DiGraph, extra_parameters: dict, path: tuple, dump: list
+        nr: NodeReference, T: nx.DiGraph, extra_parameters: dict, path: tuple, dump: list
     ) -> list:
         local_parameters = copy(extra_parameters)
         local_parameters |= nr.graph.nodes[nr.node]['_selement'].EXTRA_PARAMETERS
