@@ -25,6 +25,15 @@ def fitness(genotype):
     return sum(b == '1' for b in genotype)
 
 
+class Stopper(byron.classes.StopperABC):
+    def __init__(self):
+        self._stop = False
+
+    def stop(self, population):
+        print(population)
+        return self._stop
+
+
 def main():
     byron.welcome()
 
@@ -38,13 +47,14 @@ def main():
     # evaluators.append(byron.evaluator.MakefileEvaluator('genome.dat', required_files=['onemax-shell.sh']))
 
     byron.logger.info("main: Using %s", evaluator)
-    population = byron.ea.vanilla_ea(
+    population = byron.ea.adaptive_ea(
         top_frame,
         evaluator,
         max_generation=5_000,
         lambda_=20,
         mu=30,
-        max_fitness=FITNESS_TYPE(0),
+        target_fitness=FITNESS_TYPE(0),
+        stopper=Stopper(),
     )
 
     print()

@@ -30,7 +30,6 @@ from typing import Callable, Sequence
 
 from byron.classes import Population
 from byron.classes.fitness import FitnessABC
-from byron.fitness import make_fitness
 from byron.randy import rrandom
 
 
@@ -80,17 +79,12 @@ class Estimator:
         self._max_t = temperature
         self._best = None
 
-        if isinstance(fitness, int):
-            self._near = make_fitness(ceil(fitness * temperature))
-        elif isinstance(fitness, float):
-            self._near = make_fitness(fitness * temperature)
-        elif isinstance(fitness, Sequence):
-            self._near = make_fitness(
-                fitness[: ceil(len(fitness) * temperature)]
-                + [i * temperature for i in fitness[ceil(len(fitness) * temperature) :]]
-            )
-        else:
+        if isinstance(fitness, Sequence):
+            # TODO: Handle Sequences
             self._near = None
+        else:
+            fitness_class = fitness.__class__
+            self._near = fitness_class(fitness * temperature)
 
     def _compute_confidence_interval(self, op, max_l) -> float:
         if self._operators[op].operator.stats.calls == 0:

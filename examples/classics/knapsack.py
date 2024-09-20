@@ -57,7 +57,7 @@ def main():
 
     byron.logger.info("main: Using %s", evaluator)
 
-    population = byron.ea.adaptive_ea(top_frame, evaluator, max_generation=500, lambda_=20, mu=10, top_n=1, lifespan=2)
+    population = byron.ea.simple_ea(top_frame, evaluator, max_generation=500, lambda_=20, mu=10, top_n=1, lifespan=2)
 
     byron.sys.log_operators()
 

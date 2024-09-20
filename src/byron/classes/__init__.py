@@ -26,6 +26,7 @@
 
 from .byron import *
 from .dump import *
+from .ea_stopper import *
 from .fitness import *
 from .frame import *
 from .identifiable import *

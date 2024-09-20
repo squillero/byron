@@ -5,6 +5,7 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"         #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
+
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +22,17 @@
 # limitations under the License.
 
 # =[ HISTORY ]===============================================================
-# v1 / June 2023 / Squillero (GX)
+# v1 / April 2023 / Squillero (GX)
 
-from .check import *
-from .common import *
-from .estimator import *
-from .selection import *
-from .simple_ea import *
-from .vanilla_ea import *
+__all__ = ["StopperABC"]
+
+import abc
+
+
+@abc.abstractmethod
+class StopperABC(abc.ABC):
+    def __call__(self, *args, **kwargs):
+        return self.stop(*args, **kwargs)
+
+    def stop(self, popoluation: 'byron.classes.Population') -> bool:
+        raise NotImplementedError

@@ -24,7 +24,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / January 2024 / Sacchet (MS)
 
-__all__ = ["adaptive_ea"]
+__all__ = ['simple_ea', 'adaptive_ea']
 
 
 from datetime import timedelta
@@ -61,28 +61,33 @@ def _elapsed(start, *, process: bool = False, steps: int = 0):
     return ' / '.join(data)
 
 
+def adaptive_ea(*args, **kwargs):
+    deprecation_warning("adaptive_ea() is deprecated, use simple_ea() instead.")
+    return simple_ea(*args, **kwargs)
+
+
 def _new_best(population: Population, evaluator: EvaluatorABC):
     byron_logger.info(
-        f"AdaptiveEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
+        f"SimpleEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
         + f" [🕓 gen: {population.generation:,} / fcalls: {evaluator.fitness_calls:,}]"
     )
 
 
-def adaptive_ea(
+def simple_ea(
     top_frame: type[FrameABC],
     evaluator: EvaluatorABC,
     mu: int = 10,
     lambda_: int = 20,
     max_generation: int = 100,
-    max_fitness: FitnessABC | None = None,
+    target_fitness: FitnessABC | None = None,
     top_n: int = 0,
     lifespan: int = None,
     operators: list[Callable] = None,
-    end_conditions: list[Callable] = None,
     rewards: list[float] = [0.7, 0.3],
     temperature: float = 0.85,
     entropy: bool = False,
     population_extra_parameters: dict = None,
+    stopper: Callable | None = None,
 ) -> Population:
     r"""A configurable self-adaptive evolutionary algorithm
 
@@ -98,7 +103,7 @@ def adaptive_ea(
         The size the offspring
     max_generation
         Maximum number of generation allowed
-    max_fitness
+    target_fitness
         Fitness target
     top_n
         The size of champions population
@@ -106,8 +111,6 @@ def adaptive_ea(
         The number of generation an individual survive
     operators
         Which operators you want to use
-    end_conditions
-        List of possible conditions needed to end the evolution
     rewards
         List of rewards for creating an individual fitter than parents [0] and for a successfully created individual [1]
     temperature
@@ -121,34 +124,36 @@ def adaptive_ea(
     """
 
     start = perf_counter_ns(), process_time_ns()
-    byron_logger.info("AdaptiveEA: 🧬 [b]AdaptiveEA started[/] ┈ %s", _elapsed(start, process=True))
-
-    if end_conditions:
-        stopping_conditions = end_conditions
-    else:
-        stopping_conditions = list()
-        stopping_conditions.append(lambda: population.generation >= max_generation)
-    if max_fitness:
-        max_fitness = make_fitness(max_fitness)
-        stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
-    if not operators:
-        operators = get_operators()
-
     silent_pause = 1
     if notebook_mode:
         silent_pause = 5
+    byron_logger.info("SimpleEA: 🧬 [b]SimpleEA started[/] ┈ %s", _elapsed(start, process=True))
 
     # initialize population
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
-    ops0 = [op for op in operators if op.num_parents is None]
-    assert ops0, f"{PARANOIA_VALUE_ERROR}: No initializers"
-    ops = [op for op in operators if op.num_parents is not None]
-    assert ops, f"{PARANOIA_VALUE_ERROR}: No genetic operators"
-    ext = Estimator(population, max_generation, rewards, ops, max_fitness, temperature)
+
+    # stopping conditions
+    stopping_conditions = list()
+    if stopper:
+        stopping_conditions.append(lambda: stopper(population))
+    if max_generation:
+        stopping_conditions.append(lambda: population.generation >= max_generation)
+    # TODO: if max_fitness is alredy a fitness? if minimizing?
+    if target_fitness is not None:
+        if not isinstance(target_fitness, FitnessABC):
+            target_fitness = make_fitness(target_fitness)
+        stopping_conditions.append(lambda: best.fitness == target_fitness or best.fitness >> target_fitness)
+
+    if not operators:
+        operators = get_operators()
+
+    population.operators_gen0 = [op for op in operators if op.num_parents is None]
+    population.operators = [op for op in operators if op.num_parents is not None]
+    ext = Estimator(population, max_generation, rewards, population.operators, target_fitness, temperature)
 
     gen0 = list()
     while len(gen0) < mu:
-        o = rrandom.choice(ops0)
+        o = rrandom.choice(population.operators_gen0)
         gen0 += o(top_frame=top_frame)
     population += gen0
     evaluator(population)
@@ -173,7 +178,7 @@ def adaptive_ea(
                 new_individuals += op(*parents)
         if not new_individuals:
             byron_logger.warning(
-                "AdaptiveEA: empty offspring (no new individuals) ┈ %s", _elapsed(start, steps=evaluator.fitness_calls)
+                "SimpleEA: empty offspring (no new individuals) ┈ %s", _elapsed(start, steps=evaluator.fitness_calls)
             )
 
         if lifespan is not None:
@@ -194,18 +199,18 @@ def adaptive_ea(
         byron_logger.hesitant_log(
             silent_pause,
             LOGGING_INFO,
-            f"AdaptiveEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
+            f"SimpleEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
             population.generation,
             _elapsed(start, steps=evaluator.fitness_calls),
         )
 
     end = process_time_ns()
 
-    byron_logger.info("AdaptiveEA: 🍦 [b]AdaptiveEA completed[/] ┈ %s", _elapsed(start, process=True))
+    byron_logger.info("SimpleEA: 🍦 [b]SimpleEA completed[/] ┈ %s", _elapsed(start, process=True))
     byron_logger.info(
-        f"AdaptiveEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
+        f"SimpleEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
     )
-    byron_logger.info("AdaptiveEA: Genetic operators statistics:")
+    byron_logger.info("SimpleEA: Genetic operators statistics:")
     for op in get_operators():
-        byron_logger.info(f"AdaptiveEA: * {op.__qualname__}: {op.stats}")
+        byron_logger.info(f"SimpleEA: * {op.__qualname__}: {op.stats}")
     return population

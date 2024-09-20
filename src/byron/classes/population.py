@@ -46,6 +46,8 @@ class Population(Iterable):
     _individuals: list[Individual]
     _memory: set | None
     _generation: int
+    _operators_gen0: list[Callable[[], list[Individual]]]
+    _operators: list[Callable[[], list[Individual]]]
 
     def __init__(self, top_frame: type[SElement], extra_parameters: dict | None = None, *, memory: bool = False):
         assert check_valid_types(top_frame, SElement, subclass=True)
@@ -60,6 +62,24 @@ class Population(Iterable):
             self._memory = set()
         else:
             self._memory = None
+
+    @property
+    def operators_gen0(self) -> list[Callable[[], list[Individual]]]:
+        return self._operators_gen0
+
+    @operators_gen0.setter
+    def operators_gen0(self, value: list[Callable[[], list[Individual]]]):
+        assert value, f"{PARANOIA_VALUE_ERROR}: No initializers"
+        self._operators_gen0 = list(value)
+
+    @property
+    def operators(self) -> list[Callable[[], list[Individual]]]:
+        return self._operators
+
+    @operators.setter
+    def operators(self, value: list[Callable[[], list[Individual]]]):
+        assert value, f"{PARANOIA_VALUE_ERROR}: No genetic operators"
+        self._operators = list(value)
 
     @property
     def top_frame(self):
